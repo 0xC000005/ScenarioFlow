@@ -4,14 +4,22 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 from pathlib import Path
 import re
-from typing import Iterable
+from typing import Iterable, Iterator
 
 
 MAX_GITHUB_FILE_BYTES = 100 * 1024 * 1024
 SKIP_SUFFIXES = {".npz", ".parquet", ".pyc", ".pyo"}
-SKIP_DIRECTORY_NAMES = {".git", ".superpowers", ".venv", "__pycache__"}
+SKIP_DIRECTORY_NAMES = {
+    ".git",
+    ".pytest_cache",
+    ".superpowers",
+    ".venv",
+    "__pycache__",
+}
 SKIP_RELATIVE_PREFIXES = {("artifacts", "cache")}
 SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----"),
@@ -19,8 +27,17 @@ SECRET_PATTERNS = (
     re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9]{20,}\b"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
-HOST_PATH_PATTERN = re.compile(r"(?<![A-Za-z0-9_.-])/(?:home|Users|private|tmp)/[^\s\"']+")
-WINDOWS_HOST_PATH_PATTERN = re.compile(r"\b[A-Za-z]:\\Users\\[^\s\"']+")
+GENERIC_UNIX_ABSOLUTE_PATH_PATTERN = re.compile(r"(?<![\w./-])/(?!/|\s)")
+TEXT_UNIX_HOST_PATH_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_.-])/(?:home|Users|private|tmp|root|var|mnt|workspace|opt|srv)/"
+    r"[^\s\"']+"
+)
+WINDOWS_DRIVE_PATH_PATTERN = re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]")
+WINDOWS_UNC_PATH_PATTERN = re.compile(r"(?<!\\)\\\\[A-Za-z0-9._-]+[\\/][A-Za-z0-9._-]+")
+LOCAL_FILE_URI_PATTERN = re.compile(r"(?i)(?<![A-Za-z0-9+.-])file:[\\/]+")
+TRIPLE_SLASH_URI_PATTERN = re.compile(
+    r"(?i)(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]*:/{3,}"
+)
 
 
 def _release_files(root: Path) -> Iterable[Path]:
@@ -55,6 +72,70 @@ def _relative(root: Path, path: Path) -> str:
     return path.relative_to(root).as_posix()
 
 
+def _json_strings(value: object) -> Iterator[str]:
+    if isinstance(value, dict):
+        for key, item in value.items():
+            yield key
+            yield from _json_strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _json_strings(item)
+    elif isinstance(value, str):
+        yield value
+
+
+def _portable_authority_paths(root: Path) -> set[str]:
+    manifest = root / "results" / "FROZEN_AUTHORITY.tsv"
+    if not manifest.is_file():
+        return set()
+    try:
+        with manifest.open(encoding="utf-8", newline="") as handle:
+            rows = csv.DictReader(handle, delimiter="\t")
+            return {
+                row["released_path"]
+                for row in rows
+                if row.get("transformation") == "portable-json-v1"
+                and row.get("released_path")
+            }
+    except (csv.Error, KeyError, UnicodeDecodeError):
+        return set()
+
+
+def _contains_host_path(path: Path, contents: str, *, strict_json: bool) -> bool:
+    if path.suffix == ".json":
+        try:
+            document = json.loads(contents)
+        except json.JSONDecodeError:
+            pass
+        else:
+            patterns = (
+                (
+                    GENERIC_UNIX_ABSOLUTE_PATH_PATTERN,
+                    WINDOWS_DRIVE_PATH_PATTERN,
+                    WINDOWS_UNC_PATH_PATTERN,
+                    LOCAL_FILE_URI_PATTERN,
+                    TRIPLE_SLASH_URI_PATTERN,
+                )
+                if strict_json
+                else (
+                    TEXT_UNIX_HOST_PATH_PATTERN,
+                    WINDOWS_DRIVE_PATH_PATTERN,
+                    WINDOWS_UNC_PATH_PATTERN,
+                    LOCAL_FILE_URI_PATTERN,
+                )
+            )
+            return any(
+                any(pattern.search(value) for pattern in patterns)
+                for value in _json_strings(document)
+            )
+    return bool(
+        TEXT_UNIX_HOST_PATH_PATTERN.search(contents)
+        or WINDOWS_DRIVE_PATH_PATTERN.search(contents)
+        or WINDOWS_UNC_PATH_PATTERN.search(contents)
+        or LOCAL_FILE_URI_PATTERN.search(contents)
+    )
+
+
 def _secret_issues(root: Path) -> list[str]:
     issues: list[str] = []
     for path in _text_files(root):
@@ -66,9 +147,14 @@ def _secret_issues(root: Path) -> list[str]:
 
 def _host_path_issues(root: Path) -> list[str]:
     issues: list[str] = []
+    portable_authorities = _portable_authority_paths(root)
     for path in _text_files(root):
         contents = path.read_text(encoding="utf-8")
-        if HOST_PATH_PATTERN.search(contents) or WINDOWS_HOST_PATH_PATTERN.search(contents):
+        if _contains_host_path(
+            path,
+            contents,
+            strict_json=_relative(root, path) in portable_authorities,
+        ):
             issues.append(f"absolute host path: {_relative(root, path)}")
     return issues
 
@@ -84,10 +170,22 @@ def _large_file_issues(root: Path) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
-    parser.add_argument("--all", action="store_true", help="run every public-release check")
-    parser.add_argument("--secrets", action="store_true", help="scan text files for credential-shaped values")
-    parser.add_argument("--absolute-paths", action="store_true", help="scan text files for host paths")
-    parser.add_argument("--size", action="store_true", help="reject files larger than GitHub's 100 MiB limit")
+    parser.add_argument(
+        "--all", action="store_true", help="run every public-release check"
+    )
+    parser.add_argument(
+        "--secrets",
+        action="store_true",
+        help="scan text files for credential-shaped values",
+    )
+    parser.add_argument(
+        "--absolute-paths", action="store_true", help="scan text files for host paths"
+    )
+    parser.add_argument(
+        "--size",
+        action="store_true",
+        help="reject files larger than GitHub's 100 MiB limit",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     checks = args.all or args.secrets or args.absolute_paths or args.size

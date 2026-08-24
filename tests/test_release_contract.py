@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
 from pathlib import Path
 import subprocess
 
@@ -14,21 +15,58 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 EXPECTED_DATA = {
-    "multi_factor_data.npz": (420_993, "fcb34d7d0fdc9a874e06c95649f0ba93f7e203afb0e9690901cf8f67ebba5991"),
-    "multi_factor_levels.parquet": (347_987, "3ac3aeb04fd227fb471bc026f5f4191f5655c4cf3e09443b102e4d6d0019c75f"),
-    "multi_factor_returns.parquet": (463_257, "77970f0b506c1ea6bd0ab45b539c621e2cc4199b10b223f2a07c6d4a2003f21d"),
-    "spx_vol_surface_history_full_data_fixed.parquet": (1_761_788, "d657a9cf50ba513fa1806aaf8b1a30a7646438bda09ebeabc5f6804f6e0f704a"),
-    "vol_surface_with_ret.npz": (1_398_758, "3e5d05a4cc72cfbd60646aab6f491aac763d4667144409dd72f7969e40b4d50f"),
+    "multi_factor_data.npz": (
+        420_993,
+        "fcb34d7d0fdc9a874e06c95649f0ba93f7e203afb0e9690901cf8f67ebba5991",
+    ),
+    "multi_factor_levels.parquet": (
+        347_987,
+        "3ac3aeb04fd227fb471bc026f5f4191f5655c4cf3e09443b102e4d6d0019c75f",
+    ),
+    "multi_factor_returns.parquet": (
+        463_257,
+        "77970f0b506c1ea6bd0ab45b539c621e2cc4199b10b223f2a07c6d4a2003f21d",
+    ),
+    "spx_vol_surface_history_full_data_fixed.parquet": (
+        1_761_788,
+        "d657a9cf50ba513fa1806aaf8b1a30a7646438bda09ebeabc5f6804f6e0f704a",
+    ),
+    "vol_surface_with_ret.npz": (
+        1_398_758,
+        "3e5d05a4cc72cfbd60646aab6f491aac763d4667144409dd72f7969e40b4d50f",
+    ),
 }
 LEVEL_COLUMNS = [
-    "spx", "usdcad", "usdjpy", "dxy", "copper", "wheat", "crude_oil",
-    "us2y", "us10y", "aaa_oas", "bbb_oas", "nikkei", "gold", "vix",
+    "spx",
+    "usdcad",
+    "usdjpy",
+    "dxy",
+    "copper",
+    "wheat",
+    "crude_oil",
+    "us2y",
+    "us10y",
+    "aaa_oas",
+    "bbb_oas",
+    "nikkei",
+    "gold",
+    "vix",
 ]
 RETURN_COLUMNS = [
-    "spx_logret", "usdcad_logret", "usdjpy_logret", "dxy_logret",
-    "copper_logret", "wheat_logret", "crude_oil_logret", "us2y_diff",
-    "us10y_diff", "aaa_oas_diff", "bbb_oas_diff", "nikkei_logret",
-    "gold_logret", "vix_logret",
+    "spx_logret",
+    "usdcad_logret",
+    "usdjpy_logret",
+    "dxy_logret",
+    "copper_logret",
+    "wheat_logret",
+    "crude_oil_logret",
+    "us2y_diff",
+    "us10y_diff",
+    "aaa_oas_diff",
+    "bbb_oas_diff",
+    "nikkei_logret",
+    "gold_logret",
+    "vix_logret",
 ]
 
 
@@ -42,7 +80,10 @@ def test_processed_data_filenames_checksums_and_total_size() -> None:
     assert released_files == set(EXPECTED_DATA) | {"CHECKSUMS.tsv"}
     dataset_files = released_files - {"CHECKSUMS.tsv"}
     assert dataset_files == set(EXPECTED_DATA)
-    assert sum((DATA_DIR / filename).stat().st_size for filename in dataset_files) == 4_392_783
+    assert (
+        sum((DATA_DIR / filename).stat().st_size for filename in dataset_files)
+        == 4_392_783
+    )
     for filename, (expected_size, expected_hash) in EXPECTED_DATA.items():
         path = DATA_DIR / filename
         assert path.stat().st_size == expected_size
@@ -62,7 +103,13 @@ def test_checksum_manifest_matches_frozen_data_contract() -> None:
 def test_data_schema_and_date_coverage() -> None:
     """A changed array, column order, or observed-date range must fail the contract."""
     with np.load(DATA_DIR / "multi_factor_data.npz", allow_pickle=False) as factor_data:
-        assert factor_data.files == ["dates", "levels", "level_columns", "returns", "return_columns"]
+        assert factor_data.files == [
+            "dates",
+            "levels",
+            "level_columns",
+            "returns",
+            "return_columns",
+        ]
         assert factor_data["dates"].shape == (5_825,)
         assert factor_data["dates"].dtype == np.dtype("datetime64[D]")
         assert str(factor_data["dates"][0]) == "2000-01-03"
@@ -76,13 +123,17 @@ def test_data_schema_and_date_coverage() -> None:
 
     levels = pd.read_parquet(DATA_DIR / "multi_factor_levels.parquet")
     returns = pd.read_parquet(DATA_DIR / "multi_factor_returns.parquet")
-    surface_frame = pd.read_parquet(DATA_DIR / "spx_vol_surface_history_full_data_fixed.parquet")
+    surface_frame = pd.read_parquet(
+        DATA_DIR / "spx_vol_surface_history_full_data_fixed.parquet"
+    )
     assert levels.shape == (5_825, 14)
     assert returns.shape == (5_825, 14)
     assert levels.columns.tolist() == LEVEL_COLUMNS
     assert returns.columns.tolist() == RETURN_COLUMNS
     assert [str(dtype) for dtype in levels.dtypes] == ["float32"] * 11 + ["float64"] * 3
-    assert [str(dtype) for dtype in returns.dtypes] == ["float32"] * 11 + ["float64"] * 3
+    assert [str(dtype) for dtype in returns.dtypes] == ["float32"] * 11 + [
+        "float64"
+    ] * 3
     assert surface_frame.shape == (5_822, 32)
     assert surface_frame.columns[0] == "date"
     assert str(surface_frame["date"].dtype) == "datetime64[ns]"
@@ -99,11 +150,14 @@ def test_data_schema_and_date_coverage() -> None:
 
 def test_date_aligned_panel_has_39_variables() -> None:
     """Index-based alignment or a missing IV/factor state must fail this joint-panel gate."""
-    surface_frame = pd.read_parquet(DATA_DIR / "spx_vol_surface_history_full_data_fixed.parquet")
+    surface_frame = pd.read_parquet(
+        DATA_DIR / "spx_vol_surface_history_full_data_fixed.parquet"
+    )
     iv_dates = pd.DatetimeIndex(surface_frame["date"])
-    with np.load(DATA_DIR / "vol_surface_with_ret.npz", allow_pickle=False) as iv_data, np.load(
-        DATA_DIR / "multi_factor_data.npz", allow_pickle=False
-    ) as factor_data:
+    with (
+        np.load(DATA_DIR / "vol_surface_with_ret.npz", allow_pickle=False) as iv_data,
+        np.load(DATA_DIR / "multi_factor_data.npz", allow_pickle=False) as factor_data,
+    ):
         factor_dates = pd.DatetimeIndex(factor_data["dates"])
         index_by_date = pd.Series(np.arange(factor_dates.size), index=factor_dates)
         alignment = index_by_date.reindex(iv_dates)
@@ -111,7 +165,8 @@ def test_date_aligned_panel_has_39_variables() -> None:
         indices = alignment.to_numpy(dtype=np.int64)
         assert np.array_equal(factor_dates[indices].to_numpy(), iv_dates.to_numpy())
         panel = np.concatenate(
-            [iv_data["surface"].reshape(5_822, 25), factor_data["levels"][indices]], axis=1
+            [iv_data["surface"].reshape(5_822, 25), factor_data["levels"][indices]],
+            axis=1,
         )
 
     assert panel.shape == (5_822, 39)
@@ -157,6 +212,106 @@ def test_release_scanner_ignores_local_virtual_environments(tmp_path: Path) -> N
     assert result.stdout == "release checks passed\n"
 
 
+def test_release_scanner_ignores_only_the_pytest_cache_directory(
+    tmp_path: Path,
+) -> None:
+    """A routine pytest run may leave a cache, but lookalike paths remain public."""
+    cache_file = tmp_path / ".pytest_cache" / "v" / "cache" / "nodeids"
+    cache_file.parent.mkdir(parents=True)
+    cache_file.write_text("/" + "home/example/private/test-node\n")
+    command = [
+        "python",
+        str(ROOT / "scripts" / "check_release.py"),
+        "--root",
+        str(tmp_path),
+        "--all",
+    ]
+    cached_result = subprocess.run(command, text=True, capture_output=True, check=False)
+    assert cached_result.returncode == 0
+
+    lookalike = tmp_path / ".pytest_cache-copy" / "nodeids"
+    lookalike.parent.mkdir()
+    lookalike.write_text("/" + "home/example/private/test-node\n")
+    lookalike_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert lookalike_result.returncode == 1
+    assert ".pytest_cache-copy/nodeids" in lookalike_result.stdout
+
+
+def test_release_scanner_rejects_generic_and_unc_absolute_paths(
+    tmp_path: Path,
+) -> None:
+    """Non-home Unix paths and UNC shares are host-specific too."""
+    (tmp_path / "unix.txt").write_text("/" + "var/lib/private/result.json\n")
+    separator = chr(92)
+    unc_path = (separator * 2) + separator.join(("server", "share", "result.json"))
+    (tmp_path / "unc.txt").write_text(unc_path + "\n")
+    result = subprocess.run(
+        [
+            "python",
+            str(ROOT / "scripts" / "check_release.py"),
+            "--root",
+            str(tmp_path),
+            "--all",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "absolute host path: unix.txt" in result.stdout
+    assert "absolute host path: unc.txt" in result.stdout
+
+
+def test_release_scanner_scopes_strict_paths_to_portable_authorities(
+    tmp_path: Path,
+) -> None:
+    """Strict authority checks must not reject reader-facing routes or dates."""
+    reader_json = tmp_path / "reader.json"
+    reader_json.write_text(
+        json.dumps(
+            {
+                "endpoint": "/" + "api/v1/scenarios",
+                "display_date": "/" + "2026/08/24",
+            }
+        )
+    )
+    command = [
+        "python",
+        str(ROOT / "scripts" / "check_release.py"),
+        "--root",
+        str(tmp_path),
+        "--all",
+    ]
+    reader_result = subprocess.run(command, text=True, capture_output=True, check=False)
+    assert reader_result.returncode == 0
+
+    portable_path = tmp_path / "results" / "frozen" / "portable.json"
+    portable_path.parent.mkdir(parents=True)
+    authority_manifest = tmp_path / "results" / "FROZEN_AUTHORITY.tsv"
+    authority_manifest.write_text(
+        "released_path\ttransformation\n"
+        "results/frozen/portable.json\tportable-json-v1\n"
+    )
+    strict_values = (
+        "/" + "opt/scenarioflow/result.json",
+        "/" + "srv/scenarioflow/result.json",
+        "/" + "équipe/private/result.json",
+        "file:" + ("/" * 3) + "home/research/result.json",
+        "custom:" + ("/" * 3) + "mnt/data/result.json",
+    )
+    for value in strict_values:
+        portable_path.write_text(json.dumps({"nested": [{value: "evidence"}]}))
+        strict_result = subprocess.run(
+            command, text=True, capture_output=True, check=False
+        )
+        assert strict_result.returncode == 1
+        assert "absolute host path: results/frozen/portable.json" in (
+            strict_result.stdout
+        )
+
+
 def test_release_scanner_ignores_internal_plan_bookkeeping(tmp_path: Path) -> None:
     """Ignored execution ledgers must not enter the candidate release scan."""
     ledger = tmp_path / ".superpowers" / "sdd" / "release-plan" / "progress.md"
@@ -194,9 +349,7 @@ def test_release_scanner_excludes_only_the_fetched_artifact_cache(
         str(tmp_path),
         "--size",
     ]
-    cached_result = subprocess.run(
-        command, text=True, capture_output=True, check=False
-    )
+    cached_result = subprocess.run(command, text=True, capture_output=True, check=False)
     assert cached_result.returncode == 0
 
     other = tmp_path / "artifacts" / "other-cache" / "model.ckpt"
@@ -204,9 +357,7 @@ def test_release_scanner_excludes_only_the_fetched_artifact_cache(
     with other.open("wb") as handle:
         handle.seek(100 * 1024 * 1024)
         handle.write(b"x")
-    other_result = subprocess.run(
-        command, text=True, capture_output=True, check=False
-    )
+    other_result = subprocess.run(command, text=True, capture_output=True, check=False)
     assert other_result.returncode == 1
     assert "artifacts/other-cache/model.ckpt" in other_result.stdout
 
@@ -223,7 +374,10 @@ def test_release_scanner_excludes_only_the_fetched_artifact_cache(
         check=False,
     )
     assert file_shaped_result.returncode == 1
-    assert "file exceeds GitHub 100 MiB limit: artifacts/cache" in file_shaped_result.stdout
+    assert (
+        "file exceeds GitHub 100 MiB limit: artifacts/cache"
+        in file_shaped_result.stdout
+    )
 
 
 def test_release_scanner_still_scans_tracked_artifact_authorities(

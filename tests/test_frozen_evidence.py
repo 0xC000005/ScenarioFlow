@@ -29,6 +29,56 @@ PORTABLE_SOURCES = {
     "results/foundation_baselines_current_panel_20260810/benchmark_manifest.json",
     "results/fmts_reproduction_20260805/reports/layer_a_garch_ccc/garch_ccc_contract_report.json",
 }
+PORTABLE_PROJECTION_PROOFS = {
+    "results/fmts_multiseed_20260805/aggregate/summary.json": (
+        701_189,
+        "2082647c920f6cdff88faf15ed37515dfe9fba3e7e0697df38f9203d2d0954d1",
+        "results/frozen/multiseed/summary.json",
+        692_525,
+        "4ebb4d26666cf3d05f8f85c03f678584c23be799479e94f328078fd6783eb3fb",
+        "50fbf182f6f349234d45718d110259674b800fd28b18b64bb11c4f144bf0dab0",
+    ),
+    "results/fmts_multiseed_20260805/command_dag.json": (
+        955_426,
+        "d5f987f597e93d132c19c9c7c047d7224ce83c94d200c2a704c640b60418675d",
+        "results/frozen/multiseed/command-dag.json",
+        910_790,
+        "6e50e4b911358a702980e1d5929eb24fe6d64593d5f0b42696df7df118a268b2",
+        "ecf90958d519226e280c3f35cfc10bfbed067e068fb5f381b2edb4c343e83844",
+    ),
+    "results/fmts_multiseed_20260805/protocol_manifest.json": (
+        86_010,
+        "33f832dfc799e1c3619f012b7286791dc2e4fe9cf1c9acb52e55e136206397c8",
+        "results/frozen/multiseed/protocol-manifest.json",
+        76_765,
+        "f0111cb5fe42ebdd8dedc8f468ec4ca411015495b727b431801407a75bee7808",
+        "e71d93605342bb41da12189ac533be419749454377ebb6c525163222a486d004",
+    ),
+    "results/fmts_reproduction_20260805/reproduction_report.json": (
+        540_179,
+        "39213591e2b61e352c8aaa087da5417489520c19e1ebf5b4acf9dc8b370ae64f",
+        "results/frozen/benchmark/checkpoint-replay/reproduction-report.json",
+        539_195,
+        "26403729fa56647ba65f6b686c8d1b0c9bff786d7c3dc33e62cad96033f67d8b",
+        "a56b27ee32ba1403c13aad108f1a1803a2ba70cac10052c583b07b1fc9bec9ea",
+    ),
+    "results/foundation_baselines_current_panel_20260810/benchmark_manifest.json": (
+        65_089,
+        "30c75646bdd00de4531b58962af8411189bbfcc1049d7b9538d9b98a58d93f30",
+        "results/frozen/foundation/benchmark-manifest.json",
+        64_865,
+        "8f1e4bd59f0ab38a36fffdafbbba59fa27442aba48946469350a11c9b9a91f19",
+        "96653d45b79475999e7b965aa5b540384277891ef341eac6c374bb23040a11b5",
+    ),
+    "results/fmts_reproduction_20260805/reports/layer_a_garch_ccc/garch_ccc_contract_report.json": (
+        40_286,
+        "fd61802d5f0e12acd6d34dd2fb37bb8422a4313e677cd41bf45ecfb73687b128",
+        "results/frozen/benchmark/checkpoint-replay/gaussian-ccc/contract-report.json",
+        39_950,
+        "70c9ac714a4f81b182746810791658bea35d14c4d28bfde762e0377eb5f3190a",
+        "9870ee9c967ab4ae264721613d712d3ab2786188546e8f067f1aa16eea868246",
+    ),
+}
 
 EXPECTED_RELEASED_PATHS = {
     "metadata/models/iv-only/args.json",
@@ -172,6 +222,35 @@ def test_release_contains_the_exact_frozen_authority_set() -> None:
     assert verify_release_authorities(ROOT, MANIFEST) == list(authorities)
 
 
+def test_portable_projection_proofs_are_independently_pinned() -> None:
+    """A scientific edit plus a matching TSV edit must still fail this gate."""
+    seen_sources = set()
+    for item in load_authorities(MANIFEST):
+        if item.transformation != "portable-json-v1":
+            continue
+        seen_sources.add(item.frozen_source_path)
+        expected = PORTABLE_PROJECTION_PROOFS[item.frozen_source_path]
+        assert (
+            item.frozen_bytes,
+            item.frozen_sha256,
+            item.released_path.as_posix(),
+            item.released_bytes,
+            item.released_sha256,
+        ) == expected[:5]
+        document = json.loads((ROOT / item.released_path).read_text(encoding="utf-8"))
+        semantic_digest = hashlib.sha256(
+            json.dumps(
+                document,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode()
+        ).hexdigest()
+        assert semantic_digest == expected[5]
+    assert seen_sources == set(PORTABLE_PROJECTION_PROOFS)
+
+
 def test_portable_projection_changes_only_recognized_path_strings() -> None:
     """Portable projection must preserve records and scientific values."""
     donor_root = "/" + "home/max/Documents/vol-surface-vae-pub"
@@ -229,13 +308,53 @@ def test_portable_projection_rejects_key_collisions() -> None:
     [
         "/" + "home/another-user/private/result.json",
         "/" + "tmp/unrecognized-run/result.json",
+        "/" + "root/private/result.json",
+        "/" + "var/lib/scenarioflow/result.json",
+        "/" + "mnt/research/result.json",
+        "/" + "workspace/output/result.json",
+        "/" + "opt/scenarioflow/result.json",
+        "/" + "srv/scenarioflow/result.json",
+        "/" + "équipe/private/result.json",
+        "file:" + ("/" * 3) + "root/private/result.json",
+        "file:" + "/" + "var/lib/result.json",
+        "custom:" + ("/" * 3) + "mnt/data/result.json",
         "C:" + r"\Users\researcher\result.json",
+        "D:" + r"\research\result.json",
+        "E:" + "/research/result.json",
+        ("\\" * 2) + r"server\share\result.json",
     ],
 )
 def test_portable_projection_fails_closed_on_unknown_host_paths(value: str) -> None:
     """An unrecognized host path must never survive a public projection."""
-    with pytest.raises(AuthorityError, match="unrecognized absolute host path"):
-        project_portable_json_v1(json.dumps({"path": value}).encode())
+    documents = (
+        {"nested": [{"path": value}]},
+        {value: {"score": 1.0}},
+    )
+    for document in documents:
+        with pytest.raises(AuthorityError, match="unrecognized absolute host path"):
+            project_portable_json_v1(json.dumps(document).encode())
+
+
+def test_portable_projection_allows_approved_provenance_uris() -> None:
+    """The five public provenance schemes must remain stable and readable."""
+    uris = [
+        "frozen-source://results/run.json",
+        "paper-authority://snapshot/table.tex",
+        "artifact-cache://models/model.bin",
+        "legacy-worktree://run-id/data/panel.parquet",
+        "private-provenance://" + "a" * 64,
+    ]
+    payload = json.dumps({uri: {"source": uri} for uri in uris}).encode()
+
+    assert json.loads(project_portable_json_v1(payload)) == json.loads(payload)
+
+
+def test_portable_projection_rejects_nested_duplicate_json_keys() -> None:
+    """Duplicate JSON keys must not be collapsed before path projection."""
+    payload = b'{"outer":{"score":1,"score":2}}'
+
+    with pytest.raises(AuthorityError, match="duplicate JSON key: score"):
+        project_portable_json_v1(payload)
 
 
 def test_verifier_rejects_missing_and_extra_managed_files(tmp_path: Path) -> None:

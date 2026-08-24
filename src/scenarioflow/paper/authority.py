@@ -42,10 +42,11 @@ MANAGED_RELEASE_ROOTS = (
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _AUTHORITY_ID = re.compile(r"[a-z0-9][a-z0-9.-]*")
-_UNIX_HOST_PATH = re.compile(
-    r"(?<![A-Za-z0-9_.-])/(?:home|Users|private|tmp)/[^\s\"']+"
-)
-_WINDOWS_HOST_PATH = re.compile(r"\b[A-Za-z]:\\Users\\[^\s\"']+")
+_UNIX_ABSOLUTE_PATH = re.compile(r"(?<![\w./-])/(?!/|\s)")
+_WINDOWS_DRIVE_PATH = re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]")
+_WINDOWS_UNC_PATH = re.compile(r"(?<!\\)\\\\[^\\/\s\"']+[\\/][^\\/\s\"']+")
+_LOCAL_FILE_URI = re.compile(r"(?i)(?<![A-Za-z0-9+.-])file:[\\/]+")
+_TRIPLE_SLASH_URI = re.compile(r"(?i)(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]*:/{3,}")
 _PRIVATE_TRANSCRIPT = re.compile(
     r"/(?:home/[^/]+|Users/[^/]+)/\.claude/projects/" r"[A-Za-z0-9._/-]+\.jsonl"
 )
@@ -242,7 +243,7 @@ def _project_string(value: str) -> str:
         return f"private-provenance://{digest}"
 
     projected = _PRIVATE_TRANSCRIPT.sub(replace_private, projected)
-    if _UNIX_HOST_PATH.search(projected) or _WINDOWS_HOST_PATH.search(projected):
+    if _contains_absolute_host_path(projected):
         raise AuthorityError("unrecognized absolute host path in portable JSON")
     return projected
 
@@ -265,12 +266,40 @@ def _project_value(value: object) -> object:
     return value
 
 
+def _reject_duplicate_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    document: dict[str, object] = {}
+    for key, value in pairs:
+        if key in document:
+            raise AuthorityError(f"duplicate JSON key: {key}")
+        document[key] = value
+    return document
+
+
+def _load_json_document(payload: bytes, *, label: str) -> object:
+    try:
+        return json.loads(
+            payload.decode("utf-8"), object_pairs_hook=_reject_duplicate_object
+        )
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise AuthorityError(f"{label} must be UTF-8 JSON") from error
+
+
+def _contains_absolute_host_path(value: str) -> bool:
+    return any(
+        pattern.search(value) is not None
+        for pattern in (
+            _UNIX_ABSOLUTE_PATH,
+            _WINDOWS_DRIVE_PATH,
+            _WINDOWS_UNC_PATH,
+            _LOCAL_FILE_URI,
+            _TRIPLE_SLASH_URI,
+        )
+    )
+
+
 def project_portable_json_v1(payload: bytes) -> bytes:
     """Rewrite approved host paths while preserving the JSON data model."""
-    try:
-        source = json.loads(payload.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as error:
-        raise AuthorityError("portable-json-v1 input must be UTF-8 JSON") from error
+    source = _load_json_document(payload, label="portable-json-v1 input")
     projected = _project_value(source)
     try:
         serialized = json.dumps(
@@ -363,14 +392,11 @@ def verify_release_authorities(root: Path, manifest: Path) -> list[FrozenAuthori
                 f"released authority size or SHA-256 mismatch: {item.authority_id}"
             )
         if item.transformation == "portable-json-v1":
-            try:
-                document = json.loads(released.read_text(encoding="utf-8"))
-            except (UnicodeDecodeError, json.JSONDecodeError) as error:
-                raise AuthorityError(
-                    f"portable authority is not valid JSON: {item.authority_id}"
-                ) from error
+            document = _load_json_document(
+                released.read_bytes(), label=f"portable authority {item.authority_id}"
+            )
             for value in _walk_strings(document):
-                if _UNIX_HOST_PATH.search(value) or _WINDOWS_HOST_PATH.search(value):
+                if _contains_absolute_host_path(value):
                     raise AuthorityError(
                         f"portable authority contains a host path: {item.authority_id}"
                     )
