@@ -23,6 +23,7 @@ dev = ["pytest>=8"]
 baseline-classical = ["arch>=7"]
 baseline-deep = []
 demo-openai = ["openai>=1"]
+paper = ["matplotlib>=3.8"]
 
 [project.scripts]
 scenarioflow = "scenarioflow.cli:main"

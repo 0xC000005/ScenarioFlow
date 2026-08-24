@@ -247,6 +247,7 @@ def _run_paper(arguments: list[str]) -> int:
             "export-dollar-liquidity",
             help="export the frozen dollar-liquidity table",
         )
+        commands.add_parser("plot", help="regenerate a numerical paper figure")
         parser.print_help()
         return 0
     if arguments[0] == "export-tables":
@@ -259,6 +260,10 @@ def _run_paper(arguments: list[str]) -> int:
         return dollar_liquidity.main(
             arguments[1:], prog="scenarioflow paper export-dollar-liquidity"
         )
+    if arguments[0] == "plot":
+        from .paper import plots
+
+        return plots.main(arguments[1:], prog="scenarioflow paper plot")
     raise ArtifactError(f"unknown paper command: {arguments[0]}")
 
 

@@ -1,0 +1,44 @@
+{
+  "figure": "paper/camera_ready/icaif/illustrations/joint39_noniv_common_history_fans.png",
+  "checkpoint": "models/backfill/734a_joint39_realvix_channel_level_alltrain_w005_e3_s7345/best_model.pt",
+  "checkpoint_sha256": "35b3c416c89d0d928b2943406e64e0b687a0ded91c6fb379c8b78b5fecdfb217",
+  "checkpoint_epoch": 1,
+  "state_scope": "joint38",
+  "panel_channels": 39,
+  "factor_channels": 14,
+  "factors_plotted": [
+    "factor:spx",
+    "factor:vix",
+    "factor:us10y"
+  ],
+  "validation_windows": 441,
+  "history_days": 30,
+  "future_days": 30,
+  "samples": 64,
+  "seed": 7345,
+  "device": "cuda",
+  "selection_rule": "history only: rank each non-IV channel's causal local scale across validation windows, average the 14 percentile ranks, and select windows nearest the requested calm/turbulent score quantiles",
+  "realized_future_used_for_selection": false,
+  "windows": {
+    "calm": {
+      "validation_index": 326,
+      "raw_panel_index": 4336,
+      "activity_score": 0.29139610389610393,
+      "activity_score_percentile": 0.15192743764172337,
+      "history_start": "2017-03-31",
+      "history_end": "2017-05-12",
+      "future_start": "2017-05-15",
+      "future_end": "2017-06-26"
+    },
+    "turbulent": {
+      "validation_index": 226,
+      "raw_panel_index": 4236,
+      "activity_score": 0.7150974025974026,
+      "activity_score_percentile": 0.8503401360544217,
+      "history_start": "2016-11-04",
+      "history_end": "2016-12-16",
+      "future_start": "2016-12-19",
+      "future_end": "2017-02-01"
+    }
+  }
+}
