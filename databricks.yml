@@ -1,0 +1,38 @@
+bundle:
+  name: scenarioflow
+  databricks_cli_version: ">=0.218.0"
+
+include:
+  - deploy/databricks/*.yml
+
+artifacts:
+  default:
+    type: whl
+    path: .
+    build: uv build --wheel
+
+variables:
+  cluster_id:
+    description: Existing Databricks cluster used for the reproduction job.
+  data_dir:
+    description: Unity Catalog volume directory containing the processed data.
+    default: /Volumes/main/default/scenarioflow/data
+  checkpoint_root:
+    description: Unity Catalog volume directory containing fetched checkpoints.
+    default: /Volumes/main/default/scenarioflow/checkpoints
+  artifact_root:
+    description: Unity Catalog volume directory containing fetched evidence artifacts.
+    default: /Volumes/main/default/scenarioflow/artifacts
+  output_root:
+    description: Unity Catalog volume directory for resumable runs and the final summary.
+    default: /Volumes/main/default/scenarioflow/results
+
+workspace:
+  root_path: ~/.bundle/${bundle.name}/${bundle.target}
+
+targets:
+  dev:
+    default: true
+    mode: development
+  release:
+    mode: production

@@ -88,6 +88,12 @@ Open `http://127.0.0.1:8766`. Omit either backend from the `docker compose up`
 command when its optional credential is unavailable. For numerical commands, use
 the runtime target directly and mount the required inputs and output directory.
 
+## Databricks
+
+The optional Asset Bundle builds this package as a wheel and invokes the same
+`scenarioflow reproduce` entry point on Unity Catalog volume paths. See the
+[Databricks job](deploy/databricks/README.md) for its parameters and commands.
+
 See [DATA_SOURCES.md](DATA_SOURCES.md) for the processed-data provenance and
 [Paper assets](paper_assets/README.md) for table and figure reproduction, and
 [LICENSE](LICENSE) for the repository license.

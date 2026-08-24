@@ -1,0 +1,29 @@
+resources:
+  jobs:
+    reproduce:
+      name: scenarioflow-reproduce-${bundle.target}
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: reproduce
+          existing_cluster_id: ${var.cluster_id}
+          python_wheel_task:
+            package_name: scenarioflow
+            entry_point: scenarioflow
+            parameters:
+              - reproduce
+              - --output-root
+              - ${var.output_root}/runs
+              - --source-manifest
+              - /Workspace${workspace.file_path}/reproduction/FROZEN_SOURCE.tsv
+              - --artifact-manifest
+              - /Workspace${workspace.file_path}/reproduction/FROZEN_DATA.tsv
+              - --data-dir
+              - ${var.data_dir}
+              - --checkpoint-root
+              - ${var.checkpoint_root}
+              - --artifact-root
+              - ${var.artifact_root}
+              - --output
+              - ${var.output_root}/summary.json
+          libraries:
+            - whl: ./dist/*.whl
