@@ -9,7 +9,10 @@ import pytest
 from scenarioflow.evaluation.garch_ccc_contract import (
     EXPECTED_SOURCE_BLOB,
     EXPECTED_SOURCE_REVISION,
+    FROZEN_SUMMARY_SHA256,
+    FROZEN_TABLE_SHA256,
     SOURCE_TAG,
+    build_garch_ccc_contract_report,
     validate_published_row,
 )
 
@@ -18,7 +21,7 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _write_fixture(root: Path, *, source_revision: str = EXPECTED_SOURCE_REVISION):
+def _documents(*, source_revision: str = EXPECTED_SOURCE_REVISION):
     state_specs = [{"name": f"s{index}"} for index in range(39)]
     result = {
         "baseline_name": "garch_ccc",
@@ -83,70 +86,41 @@ def _write_fixture(root: Path, *, source_revision: str = EXPECTED_SOURCE_REVISIO
     table = """GARCH-CCC & 3.3325 & 0.0137 & 9.2590 & 3.903 & 0.2048 & 0.649 & 0.123 & 1.062 \\\\
 GARCH-CCC & 0.973 & 0.207 & 0.177 & 0.061 & 0.291 & 0.144 & 1.011 & 0.506 & 0.921 & 0.977 \\\\
 """
-    result_path = root / "result.json"
-    manifest_path = root / "manifest.json"
-    table_path = root / "table.tex"
-    result_path.write_text(json.dumps(result))
-    manifest_path.write_text(json.dumps(manifest))
-    table_path.write_text(table)
-    return result_path, manifest_path, table_path
+    return result, manifest, table
 
 
-def test_frozen_gaussian_row_validates_precision_identity_and_isolated_output(
-    tmp_path: Path,
-) -> None:
-    source = tmp_path / "source"
-    source.mkdir()
-    paths = _write_fixture(source)
-    report = validate_published_row(
-        result_path=paths[0],
-        replay_manifest_path=paths[1],
-        table_path=paths[2],
-        output_dir=tmp_path / "report",
-        expected_sha256=tuple(_sha(path) for path in paths),
+def test_frozen_gaussian_document_contract_validates_precision_and_identity() -> None:
+    result, manifest, table = _documents()
+    report = build_garch_ccc_contract_report(
+        result=result, manifest=manifest, table_text=table
     )
     assert report["overall_pass"] is True
     assert report["candidate"] == "garch_ccc"
-    assert (tmp_path / "report" / "garch_ccc_contract_report.json").is_file()
+    assert report["authority"]["summary_sha256"] == FROZEN_SUMMARY_SHA256
+    assert report["authority"]["table_sha256"] == FROZEN_TABLE_SHA256
 
 
 def test_frozen_gaussian_row_rejects_a_substituted_live_implementation(
     tmp_path: Path,
 ) -> None:
-    source = tmp_path / "source"
-    source.mkdir()
-    paths = _write_fixture(source, source_revision="current-live-revision")
+    result, manifest, table = _documents(source_revision="current-live-revision")
     with pytest.raises(ValueError, match="source revision"):
-        validate_published_row(
-            result_path=paths[0],
-            replay_manifest_path=paths[1],
-            table_path=paths[2],
-            output_dir=tmp_path / "report",
-            expected_sha256=tuple(_sha(path) for path in paths),
+        build_garch_ccc_contract_report(
+            result=result, manifest=manifest, table_text=table
         )
 
 
-def test_frozen_gaussian_row_rejects_tamper_and_source_output_overlap(
-    tmp_path: Path,
-) -> None:
+def test_public_validator_rejects_arbitrary_self_hashed_fixture(tmp_path: Path) -> None:
     source = tmp_path / "source"
     source.mkdir()
-    paths = _write_fixture(source)
-    hashes = tuple(_sha(path) for path in paths)
-    paths[0].write_text(paths[0].read_text() + "\n")
-    with pytest.raises(ValueError, match="checksum"):
+    result, manifest, table = _documents()
+    summary = source / "summary.json"
+    table_path = source / "table.tex"
+    summary.write_text(json.dumps({"result": result, "manifest": manifest}))
+    table_path.write_text(table)
+    with pytest.raises(ValueError, match="frozen summary checksum"):
         validate_published_row(
-            result_path=paths[0],
-            replay_manifest_path=paths[1],
-            table_path=paths[2],
+            summary_path=summary,
+            table_path=table_path,
             output_dir=tmp_path / "report",
-            expected_sha256=hashes,
-        )
-    with pytest.raises(ValueError, match="isolated"):
-        validate_published_row(
-            result_path=paths[0],
-            replay_manifest_path=paths[1],
-            table_path=paths[2],
-            output_dir=source / "report",
-            expected_sha256=tuple(_sha(path) for path in paths),
         )

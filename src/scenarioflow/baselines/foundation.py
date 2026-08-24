@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
@@ -55,8 +56,29 @@ _MANIFEST_FIELDS = frozenset(
 _HEX_DIGEST_LENGTH = 64
 
 
+@dataclass(frozen=True)
+class FoundationArtifactAuthority:
+    """Identity and manifest digest supplied independently of a sealed deck."""
+
+    manifest_sha256: str
+    model_name: str
+    model_revision: str
+    source_revision: str
+    train_seed: int
+    rollout_seed: int
+    checkpoint_sha256: str
+    model_config_sha256: str
+    panel_manifest_sha256: str
+    expected_window_count: int = EXPECTED_EVALUATION_WINDOWS
+    expected_scenario_count: int = EXPECTED_SCENARIOS
+
+
 def _array_sha256(array: np.ndarray) -> str:
     return hashlib.sha256(np.ascontiguousarray(array).tobytes()).hexdigest()
+
+
+def _file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _is_sha256(value: object) -> bool:
@@ -187,6 +209,7 @@ def _existing_artifact_matches(
             return False
         histories, samples, manifest = load_foundation_artifact(
             path,
+            expected_manifest_sha256=_file_sha256(path / "manifest.json"),
             expected_model_name=expected_manifest["model_name"],
             expected_model_revision=expected_manifest["model_revision"],
             expected_source_revision=expected_manifest["source_revision"],
@@ -353,6 +376,7 @@ def _validate_loaded_arrays(
 def load_foundation_artifact(
     artifact_dir: str | Path,
     *,
+    expected_manifest_sha256: str,
     expected_model_name: str,
     expected_model_revision: str,
     expected_source_revision: str,
@@ -369,6 +393,10 @@ def load_foundation_artifact(
     if expected_window_count <= 0 or expected_scenario_count <= 0:
         raise RuntimeError("expected window and scenario counts must be positive")
     path = Path(artifact_dir)
+    if not _is_sha256(expected_manifest_sha256):
+        raise RuntimeError("external authority manifest_sha256 is invalid")
+    if _file_sha256(path / "manifest.json") != expected_manifest_sha256:
+        raise RuntimeError("sealed manifest does not match external authority")
     manifest = _read_existing_manifest(path / "manifest.json")
     if set(manifest) != _MANIFEST_FIELDS:
         raise RuntimeError("manifest fields do not match the sealed schema")
@@ -450,11 +478,13 @@ class PrecomputedJointScenarioBaseline:
         expected_checkpoint_sha256: str,
         expected_model_config_sha256: str,
         expected_panel_manifest_sha256: str,
+        expected_manifest_sha256: str,
         expected_window_count: int = EXPECTED_EVALUATION_WINDOWS,
         expected_scenario_count: int = EXPECTED_SCENARIOS,
     ) -> None:
         histories, samples, manifest = load_foundation_artifact(
             artifact_dir,
+            expected_manifest_sha256=expected_manifest_sha256,
             expected_model_name=expected_model_name,
             expected_model_revision=expected_model_revision,
             expected_source_revision=expected_source_revision,
@@ -474,29 +504,27 @@ class PrecomputedJointScenarioBaseline:
         }
 
     @classmethod
-    def from_manifest(
-        cls, artifact_dir: str | Path
+    def from_authority(
+        cls,
+        artifact_dir: str | Path,
+        authority: FoundationArtifactAuthority,
     ) -> "PrecomputedJointScenarioBaseline":
-        """Load a sealed deck using its own hash-bound identity fields."""
-        manifest = _read_existing_manifest(Path(artifact_dir) / "manifest.json")
-        history_shape = manifest.get("history_shape")
-        sample_shape = manifest.get("sample_shape")
-        if not isinstance(history_shape, list) or not isinstance(sample_shape, list):
-            raise RuntimeError("manifest shapes are missing")
+        """Load only against authority supplied outside the sealed directory."""
+        if not isinstance(authority, FoundationArtifactAuthority):
+            raise TypeError("external FoundationArtifactAuthority is required")
         return cls(
             artifact_dir,
-            expected_model_name=str(manifest.get("model_name", "")),
-            expected_model_revision=str(manifest.get("model_revision", "")),
-            expected_source_revision=str(manifest.get("source_revision", "")),
-            expected_train_seed=manifest.get("train_seed"),
-            expected_rollout_seed=manifest.get("rollout_seed"),
-            expected_checkpoint_sha256=str(manifest.get("checkpoint_sha256", "")),
-            expected_model_config_sha256=str(manifest.get("model_config_sha256", "")),
-            expected_panel_manifest_sha256=str(
-                manifest.get("panel_manifest_sha256", "")
-            ),
-            expected_window_count=int(history_shape[0]),
-            expected_scenario_count=int(sample_shape[1]),
+            expected_manifest_sha256=authority.manifest_sha256,
+            expected_model_name=authority.model_name,
+            expected_model_revision=authority.model_revision,
+            expected_source_revision=authority.source_revision,
+            expected_train_seed=authority.train_seed,
+            expected_rollout_seed=authority.rollout_seed,
+            expected_checkpoint_sha256=authority.checkpoint_sha256,
+            expected_model_config_sha256=authority.model_config_sha256,
+            expected_panel_manifest_sha256=authority.panel_manifest_sha256,
+            expected_window_count=authority.expected_window_count,
+            expected_scenario_count=authority.expected_scenario_count,
         )
 
     def sample_joint(

@@ -404,6 +404,9 @@ class CurrentPanelDeepBaseline:
         self.sample_steps = int(sample_steps)
         self.chunk_size = int(chunk_size)
         self.seed = int(seed)
+        generator = torch.Generator(device=self.device)
+        generator.manual_seed(self.seed)
+        self._rng_state = generator.get_state()
 
     def eval(self) -> "CurrentPanelDeepBaseline":
         self.model.eval()
@@ -426,11 +429,14 @@ class CurrentPanelDeepBaseline:
         outputs: list[np.ndarray] = []
         devices = [self.device] if self.device.type == "cuda" else []
         with torch.random.fork_rng(devices=devices), torch.no_grad():
-            torch.manual_seed(self.seed)
-            for start in range(0, repeated.shape[0], self.chunk_size):
-                h = torch.from_numpy(repeated[start : start + self.chunk_size]).to(
-                    self.device
-                )
+            if self.device.type == "cuda":
+                torch.cuda.set_rng_state(self._rng_state, self.device)
+            else:
+                torch.set_rng_state(self._rng_state)
+            # One trajectory per RNG advance makes the stream independent of
+            # how evaluator windows are partitioned into calls/batches.
+            for start in range(repeated.shape[0]):
+                h = torch.from_numpy(repeated[start : start + 1]).to(self.device)
                 if self.model_type == "path_diffusion":
                     sample_z = self.model.sample_trajectory(
                         h, n_ddim_steps=self.sample_steps
@@ -449,6 +455,11 @@ class CurrentPanelDeepBaseline:
                         )
                     )
                 outputs.append(sample_z.detach().cpu().numpy())
+            self._rng_state = (
+                torch.cuda.get_rng_state(self.device)
+                if self.device.type == "cuda"
+                else torch.get_rng_state()
+            )
         out_z = np.concatenate(outputs, axis=0).reshape(
             bsz, int(n_samples), self.future_len, dim
         )

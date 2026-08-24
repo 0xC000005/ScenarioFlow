@@ -22,10 +22,10 @@ from scenarioflow.evaluation.current_panel import (
     TABLE_THRESHOLD_RULES,
     WindowHistoricalSim,
     build_run_manifest,
+    main as evaluator_main,
     validate_result_schema,
 )
 from scenarioflow.evaluation.window_scores import build_window_score_artifact
-from scenarioflow.state import UnifiedVariableSpec
 
 
 def _tiny_changes() -> tuple[np.ndarray, np.ndarray]:
@@ -94,10 +94,24 @@ def test_tiny_deep_and_g2_adapters_are_seeded_and_shape_stable() -> None:
         future_len=3,
         seed=17,
     )
-    first = baseline.sample_joint(history, n_samples=2)
-    second = baseline.sample_joint(history, n_samples=2)
-    assert first.shape == (2, 2, 3, 4)
-    np.testing.assert_array_equal(first, second)
+    first = baseline.sample_joint(history[:1], n_samples=2)
+    second = baseline.sample_joint(history[1:], n_samples=2)
+    assert first.shape == second.shape == (1, 2, 3, 4)
+    assert not np.array_equal(first, second)
+
+    torch.manual_seed(5)
+    full_model = build_model(
+        "deepvar", input_dim=4, future_len=3, hidden_dim=8, num_layers=1, rank=2
+    )
+    full = CurrentPanelDeepBaseline(
+        full_model,
+        np.zeros(4, dtype=np.float32),
+        np.ones(4, dtype=np.float32),
+        model_type="deepvar",
+        future_len=3,
+        seed=17,
+    ).sample_joint(history, n_samples=2)
+    np.testing.assert_allclose(np.concatenate([first, second]), full, rtol=0, atol=0)
 
     g2 = DeepVARSNIInterfaceBaseline(
         model,
@@ -107,10 +121,26 @@ def test_tiny_deep_and_g2_adapters_are_seeded_and_shape_stable() -> None:
         future_len=3,
         seed=17,
     )
-    g2_first = g2.sample_joint(history, n_samples=2)
-    g2_second = g2.sample_joint(history, n_samples=2)
-    assert g2_first.shape == (2, 2, 3, 4)
-    np.testing.assert_array_equal(g2_first, g2_second)
+    g2_first = g2.sample_joint(history[:1], n_samples=2)
+    g2_second = g2.sample_joint(history[1:], n_samples=2)
+    assert g2_first.shape == g2_second.shape == (1, 2, 3, 4)
+    assert not np.array_equal(g2_first, g2_second)
+
+    torch.manual_seed(5)
+    g2_full_model = build_model(
+        "deepvar", input_dim=4, future_len=3, hidden_dim=8, num_layers=1, rank=2
+    )
+    g2_full = DeepVARSNIInterfaceBaseline(
+        g2_full_model,
+        scale_half_life=None,
+        scale_floor=1e-4,
+        center_mode="zero",
+        future_len=3,
+        seed=17,
+    ).sample_joint(history, n_samples=2)
+    np.testing.assert_allclose(
+        np.concatenate([g2_first, g2_second]), g2_full, rtol=0, atol=0
+    )
 
 
 def test_tiny_state_matched_historical_adapter_is_seeded_and_shape_stable() -> None:
@@ -158,7 +188,7 @@ def test_result_manifest_metric_and_screen_contracts_are_exact() -> None:
     )
     assert METRIC_PATHS[0] == ("CRPS", ("panel_b_crps", "overall"))
     assert METRIC_PATHS[-1] == ("ACF corr", ("current_panel_iv_metrics", "acf_corr"))
-    assert "schema_version" in CURRENT_PANEL_RESULT_KEYS
+    assert "schema_version" not in CURRENT_PANEL_RESULT_KEYS
 
     leaf = {
         "cov90": 0.9,
@@ -174,7 +204,6 @@ def test_result_manifest_metric_and_screen_contracts_are_exact() -> None:
     }
     result = {key: {} for key in CURRENT_PANEL_RESULT_KEYS}
     result.update(
-        schema_version="scenarioflow.current-panel-result.v1",
         baseline_name="bootstrap",
         mode="current_realvix_39_state_panel",
         generation_time_s=0.1,
@@ -214,6 +243,37 @@ def test_result_manifest_metric_and_screen_contracts_are_exact() -> None:
         "seed",
         "iv_alignment",
     )
+
+
+def test_portable_evaluator_cli_executes_a_bounded_committed_panel_run(
+    tmp_path,
+) -> None:
+    evaluator_main(
+        [
+            "--baseline",
+            "bootstrap",
+            "--data-dir",
+            "data",
+            "--output-dir",
+            str(tmp_path),
+            "--max-windows",
+            "2",
+            "--n-samples",
+            "2",
+            "--batch-size",
+            "1",
+            "--seed",
+            "772",
+        ]
+    )
+    result = __import__("json").loads(
+        (tmp_path / "bootstrap" / "results_current_panel.json").read_text()
+    )
+    assert "schema_version" not in result
+    assert result["n_windows"] == 2
+    assert result["n_samples"] == 2
+    assert set(result) == set(CURRENT_PANEL_RESULT_KEYS)
+    validate_result_schema(result, canonical_counts=False)
 
 
 def test_window_score_deck_reconciles_to_published_aggregates() -> None:

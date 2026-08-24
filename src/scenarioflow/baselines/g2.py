@@ -56,6 +56,9 @@ class DeepVARSNIInterfaceBaseline:
         self.future_len = int(future_len)
         self.chunk_size = int(chunk_size)
         self.seed = int(seed)
+        generator = torch.Generator(device=self.device)
+        generator.manual_seed(self.seed)
+        self._rng_state = generator.get_state()
 
     def eval(self) -> "DeepVARSNIInterfaceBaseline":
         self.model.eval()
@@ -95,15 +98,23 @@ class DeepVARSNIInterfaceBaseline:
         outputs: list[np.ndarray] = []
         devices = [self.device] if self.device.type == "cuda" else []
         with torch.random.fork_rng(devices=devices), torch.no_grad():
-            torch.manual_seed(self.seed)
-            for start in range(0, repeated.shape[0], self.chunk_size):
-                chunk = torch.from_numpy(repeated[start : start + self.chunk_size]).to(
-                    self.device
-                )
+            if self.device.type == "cuda":
+                torch.cuda.set_rng_state(self._rng_state, self.device)
+            else:
+                torch.set_rng_state(self._rng_state)
+            # Preserve one continuous per-trajectory stream across evaluator
+            # calls, independent of the external window batch partition.
+            for start in range(repeated.shape[0]):
+                chunk = torch.from_numpy(repeated[start : start + 1]).to(self.device)
                 norm_future = self.model.sample_trajectory(
                     chunk, n_future=self.future_len
                 )
                 outputs.append(norm_future.detach().cpu().numpy())
+            self._rng_state = (
+                torch.cuda.get_rng_state(self.device)
+                if self.device.type == "cuda"
+                else torch.get_rng_state()
+            )
         norm_future = np.concatenate(outputs, axis=0).reshape(
             bsz, int(n_samples), self.future_len, dim
         )

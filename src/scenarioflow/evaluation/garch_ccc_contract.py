@@ -16,6 +16,8 @@ SOURCE_TAG = "refs/tags/provenance/garch-ccc-gaussian-da91172a"
 FROZEN_SUMMARY_SHA256 = (
     "d1431f0dc94974301f0bd8642666ba70c8d093bb06cad8a43311f8900b33a771"
 )
+FROZEN_TABLE_SHA256 = "1492cf31ee50c99ded8c068c714c98fb0c793a0dce4f49137c20d37cccfd2589"
+REPORT_SCHEMA = "scenarioflow.garch-ccc-published-row.v1"
 
 EXPECTED_HEADLINES: tuple[tuple[str, tuple[str, ...], float], ...] = (
     ("CRPS", ("panel_b_crps", "overall"), 3.332548859024846),
@@ -130,31 +132,13 @@ def _require(label: str, actual: object, expected: object) -> dict[str, Any]:
     return {"name": label, "actual": actual, "expected": expected, "passed": True}
 
 
-def validate_published_row(
+def build_garch_ccc_contract_report(
     *,
-    result_path: str | Path,
-    replay_manifest_path: str | Path,
-    table_path: str | Path,
-    output_dir: str | Path,
-    expected_sha256: Sequence[str],
+    result: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    table_text: str,
 ) -> dict[str, Any]:
-    """Validate pinned bytes, provenance, structure, and surviving metric precision."""
-    sources = tuple(
-        Path(value).expanduser().resolve()
-        for value in (result_path, replay_manifest_path, table_path)
-    )
-    if len(expected_sha256) != 3:
-        raise ValueError("expected_sha256 must pin result, manifest, and table")
-    if any(not source.is_file() for source in sources):
-        raise FileNotFoundError("all three frozen GARCH contract sources are required")
-    output = Path(output_dir).expanduser().resolve()
-    _assert_isolated(output, sources)
-    actual_hashes = tuple(_sha256(path) for path in sources)
-    if actual_hashes != tuple(expected_sha256):
-        raise ValueError("frozen GARCH contract checksum mismatch")
-
-    result = _result_from_document(_read_object(sources[0]))
-    manifest = _read_object(sources[1])
+    """Validate already authenticated documents against the immutable row."""
     provenance = manifest.get("provenance")
     if not isinstance(provenance, Mapping):
         provenance = manifest
@@ -218,7 +202,7 @@ def validate_published_row(
             }
         )
 
-    distributional, risk = _published_rows(sources[2].read_text(encoding="utf-8"))
+    distributional, risk = _published_rows(table_text)
     display_checks = []
     for (name, path), published in zip(
         _DISTRIBUTIONAL_COLUMNS + _RISK_COLUMNS, distributional + risk, strict=True
@@ -238,17 +222,57 @@ def validate_published_row(
         )
 
     report = {
-        "schema_version": "scenarioflow.garch-ccc-published-row.v1",
+        "schema_version": REPORT_SCHEMA,
         "candidate": "garch_ccc",
         "immutable_authority": True,
-        "source_artifacts": [
-            {"path": str(path), "sha256": digest}
-            for path, digest in zip(sources, actual_hashes, strict=True)
-        ],
+        "authority": {
+            "summary_sha256": FROZEN_SUMMARY_SHA256,
+            "table_sha256": FROZEN_TABLE_SHA256,
+            "source_revision": EXPECTED_SOURCE_REVISION,
+            "source_blob": EXPECTED_SOURCE_BLOB,
+            "source_tag": SOURCE_TAG,
+        },
         "structural_checks": checks,
         "exact_headline_checks": headline_checks,
         "display_rounded_checks": display_checks,
         "overall_pass": True,
+    }
+    return report
+
+
+def validate_published_row(
+    *,
+    summary_path: str | Path,
+    table_path: str | Path,
+    output_dir: str | Path,
+) -> dict[str, Any]:
+    """Authenticate the exact frozen summary/table bytes and write their report."""
+    summary_source = Path(summary_path).expanduser().resolve()
+    table_source = Path(table_path).expanduser().resolve()
+    sources = (summary_source, table_source)
+    if any(not source.is_file() for source in sources):
+        raise FileNotFoundError("frozen GARCH summary and published table are required")
+    output = Path(output_dir).expanduser().resolve()
+    _assert_isolated(output, sources)
+    if _sha256(summary_source) != FROZEN_SUMMARY_SHA256:
+        raise ValueError("frozen summary checksum mismatch")
+    if _sha256(table_source) != FROZEN_TABLE_SHA256:
+        raise ValueError("frozen table checksum mismatch")
+    summary = _read_object(summary_source)
+    result = _result_from_document(summary)
+    manifest = summary.get("manifest")
+    if not isinstance(manifest, Mapping):
+        manifest = summary.get("replay_manifest")
+    if not isinstance(manifest, Mapping):
+        raise ValueError("frozen summary does not contain its replay manifest")
+    report = build_garch_ccc_contract_report(
+        result=result,
+        manifest=manifest,
+        table_text=table_source.read_text(encoding="utf-8"),
+    )
+    report["source_artifacts"] = {
+        "summary": {"path": str(summary_source), "sha256": FROZEN_SUMMARY_SHA256},
+        "table": {"path": str(table_source), "sha256": FROZEN_TABLE_SHA256},
     }
     output.mkdir(parents=True, exist_ok=True)
     report_path = output / "garch_ccc_contract_report.json"
@@ -260,20 +284,14 @@ def validate_published_row(
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--result", required=True)
-    parser.add_argument("--manifest", required=True)
+    parser.add_argument("--summary", required=True)
     parser.add_argument("--table", required=True)
-    parser.add_argument("--result-sha256", required=True)
-    parser.add_argument("--manifest-sha256", required=True)
-    parser.add_argument("--table-sha256", required=True)
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args(argv)
     validate_published_row(
-        result_path=args.result,
-        replay_manifest_path=args.manifest,
+        summary_path=args.summary,
         table_path=args.table,
         output_dir=args.output_dir,
-        expected_sha256=(args.result_sha256, args.manifest_sha256, args.table_sha256),
     )
     print("GARCH-CCC published-row contract: PASS")
 

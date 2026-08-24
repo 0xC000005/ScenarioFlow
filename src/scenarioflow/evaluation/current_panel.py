@@ -6,11 +6,12 @@ import argparse
 import json
 import math
 import time
-from dataclasses import asdict, dataclass, is_dataclass
+from dataclasses import asdict, dataclass, is_dataclass, replace
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import numpy as np
+import torch
 from scipy import stats as sp_stats
 
 from ..baselines.classical import (
@@ -21,12 +22,19 @@ from ..baselines.classical import (
     JointRandomWalk,
 )
 from ..baselines.deep import load_current_panel_deep_baseline
-from ..baselines.foundation import PrecomputedJointScenarioBaseline
+from ..baselines.foundation import (
+    FoundationArtifactAuthority,
+    PrecomputedJointScenarioBaseline,
+)
 from ..baselines.g2 import DeepVARSNIInterfaceBaseline
 from ..data import load_aligned_iv_factor_panel, official_train_val_indices
-from ..state import build_increment_coordinate_block, reconstruct_state_from_increments
+from ..state import (
+    build_increment_coordinate_block,
+    normalize_increment_windows,
+    reconstruct_state_from_increments,
+)
+from ..model import load_model as load_scenarioflow_model
 
-RESULT_SCHEMA_VERSION = "scenarioflow.current-panel-result.v1"
 MODE = "current_realvix_39_state_panel"
 
 
@@ -62,7 +70,6 @@ BASELINES = (
 )
 
 CURRENT_PANEL_RESULT_KEYS = (
-    "schema_version",
     "baseline_name",
     "mode",
     "generation_time_s",
@@ -232,6 +239,68 @@ class WindowHistoricalSim:
         return output
 
 
+class ScenarioFlowCheckpointBaseline:
+    """Adapter from a package checkpoint to the shared increment sampler."""
+
+    def __init__(self, checkpoint: str | Path, *, device: str, seed: int) -> None:
+        self.device = torch.device(device)
+        self.model, _ = load_scenarioflow_model(checkpoint, self.device)
+        self.model.eval()
+        generator = torch.Generator(device=self.device)
+        generator.manual_seed(seed)
+        self._rng_state = generator.get_state()
+
+    def sample_joint(
+        self,
+        history_changes: np.ndarray,
+        *,
+        n_samples: int,
+        history_state: np.ndarray,
+        **_: Any,
+    ) -> np.ndarray:
+        history = np.asarray(history_changes, dtype=np.float32)
+        normalized, _future, center, scale = normalize_increment_windows(
+            history,
+            history,
+            half_life=None,
+            scale_floor=1e-4,
+            center_mode="zero",
+        )
+        outputs = []
+        devices = [self.device] if self.device.type == "cuda" else []
+        with torch.random.fork_rng(devices=devices), torch.no_grad():
+            if self.device.type == "cuda":
+                torch.cuda.set_rng_state(self._rng_state, self.device)
+            else:
+                torch.set_rng_state(self._rng_state)
+            for window in range(history.shape[0]):
+                draws = []
+                for _sample in range(n_samples):
+                    draw = self.model.sample_batched(
+                        torch.from_numpy(
+                            np.asarray(
+                                history_state[window : window + 1], dtype=np.float32
+                            )
+                        ).to(self.device),
+                        torch.from_numpy(normalized[window : window + 1]).to(
+                            self.device
+                        ),
+                        torch.from_numpy(center[window : window + 1]).to(self.device),
+                        torch.from_numpy(scale[window : window + 1]).to(self.device),
+                        n_samples=1,
+                        n_steps=self.model.cfg.future_len,
+                        chunk_size=1,
+                    )
+                    draws.append(draw.detach().cpu().numpy()[0, 0])
+                outputs.append(draws)
+            self._rng_state = (
+                torch.cuda.get_rng_state(self.device)
+                if self.device.type == "cuda"
+                else torch.get_rng_state()
+            )
+        return np.asarray(outputs, dtype=np.float32)
+
+
 def _path_value(payload: Mapping[str, Any], path: Sequence[str]) -> object:
     current: object = payload
     for key in path:
@@ -247,8 +316,6 @@ def validate_result_schema(
     missing = [key for key in CURRENT_PANEL_RESULT_KEYS if key not in result]
     if missing:
         raise ResultContractError(f"result missing keys: {missing}")
-    if result["schema_version"] != RESULT_SCHEMA_VERSION:
-        raise ResultContractError("unexpected result schema_version")
     if result["mode"] != MODE:
         raise ResultContractError("unexpected evaluator mode")
     if not isinstance(result["state_specs"], list) or len(result["state_specs"]) != 39:
@@ -475,6 +542,7 @@ def create_baseline(
     seed: int = 772,
     checkpoint: str | Path | None = None,
     foundation_artifact: str | Path | None = None,
+    foundation_authority: FoundationArtifactAuthority | None = None,
     train_block: Any | None = None,
     device: str = "cpu",
 ) -> Any:
@@ -511,10 +579,18 @@ def create_baseline(
         if checkpoint is None:
             raise FileNotFoundError("deepvar_sni requires an explicit checkpoint")
         return DeepVARSNIInterfaceBaseline.load(checkpoint, device=device, seed=seed)
+    if name in {"scenarioflow", "scenarioflow_graph"}:
+        if checkpoint is None:
+            raise FileNotFoundError(f"{name} requires an explicit checkpoint")
+        return ScenarioFlowCheckpointBaseline(checkpoint, device=device, seed=seed)
     if name in FOUNDATION_BASELINES:
         if foundation_artifact is None:
             raise FileNotFoundError(f"{name} requires an explicit sealed artifact")
-        return PrecomputedJointScenarioBaseline.from_manifest(foundation_artifact)
+        if foundation_authority is None:
+            raise ValueError(f"{name} requires external foundation authority")
+        return PrecomputedJointScenarioBaseline.from_authority(
+            foundation_artifact, foundation_authority
+        )
     raise ValueError(f"unknown or externally supplied baseline {name!r}")
 
 
@@ -533,7 +609,10 @@ def _serializable(value: Any) -> Any:
 
 
 def write_result(output_dir: str | Path, result: Mapping[str, Any]) -> Path:
-    validate_result_schema(result)
+    validate_result_schema(
+        result,
+        canonical_counts=(result["n_windows"] == 441 and result["n_samples"] == 64),
+    )
     destination = Path(output_dir) / str(result["baseline_name"])
     destination.mkdir(parents=True, exist_ok=True)
     path = destination / "results_current_panel.json"
@@ -543,29 +622,433 @@ def write_result(output_dir: str | Path, result: Mapping[str, Any]) -> Path:
     return path
 
 
+def _safe_spearman(left: np.ndarray, right: np.ndarray) -> float:
+    left = np.asarray(left, dtype=np.float64).reshape(-1)
+    right = np.asarray(right, dtype=np.float64).reshape(-1)
+    keep = np.isfinite(left) & np.isfinite(right)
+    if keep.sum() < 3 or np.ptp(left[keep]) < 1e-12 or np.ptp(right[keep]) < 1e-12:
+        return 0.0
+    value = float(sp_stats.spearmanr(left[keep], right[keep]).statistic)
+    return value if np.isfinite(value) else 0.0
+
+
+def _safe_corr(left: np.ndarray, right: np.ndarray) -> float:
+    left = np.asarray(left, dtype=np.float64).reshape(-1)
+    right = np.asarray(right, dtype=np.float64).reshape(-1)
+    keep = np.isfinite(left) & np.isfinite(right)
+    if keep.sum() < 3 or np.std(left[keep]) < 1e-12 or np.std(right[keep]) < 1e-12:
+        return 0.0
+    value = float(np.corrcoef(left[keep], right[keep])[0, 1])
+    return value if np.isfinite(value) else 0.0
+
+
+def _finite_ratio(numerator: float, denominator: float) -> float:
+    if abs(denominator) < 1e-12:
+        return 1.0 if abs(numerator) < 1e-12 else float(numerator / 1e-12)
+    return float(numerator / denominator)
+
+
+def evaluate_iv_suite(
+    conditional_samples: np.ndarray,
+    ground_truth: np.ndarray,
+    history: np.ndarray,
+) -> tuple[dict[str, Any], dict[str, float]]:
+    """Compute the complete published IV diagnostic payload on raw IV levels."""
+    samples = np.asarray(conditional_samples, dtype=np.float64)
+    truth = np.asarray(ground_truth, dtype=np.float64)
+    history_arr = np.asarray(history, dtype=np.float64)
+    coverage: dict[str, float] = {}
+    for level in (0.5, 0.8, 0.9, 0.95):
+        alpha = (1.0 - level) / 2.0
+        lower = np.quantile(samples, alpha, axis=1)
+        upper = np.quantile(samples, 1.0 - alpha, axis=1)
+        coverage[str(level)] = float(((truth >= lower) & (truth <= upper)).mean())
+    calibration_error = float(
+        np.mean([abs(coverage[str(level)] - level) for level in (0.5, 0.8, 0.9, 0.95)])
+    )
+    ks_statistics = [
+        float(
+            sp_stats.ks_2samp(
+                samples[..., index].reshape(-1), truth[..., index].reshape(-1)
+            ).statistic
+        )
+        for index in range(truth.shape[-1])
+    ]
+    median_prediction = np.median(samples, axis=1)
+    above_fraction = (median_prediction >= truth).mean(axis=(0, 1)).tolist()
+    history_activity = (np.diff(history_arr, axis=1) ** 2).mean(axis=(1, 2))
+    width = (
+        np.quantile(samples, 0.95, axis=1) - np.quantile(samples, 0.05, axis=1)
+    ).mean(axis=(1, 2))
+    width_rho = _safe_spearman(history_activity, width)
+
+    historical_mean = history_arr.mean(axis=1)
+    anchor = history_arr[:, -1]
+    truth_reversion = np.mean(
+        np.abs(anchor - historical_mean) - np.abs(truth[:, -1] - historical_mean)
+    )
+    sample_reversion = np.mean(
+        np.abs(anchor[:, None] - historical_mean[:, None])
+        - np.abs(samples[:, :, -1] - historical_mean[:, None])
+    )
+    mr_ratio = _finite_ratio(float(sample_reversion), float(truth_reversion))
+
+    truth_change = np.diff(np.concatenate([anchor[:, None], truth], axis=1), axis=1)
+    sample_anchor = np.repeat(anchor[:, None, None], samples.shape[1], axis=1)
+    sample_change = np.diff(np.concatenate([sample_anchor, samples], axis=2), axis=2)
+    truth_market = truth_change.mean(axis=-1)
+    sample_market = sample_change.mean(axis=-1)
+    economic_ratio = _finite_ratio(
+        abs(
+            _safe_corr(
+                sample_market.reshape(-1),
+                np.tile(truth_market[:, None], (1, samples.shape[1], 1)).reshape(-1),
+            )
+        ),
+        1.0,
+    )
+
+    truth_flat = truth_change.reshape(-1, truth.shape[-1])
+    sample_flat = sample_change.reshape(-1, truth.shape[-1])
+    truth_kurtosis = float(
+        np.nanmedian(
+            sp_stats.kurtosis(truth_flat, axis=0, fisher=False, nan_policy="omit")
+        )
+    )
+    sample_kurtosis = float(
+        np.nanmedian(
+            sp_stats.kurtosis(sample_flat, axis=0, fisher=False, nan_policy="omit")
+        )
+    )
+    kurtosis_ratio = _finite_ratio(sample_kurtosis, truth_kurtosis)
+    jump_ks = float(
+        sp_stats.ks_2samp(
+            np.max(np.abs(sample_change), axis=(2, 3)).reshape(-1),
+            np.max(np.abs(truth_change), axis=(1, 2)).reshape(-1),
+        ).statistic
+    )
+    truth_acf = np.asarray(
+        [
+            _safe_corr(truth_change[:, :-1, index], truth_change[:, 1:, index])
+            for index in range(truth.shape[-1])
+        ]
+    )
+    sample_acf = np.asarray(
+        [
+            _safe_corr(sample_change[:, :, :-1, index], sample_change[:, :, 1:, index])
+            for index in range(truth.shape[-1])
+        ]
+    )
+    acf_corr = _safe_corr(truth_acf, sample_acf)
+    suite = {
+        "coverage": {"overall": coverage, "calibration_error": calibration_error},
+        "distributional_fidelity": {
+            "ks_level_test": {
+                "median_stat": float(np.median(ks_statistics)),
+                "per_dimension": ks_statistics,
+            },
+            "median_bias": {"above_frac": above_fraction},
+        },
+        "risk_state_allocation": {"history_width_spearman": width_rho},
+        "mean_reversion": {"mr_gt_ratio": mr_ratio},
+        "cointegration": {"gen_gt_ratio": economic_ratio},
+        "time_series": {
+            "acf": {"acf_correlation": acf_corr},
+            "kurtosis": {"kurtosis_ratio": kurtosis_ratio},
+        },
+        "pathwise_jump_realism": {"pathwise_max_jump": {"ks_stat": jump_ks}},
+    }
+    metrics = {
+        "cov90": coverage["0.9"],
+        "calibration_error": calibration_error,
+        "level_ks_median": float(np.median(ks_statistics)),
+        "median_abs_dev": float(np.median(np.abs(np.asarray(above_fraction) - 0.5))),
+        "width_rho": width_rho,
+        "mr_ratio": mr_ratio,
+        "economic_ratio": economic_ratio,
+        "jump_ks": jump_ks,
+        "kurtosis_ratio": kurtosis_ratio,
+        "acf_corr": acf_corr,
+    }
+    return suite, metrics
+
+
+def summarize_joint_quality(
+    raw_history: np.ndarray,
+    raw_future: np.ndarray,
+    sample_raw: np.ndarray,
+    *,
+    iv_count: int,
+) -> dict[str, Any]:
+    anchor = raw_history[:, -1]
+    truth_delta = np.diff(np.concatenate([anchor[:, None], raw_future], axis=1), axis=1)
+    sample_anchor = np.repeat(anchor[:, None, None], sample_raw.shape[1], axis=1)
+    sample_delta = np.diff(np.concatenate([sample_anchor, sample_raw], axis=2), axis=2)
+    factor_ks = [
+        float(
+            sp_stats.ks_2samp(
+                sample_delta[..., index].reshape(-1),
+                truth_delta[..., index].reshape(-1),
+            ).statistic
+        )
+        for index in range(iv_count, raw_future.shape[-1])
+    ]
+    tail_ratios = []
+    for index in range(iv_count, raw_future.shape[-1]):
+        generated = float(np.quantile(np.abs(sample_delta[..., index]), 0.99))
+        observed = float(np.quantile(np.abs(truth_delta[..., index]), 0.99))
+        tail_ratios.append(_finite_ratio(generated, observed))
+    history_activity = (np.diff(raw_history, axis=1) ** 2).mean(axis=(1, 2))
+    deck_width = (
+        np.quantile(sample_raw, 0.95, axis=1) - np.quantile(sample_raw, 0.05, axis=1)
+    ).mean(axis=(1, 2))
+    return {
+        "finite_rate": float(np.isfinite(sample_raw).mean()),
+        "n_windows": int(raw_future.shape[0]),
+        "n_samples": int(sample_raw.shape[1]),
+        "future_len": int(raw_future.shape[1]),
+        "n_factors": int(raw_future.shape[-1] - iv_count),
+        "factor_delta_ks_mean": float(np.mean(factor_ks)),
+        "factor_tail_q99_ratio_median": float(np.median(tail_ratios)),
+        "conditional_panel": {
+            "history_activity_width_spearman": _safe_spearman(
+                history_activity, deck_width
+            )
+        },
+    }
+
+
+def evaluate_baseline(
+    *,
+    name: str,
+    model: Any,
+    train_block: Any,
+    validation_block: Any,
+    n_samples: int,
+    batch_size: int,
+    iv_count: int = 25,
+) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
+    """Sample, reconstruct, and score one prepared current-panel baseline."""
+    generated: list[np.ndarray] = []
+    started = time.perf_counter()
+    for start in range(0, validation_block.history_increment.shape[0], batch_size):
+        end = min(start + batch_size, validation_block.history_increment.shape[0])
+        kwargs = (
+            {"history_state": validation_block.history_state[start:end]}
+            if name in {"historical_sim", "scenarioflow", "scenarioflow_graph"}
+            else {}
+        )
+        generated.append(
+            np.asarray(
+                model.sample_joint(
+                    validation_block.history_increment[start:end],
+                    n_samples=n_samples,
+                    **kwargs,
+                ),
+                dtype=np.float32,
+            )
+        )
+    sample_increment = np.concatenate(generated, axis=0)
+    sample_raw = reconstruct_state_from_increments(
+        validation_block.history_state[:, -1],
+        sample_increment,
+        validation_block.specs,
+    )
+    raw_history = validation_block.history_state.astype(np.float32)
+    raw_future = validation_block.future_state.astype(np.float32)
+    anchor = raw_history[:, -1]
+    gt_delta = np.diff(np.concatenate([anchor[:, None], raw_future], axis=1), axis=1)
+    sample_anchor = np.repeat(anchor[:, None, None], n_samples, axis=1)
+    sample_delta = np.diff(np.concatenate([sample_anchor, sample_raw], axis=2), axis=2)
+    train_anchor = train_block.history_state[:, -1]
+    train_delta = np.diff(
+        np.concatenate([train_anchor[:, None], train_block.future_state], axis=1),
+        axis=1,
+    ).reshape(-1, len(train_block.specs))
+    iv_samples = sample_raw[..., :iv_count]
+    iv_truth = raw_future[..., :iv_count]
+    iv_history = raw_history[..., :iv_count]
+    iv_suite, iv_metrics = evaluate_iv_suite(iv_samples, iv_truth, iv_history)
+    factor_names = [spec.name for spec in validation_block.specs[iv_count:]]
+    result = {
+        "baseline_name": name,
+        "mode": MODE,
+        "generation_time_s": float(time.perf_counter() - started),
+        "n_windows": int(raw_future.shape[0]),
+        "n_samples": int(n_samples),
+        "state_specs": [asdict(spec) for spec in validation_block.specs],
+        "current_panel_iv": iv_suite,
+        "current_panel_iv_metrics": iv_metrics,
+        "joint_panel_quality": summarize_joint_quality(
+            raw_history, raw_future, sample_raw, iv_count=iv_count
+        ),
+        "panel_b_crps": compute_crps(sample_delta, gt_delta, iv_count=iv_count),
+        "panel_b_energy_score": compute_energy_score(
+            sample_delta, gt_delta, train_delta
+        ),
+        "panel_b_variogram_score": compute_variogram_score(
+            sample_delta, gt_delta, train_delta
+        ),
+        "panel_b_correlation": compute_correlation_score(
+            sample_delta, gt_delta, iv_count=iv_count
+        ),
+        "panel_b_factor_ks": compute_factor_ks(
+            sample_delta, gt_delta, factor_names, iv_count=iv_count
+        ),
+    }
+    return result, {
+        "samples_delta": sample_delta,
+        "ground_truth_delta": gt_delta,
+        "train_delta": train_delta,
+        "conditional_iv_samples": iv_samples.reshape(
+            raw_future.shape[0], n_samples, raw_future.shape[1], 5, 5
+        ),
+        "ground_truth_iv": iv_truth.reshape(
+            raw_future.shape[0], raw_future.shape[1], 5, 5
+        ),
+        "history_iv": iv_history.reshape(
+            raw_history.shape[0], raw_history.shape[1], 5, 5
+        ),
+        "raw_history": raw_history,
+        "sample_raw": sample_raw,
+        "window_indices": validation_block.indices,
+        "variable_names": [spec.name for spec in validation_block.specs],
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--describe-contract", action="store_true")
+    parser.add_argument(
+        "--baseline",
+        choices=BASELINES + ("deepvar_sni", "scenarioflow", "scenarioflow_graph"),
+    )
+    parser.add_argument("--data-dir")
+    parser.add_argument("--output-dir")
+    parser.add_argument("--checkpoint")
+    parser.add_argument("--foundation-artifact")
+    parser.add_argument("--foundation-authority")
+    parser.add_argument("--n-samples", type=int, default=64)
+    parser.add_argument("--max-windows", type=int, default=441)
+    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--seed", type=int, default=772)
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--save-window-scores", action="store_true")
+    parser.add_argument("--protocol")
+    parser.add_argument("--node-id")
     return parser
 
 
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
-    if not args.describe_contract:
-        raise SystemExit(
-            "use --describe-contract; execution is orchestrated by workflows.reproduction"
+    if args.describe_contract:
+        print(
+            json.dumps(
+                {
+                    "protocol": asdict(PUBLISHED_VALIDATION_PROTOCOL),
+                    "candidates": list(BASELINES),
+                    "metric_paths": [(name, list(path)) for name, path in METRIC_PATHS],
+                    "thresholds": TABLE_THRESHOLD_RULES,
+                },
+                sort_keys=True,
+            )
         )
-    print(
-        json.dumps(
-            {
-                "protocol": asdict(PUBLISHED_VALIDATION_PROTOCOL),
-                "candidates": list(BASELINES),
-                "metric_paths": [(name, list(path)) for name, path in METRIC_PATHS],
-                "thresholds": TABLE_THRESHOLD_RULES,
-            },
-            sort_keys=True,
-        )
+        return
+    if args.baseline is None or args.data_dir is None or args.output_dir is None:
+        raise SystemExit("--baseline, --data-dir, and --output-dir are required")
+    if args.n_samples <= 0 or args.batch_size <= 0:
+        raise SystemExit("--n-samples and --batch-size must be positive")
+    if not 1 <= args.max_windows <= PUBLISHED_VALIDATION_PROTOCOL.val_size:
+        raise SystemExit("--max-windows must be between 1 and 441")
+
+    _panel, columns, train, validation = prepare_validation_blocks(
+        data_dir=args.data_dir
     )
+    if args.max_windows < validation.indices.size:
+        count = args.max_windows
+        validation = replace(
+            validation,
+            history_increment=validation.history_increment[:count],
+            future_increment=validation.future_increment[:count],
+            history_state=validation.history_state[:count],
+            future_state=validation.future_state[:count],
+            indices=validation.indices[:count],
+        )
+    authority = None
+    if args.foundation_authority is not None:
+        document = json.loads(
+            Path(args.foundation_authority).read_text(encoding="utf-8")
+        )
+        authority = FoundationArtifactAuthority(**document)
+    train_daily = train.history_increment[:, -1, :]
+    model = create_baseline(
+        args.baseline,
+        train_daily,
+        future_len=PUBLISHED_VALIDATION_PROTOCOL.future_len,
+        seed=args.seed,
+        checkpoint=args.checkpoint,
+        foundation_artifact=args.foundation_artifact,
+        foundation_authority=authority,
+        train_block=train,
+        device=args.device,
+    )
+    result, artifact_inputs = evaluate_baseline(
+        name=args.baseline,
+        model=model,
+        train_block=train,
+        validation_block=validation,
+        n_samples=args.n_samples,
+        batch_size=args.batch_size,
+    )
+    result_path = write_result(args.output_dir, result)
+    metadata = {
+        "train_indices_start": int(train.indices[0]),
+        "train_indices_end": int(train.indices[-1]),
+        "val_indices_start": int(validation.indices[0]),
+        "val_indices_end": int(validation.indices[-1]),
+        "iv_transform": "bounded_logit",
+        "positive_level_policy": "reference_based",
+    }
+    manifest = build_run_manifest(
+        columns=columns,
+        metadata=metadata,
+        state_specs=[asdict(spec) for spec in validation.specs],
+        n_train_windows=len(train.indices),
+        n_val_windows=len(validation.indices),
+        n_samples=args.n_samples,
+        seed=args.seed,
+        history_alignment_error=0.0,
+        future_alignment_error=0.0,
+    )
+    if len(validation.indices) != 441 or args.n_samples != 64:
+        manifest["benchmark_split"] = "published_validation_prefix_smoke"
+    candidate_dir = result_path.parent
+    (candidate_dir / "manifest.json").write_text(
+        json.dumps(_serializable(manifest), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    if args.save_window_scores:
+        from .window_scores import maybe_write_window_score_artifact
+
+        maybe_write_window_score_artifact(
+            enabled=True,
+            output_path=candidate_dir / "window_scores.npz",
+            existing_result=result,
+            **artifact_inputs,
+        )
+    if (args.protocol is None) != (args.node_id is None):
+        raise SystemExit("--protocol and --node-id must be supplied together")
+    if args.protocol is not None:
+        from ..workflows.reproduction import record_completed_node
+
+        protocol = json.loads(Path(args.protocol).read_text(encoding="utf-8"))
+        record_completed_node(
+            output_dir=args.output_dir,
+            protocol=protocol,
+            node_id=args.node_id,
+            result=result,
+        )
+    print(result_path)
 
 
 if __name__ == "__main__":

@@ -8,6 +8,22 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+import numpy as np
+import torch
+
+from ..baselines.deep import build_model, save_checkpoint
+from ..evaluation.current_panel import prepare_validation_blocks
+from ..state import normalize_increment_windows
+
+from ..evaluation.garch_ccc_contract import (
+    EXPECTED_SOURCE_BLOB,
+    EXPECTED_SOURCE_REVISION,
+    FROZEN_SUMMARY_SHA256,
+    FROZEN_TABLE_SHA256,
+    REPORT_SCHEMA,
+    SOURCE_TAG,
+)
+
 from .multiseed import (
     CANDIDATE_IDS,
     ROLLOUT_SEEDS,
@@ -75,28 +91,86 @@ def _validate_identity(
 def record_completed_node(
     *,
     output_dir: str | Path,
-    candidate: str,
-    train_seed: int | None,
-    rollout_seed: int,
+    protocol: Mapping[str, Any],
+    node_id: str,
     result: Mapping[str, Any],
     garch_contract_report: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Atomically seal a node; exact repeats resume and any drift is rejected."""
+    contract = {
+        key: value
+        for key, value in protocol.items()
+        if key not in {"contract_hash", "output_root", "nodes"}
+    }
+    contract_hash = _digest_text(_canonical_json(contract))
+    if protocol.get("contract_hash") != contract_hash:
+        raise ProtocolValidationError("protocol contract hash mismatch")
+    matching = [
+        node
+        for node in protocol.get("nodes", [])
+        if isinstance(node, Mapping) and node.get("node_id") == node_id
+    ]
+    if len(matching) != 1:
+        raise ProtocolValidationError("node ID is absent or duplicated in protocol")
+    node = matching[0]
+    if node.get("action") != "evaluate":
+        raise ProtocolValidationError("only evaluation nodes produce result manifests")
+    candidate = str(node["candidate"])
+    train_seed = node.get("train_seed")
+    rollout_seed = int(node["rollout_seed"])
     _validate_identity(
         candidate=candidate,
         train_seed=train_seed,
         rollout_seed=rollout_seed,
         result=result,
     )
-    if candidate == "garch_ccc" and (
-        not isinstance(garch_contract_report, Mapping)
-        or garch_contract_report.get("overall_pass") is not True
-        or garch_contract_report.get("immutable_authority") is not True
-    ):
-        raise ProtocolValidationError(
-            "garch_ccc requires the passing immutable published-row contract"
-        )
     root = Path(output_dir).expanduser().resolve()
+    destination = Path(str(node["destination"])).expanduser().resolve()
+    if root != destination:
+        raise ProtocolValidationError(
+            "output directory is not the node's declared destination"
+        )
+    output_root = Path(str(protocol["output_root"])).expanduser().resolve()
+    if output_root not in root.parents:
+        raise ProtocolValidationError("node output escapes the isolated output root")
+    for field in ("data_dir", "checkpoint_root", "artifact_root"):
+        protected = Path(str(protocol[field])).expanduser().resolve()
+        if root == protected or root in protected.parents or protected in root.parents:
+            raise ProtocolValidationError(f"node output overlaps protected {field}")
+    if node.get("protocol_contract_hash") != contract_hash:
+        raise ProtocolValidationError("node protocol contract hash mismatch")
+    if candidate == "garch_ccc":
+        expected_authority = {
+            "summary_sha256": FROZEN_SUMMARY_SHA256,
+            "table_sha256": FROZEN_TABLE_SHA256,
+            "source_revision": EXPECTED_SOURCE_REVISION,
+            "source_blob": EXPECTED_SOURCE_BLOB,
+            "source_tag": SOURCE_TAG,
+        }
+        valid = (
+            isinstance(garch_contract_report, Mapping)
+            and garch_contract_report.get("schema_version") == REPORT_SCHEMA
+            and garch_contract_report.get("candidate") == "garch_ccc"
+            and garch_contract_report.get("overall_pass") is True
+            and garch_contract_report.get("immutable_authority") is True
+            and garch_contract_report.get("authority") == expected_authority
+            and isinstance(garch_contract_report.get("structural_checks"), list)
+            and isinstance(garch_contract_report.get("exact_headline_checks"), list)
+            and isinstance(garch_contract_report.get("display_rounded_checks"), list)
+            and all(
+                check.get("passed") is True
+                for key in (
+                    "structural_checks",
+                    "exact_headline_checks",
+                    "display_rounded_checks",
+                )
+                for check in garch_contract_report.get(key, [])
+            )
+        )
+        if not valid:
+            raise ProtocolValidationError(
+                "garch_ccc requires the full immutable published-row contract"
+            )
     result_text = (
         json.dumps(dict(result), indent=2, sort_keys=True, allow_nan=False) + "\n"
     )
@@ -108,6 +182,8 @@ def record_completed_node(
     )
     manifest_core = {
         "schema_version": RUN_MANIFEST_SCHEMA,
+        "protocol_contract_hash": contract_hash,
+        "node_id": node_id,
         "candidate": candidate,
         "train_seed": train_seed,
         "rollout_seed": rollout_seed,
@@ -115,6 +191,9 @@ def record_completed_node(
         "result_path": "results_current_panel.json",
         "result_sha256": result_sha256,
         "garch_contract_sha256": authority_hash,
+        "command_sha256": _digest_text(
+            json.dumps(node["command"], separators=(",", ":"))
+        ),
     }
     result_path = root / "results_current_panel.json"
     manifest_path = root / "run_manifest.json"
@@ -142,26 +221,165 @@ def record_completed_node(
 
 
 def collect_completed_runs(output_root: str | Path) -> list[dict[str, Any]]:
+    root = Path(output_root).expanduser().resolve()
+    protocol_path = root / "protocol_manifest.json"
+    if not protocol_path.is_file():
+        raise ProtocolValidationError("output root has no protocol manifest")
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    expected_hash = protocol.get("contract_hash")
+    nodes = {
+        node["node_id"]: node
+        for node in protocol.get("nodes", [])
+        if isinstance(node, Mapping) and node.get("action") == "evaluate"
+    }
     runs: list[dict[str, Any]] = []
-    for manifest_path in sorted(Path(output_root).rglob("run_manifest.json")):
+    for manifest_path in sorted(root.rglob("run_manifest.json")):
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("schema_version") != RUN_MANIFEST_SCHEMA:
             raise ProtocolValidationError(f"unexpected run manifest: {manifest_path}")
+        if manifest.get("protocol_contract_hash") != expected_hash:
+            raise ProtocolValidationError(
+                f"run manifest protocol hash mismatch: {manifest_path}"
+            )
+        node = nodes.get(manifest.get("node_id"))
+        if (
+            node is None
+            or Path(str(node["destination"])).resolve()
+            != manifest_path.parent.resolve()
+        ):
+            raise ProtocolValidationError(
+                f"copied or misplaced run manifest: {manifest_path}"
+            )
         result_path = manifest_path.parent / str(manifest.get("result_path"))
         text = result_path.read_text(encoding="utf-8")
         if _digest_text(text) != manifest.get("result_sha256"):
             raise ProtocolValidationError(
                 f"completed result checksum mismatch: {result_path}"
             )
+        window_path = manifest_path.parent / manifest["candidate"] / "window_scores.npz"
+        if not window_path.is_file():
+            raise ProtocolValidationError(
+                f"completed run has no window scores: {window_path}"
+            )
+        with np.load(window_path, allow_pickle=False) as deck:
+            window_scores = {
+                name: np.asarray(deck[name])
+                for name in (
+                    "window_indices",
+                    "crps_contributions",
+                    "energy_contributions",
+                    "variogram_h30_contributions",
+                )
+            }
         runs.append(
             {
                 "candidate": manifest["candidate"],
                 "train_seed": manifest["train_seed"],
                 "rollout_seed": manifest["rollout_seed"],
                 "result": json.loads(text),
+                "window_scores": window_scores,
             }
         )
     return runs
+
+
+def train_baseline(
+    *,
+    candidate: str,
+    data_dir: str | Path,
+    checkpoint_out: str | Path,
+    train_seed: int,
+    steps: int = 1,
+    batch_size: int = 64,
+) -> Path:
+    """Fit a package neural baseline from the committed pre-test window block."""
+    if candidate not in {"deepvar", "timegrad", "path_diffusion", "deepvar_sni"}:
+        raise ProtocolValidationError(
+            f"{candidate} uses scenarioflow.training with an explicit batch/config"
+        )
+    torch.manual_seed(train_seed)
+    np.random.seed(train_seed)
+    _panel, _columns, train, _validation = prepare_validation_blocks(data_dir=data_dir)
+    history = train.history_increment.astype(np.float32)
+    future = train.future_increment.astype(np.float32)
+    normalization: dict[str, Any] | None = None
+    model_type = "deepvar" if candidate == "deepvar_sni" else candidate
+    if candidate == "deepvar_sni":
+        history, future, _center, _scale = normalize_increment_windows(
+            history, future, half_life=None, scale_floor=1e-4, center_mode="zero"
+        )
+        normalization = {
+            "scale_half_life": None,
+            "scale_floor": 1e-4,
+            "center_mode": "zero",
+        }
+        mean = np.zeros(history.shape[-1], dtype=np.float32)
+        std = np.ones(history.shape[-1], dtype=np.float32)
+    else:
+        daily = history.reshape(-1, history.shape[-1])
+        mean = daily.mean(axis=0).astype(np.float32)
+        std = (daily.std(axis=0) + 1e-6).astype(np.float32)
+        history = (history - mean[None, None]) / std[None, None]
+        future = (future - mean[None, None]) / std[None, None]
+    config = {
+        "model_type": model_type,
+        "input_dim": int(history.shape[-1]),
+        "future_len": int(future.shape[1]),
+        "hidden_dim": 128,
+        "num_layers": 2,
+        "rank": 5,
+        "n_diffusion_steps": 50,
+        "cond_dim": 128,
+        "sample_steps": 10,
+    }
+    model = build_model(
+        model_type,
+        input_dim=history.shape[-1],
+        future_len=future.shape[1],
+        hidden_dim=128,
+        num_layers=2,
+        rank=5,
+        n_diffusion_steps=50,
+        cond_dim=128,
+    )
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    rng = np.random.default_rng(train_seed)
+    last = 0.0
+    model.train()
+    for _ in range(steps):
+        indices = rng.choice(
+            history.shape[0], size=min(batch_size, history.shape[0]), replace=False
+        )
+        h = torch.from_numpy(history[indices])
+        f = torch.from_numpy(future[indices])
+        optimizer.zero_grad(set_to_none=True)
+        loss = model(h, f)
+        loss.backward()
+        optimizer.step()
+        last = float(loss.detach())
+    destination = Path(checkpoint_out)
+    if candidate == "deepvar_sni":
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        torch.save(
+            {
+                "model_state_dict": model.state_dict(),
+                "config": config,
+                "normalization": normalization,
+                "best_val_loss": last,
+            },
+            destination,
+        )
+    else:
+        save_checkpoint(
+            destination,
+            model,
+            model_type=model_type,
+            mean=mean,
+            std=std,
+            config=config,
+            best_val_loss=last,
+        )
+    return destination
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -171,15 +389,26 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--output-root", required=True)
     plan.add_argument("--source-manifest", required=True)
     plan.add_argument("--artifact-manifest", required=True)
+    plan.add_argument("--data-dir", required=True)
+    plan.add_argument("--checkpoint-root", required=True)
+    plan.add_argument("--artifact-root", required=True)
     node = subcommands.add_parser(
         "run-node", help="seal an explicitly produced package result"
     )
-    node.add_argument("--candidate", required=True, choices=CANDIDATE_IDS)
-    node.add_argument("--train-seed", type=int)
-    node.add_argument("--rollout-seed", required=True, type=int)
+    node.add_argument("--protocol", required=True)
+    node.add_argument("--node-id", required=True)
     node.add_argument("--result-input", required=True)
     node.add_argument("--garch-contract-report")
     node.add_argument("--output-dir", required=True)
+    training = subcommands.add_parser(
+        "train-baseline", help="fit a package neural baseline"
+    )
+    training.add_argument("--candidate", required=True)
+    training.add_argument("--data-dir", required=True)
+    training.add_argument("--checkpoint-out", required=True)
+    training.add_argument("--train-seed", required=True, type=int)
+    training.add_argument("--steps", type=int, default=1)
+    training.add_argument("--batch-size", type=int, default=64)
     aggregate = subcommands.add_parser(
         "aggregate", help="aggregate a complete resumed DAG"
     )
@@ -195,6 +424,9 @@ def main(argv: list[str] | None = None) -> None:
             output_root=args.output_root,
             source_manifest=args.source_manifest,
             artifact_manifest=args.artifact_manifest,
+            data_dir=args.data_dir,
+            checkpoint_root=args.checkpoint_root,
+            artifact_root=args.artifact_root,
         )
         print(
             json.dumps(
@@ -206,6 +438,7 @@ def main(argv: list[str] | None = None) -> None:
         )
         return
     if args.command == "run-node":
+        protocol = json.loads(Path(args.protocol).read_text(encoding="utf-8"))
         result = json.loads(Path(args.result_input).read_text(encoding="utf-8"))
         authority = (
             None
@@ -216,13 +449,24 @@ def main(argv: list[str] | None = None) -> None:
         )
         manifest = record_completed_node(
             output_dir=args.output_dir,
-            candidate=args.candidate,
-            train_seed=args.train_seed,
-            rollout_seed=args.rollout_seed,
+            protocol=protocol,
+            node_id=args.node_id,
             result=result,
             garch_contract_report=authority,
         )
         print(json.dumps(manifest, sort_keys=True))
+        return
+    if args.command == "train-baseline":
+        print(
+            train_baseline(
+                candidate=args.candidate,
+                data_dir=args.data_dir,
+                checkpoint_out=args.checkpoint_out,
+                train_seed=args.train_seed,
+                steps=args.steps,
+                batch_size=args.batch_size,
+            )
+        )
         return
     summary = aggregate_results(collect_completed_runs(args.output_root))
     output = Path(args.output)

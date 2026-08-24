@@ -1,6 +1,6 @@
 """Joint D-dim classical baselines for multi-factor benchmark.
 
-All classes operate on D-dimensional daily changes (D=38 for IV+factors).
+All classes operate on D-dimensional daily changes (D=39 for IV+factors).
 Constructor takes daily_changes: (N, D).
 sample_joint(history_changes, n_samples) -> (B, n_samples, T_fut, D) changes.
 Caller is responsible for IV reconstruction (cumsum + anchor).
