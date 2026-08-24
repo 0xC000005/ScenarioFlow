@@ -765,6 +765,7 @@ dependencies = [
     { name = "pyarrow" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "statsmodels" },
     { name = "torch" },
 ]
 
@@ -784,6 +785,7 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=15" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "scipy", specifier = ">=1.12" },
+    { name = "statsmodels", specifier = ">=0.14" },
     { name = "torch", specifier = ">=2.2" },
 ]
 provides-extras = ["dev", "baseline-classical", "baseline-deep"]

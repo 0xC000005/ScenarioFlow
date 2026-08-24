@@ -145,10 +145,24 @@ def _evaluation_node(
                 artifact_root
                 / "results/fmts_reproduction_20260805/checkpoint_replay/garch_ccc/summary.json"
             ),
+            "--result",
+            str(
+                artifact_root
+                / "results/fmts_reproduction_20260805/checkpoint_replay/garch_ccc/garch_ccc/results_current_panel.json"
+            ),
+            "--manifest",
+            str(
+                artifact_root
+                / "results/fmts_reproduction_20260805/checkpoint_replay/garch_ccc/manifest.json"
+            ),
             "--table",
             str(artifact_root / "paper/generated_tables/table_baseline_comparison.tex"),
             "--output-dir",
             str(destination),
+            "--protocol",
+            str(output_root / "protocol_manifest.json"),
+            "--node-id",
+            node_id,
         ]
     else:
         command = [
@@ -176,26 +190,45 @@ def _evaluation_node(
             node_id,
         ]
         if train_seed is not None:
-            command += [
-                "--checkpoint",
-                str(
+            if candidate == "scenarioflow":
+                checkpoint = (
+                    output_root
+                    / "generated_checkpoints"
+                    / candidate
+                    / f"train_seed_{train_seed}"
+                    / "stage2.pt"
+                )
+                dependency = f"train:scenarioflow:stage2:{train_seed}"
+            elif candidate == "scenarioflow_graph":
+                checkpoint = (
+                    output_root
+                    / "generated_checkpoints"
+                    / candidate
+                    / f"train_seed_{train_seed}"
+                    / "graph.pt"
+                )
+                dependency = f"train:scenarioflow_graph:graph:{train_seed}"
+            else:
+                checkpoint = (
                     output_root
                     / "generated_checkpoints"
                     / candidate
                     / f"train_seed_{train_seed}.pt"
-                ),
+                )
+                dependency = f"train:{candidate}:{train_seed}"
+            command += [
+                "--checkpoint",
+                str(checkpoint),
             ]
     return {
         "node_id": node_id,
-        "action": "evaluate",
+        "action": "authority" if candidate == "garch_ccc" else "evaluate",
         "candidate": candidate,
         "train_seed": train_seed,
         "rollout_seed": rollout_seed,
         "destination": str(destination),
         "command": command,
-        "depends_on": (
-            [] if train_seed is None else [f"train:{candidate}:{train_seed}"]
-        ),
+        "depends_on": [] if train_seed is None else [dependency],
         "protocol_contract_hash": contract_hash,
     }
 
@@ -215,40 +248,24 @@ def _training_node(
         / candidate
         / f"train_seed_{train_seed}.pt"
     )
-    if candidate in {"scenarioflow", "scenarioflow_graph"}:
-        training_inputs = (
-            artifact_root / "training_inputs" / candidate / f"train_seed_{train_seed}"
-        )
-        command = [
-            "python",
-            "-m",
-            "scenarioflow.training",
-            "--stage",
-            "stage1",
-            "--batch-npz",
-            str(training_inputs / "batch.npz"),
-            "--config",
-            str(training_inputs / "config.json"),
-            "--output",
-            str(destination),
-            "--seed",
-            str(train_seed),
-        ]
-    else:
-        command = [
-            "python",
-            "-m",
-            "scenarioflow.workflows.reproduction",
-            "train-baseline",
-            "--candidate",
-            candidate,
-            "--data-dir",
-            str(data_dir),
-            "--checkpoint-out",
-            str(destination),
-            "--train-seed",
-            str(train_seed),
-        ]
+    command = [
+        "python",
+        "-m",
+        "scenarioflow.workflows.reproduction",
+        "train-baseline",
+        "--candidate",
+        candidate,
+        "--data-dir",
+        str(data_dir),
+        "--checkpoint-out",
+        str(destination),
+        "--train-seed",
+        str(train_seed),
+        "--epochs",
+        "10",
+        "--batch-size",
+        "64",
+    ]
     return {
         "node_id": f"train:{candidate}:{train_seed}",
         "action": "train",
@@ -260,6 +277,132 @@ def _training_node(
         "depends_on": [],
         "protocol_contract_hash": contract_hash,
     }
+
+
+def _scenarioflow_training_nodes(
+    *, output_root: Path, artifact_root: Path, train_seed: int, contract_hash: str
+) -> list[dict[str, Any]]:
+    inputs = (
+        artifact_root / "training_inputs" / "scenarioflow" / f"train_seed_{train_seed}"
+    )
+    stage1 = (
+        output_root
+        / "generated_checkpoints"
+        / "scenarioflow"
+        / f"train_seed_{train_seed}"
+        / "stage1.pt"
+    )
+    stage2 = (
+        output_root
+        / "generated_checkpoints"
+        / "scenarioflow"
+        / f"train_seed_{train_seed}"
+        / "stage2.pt"
+    )
+    graph = (
+        output_root
+        / "generated_checkpoints"
+        / "scenarioflow_graph"
+        / f"train_seed_{train_seed}"
+        / "graph.pt"
+    )
+    specifications = (
+        (
+            "train:scenarioflow:stage1",
+            "scenarioflow",
+            "stage1",
+            stage1,
+            None,
+            8,
+            inputs / "config.json",
+            None,
+        ),
+        (
+            "train:scenarioflow:stage2",
+            "scenarioflow",
+            "stage2",
+            stage2,
+            stage1,
+            3,
+            None,
+            None,
+        ),
+        (
+            "train:scenarioflow_graph:graph",
+            "scenarioflow_graph",
+            "graph",
+            graph,
+            stage2,
+            2,
+            None,
+            inputs / "graph_config_overrides.json",
+        ),
+    )
+    nodes = []
+    previous: str | None = None
+    for (
+        prefix,
+        candidate,
+        stage,
+        destination,
+        checkpoint,
+        epochs,
+        config,
+        overrides,
+    ) in specifications:
+        node_id = f"{prefix}:{train_seed}"
+        command = [
+            "python",
+            "-m",
+            "scenarioflow.training",
+            "--stage",
+            stage,
+            "--batch-npz",
+            str(inputs / "batch.npz"),
+            "--output",
+            str(destination),
+            "--epochs",
+            str(epochs),
+            "--seed",
+            str(train_seed),
+            "--batch-size",
+            "32" if stage == "stage1" else "8",
+            "--max-train-windows",
+            "0" if stage == "stage2" else "2048",
+            "--lr",
+            "0.0007" if stage == "stage1" else "0.00002",
+        ]
+        if stage != "stage1":
+            command += [
+                "--train-sample-count",
+                "2",
+                "--rollout-flow-steps",
+                "4",
+                "--energy-weight",
+                "0.2",
+            ]
+        if config is not None:
+            command += ["--config", str(config)]
+        if checkpoint is not None:
+            command += ["--checkpoint", str(checkpoint)]
+        if overrides is not None:
+            command += ["--config-overrides", str(overrides)]
+        nodes.append(
+            {
+                "node_id": node_id,
+                "action": "train",
+                "stage": stage,
+                "candidate": candidate,
+                "train_seed": train_seed,
+                "rollout_seed": None,
+                "destination": str(destination),
+                "command": command,
+                "depends_on": [] if previous is None else [previous],
+                "protocol_contract_hash": contract_hash,
+            }
+        )
+        previous = node_id
+    return nodes
 
 
 def build_protocol(
@@ -318,7 +461,18 @@ def build_protocol(
     )
     nodes: list[dict[str, Any]] = []
     for candidate in CANDIDATE_IDS:
-        if candidate not in CLASSICAL_CANDIDATES:
+        if candidate in {"scenarioflow", "scenarioflow_graph"}:
+            if candidate == "scenarioflow":
+                for train_seed in TRAIN_SEEDS:
+                    nodes.extend(
+                        _scenarioflow_training_nodes(
+                            output_root=root,
+                            artifact_root=artifact_directory,
+                            train_seed=train_seed,
+                            contract_hash=contract_hash,
+                        )
+                    )
+        elif candidate not in CLASSICAL_CANDIDATES:
             nodes.extend(
                 _training_node(
                     candidate=candidate,
@@ -330,7 +484,9 @@ def build_protocol(
                 )
                 for train_seed in TRAIN_SEEDS
             )
-        if candidate in CLASSICAL_CANDIDATES:
+        if candidate == "garch_ccc":
+            seed_pairs = ((None, 772),)
+        elif candidate in CLASSICAL_CANDIDATES:
             seed_pairs = ((None, rollout) for rollout in ROLLOUT_SEEDS)
         else:
             seed_pairs = (
@@ -436,6 +592,8 @@ def _summary_stats(values: Iterable[float]) -> dict[str, float | int]:
 
 
 def _expected_keys(candidate: str) -> set[tuple[int | None, int]]:
+    if candidate == "garch_ccc":
+        return {(None, 772)}
     if candidate in CLASSICAL_CANDIDATES:
         return {(None, rollout) for rollout in ROLLOUT_SEEDS}
     return {
@@ -487,6 +645,15 @@ def _candidate_summary(
         "candidate": candidate,
         "pass_profile": _pass_profile(ordered, learned=learned),
     }
+    if candidate == "garch_ccc":
+        common.update(
+            {
+                "variation_type": "frozen_published_authority",
+                "authority_seed": 772,
+                "metrics": _metrics_summary(ordered),
+            }
+        )
+        return common
     if not learned:
         common.update(
             {
@@ -595,7 +762,7 @@ def _paired_comparison(
         for metric, _ in METRIC_PATHS
     }
     uncertainty: dict[str, Any] = {}
-    for position, metric in enumerate(("CRPS", "Energy Score", "Variogram")):
+    for metric in ("CRPS", "Energy Score", "Variogram"):
         deltas = []
         reference = None
         for pair in ordered:
@@ -614,7 +781,7 @@ def _paired_comparison(
             series,
             block_length=block_length,
             n_bootstrap=n_bootstrap,
-            seed=bootstrap_seed + position,
+            seed=bootstrap_seed,
         )
         alpha = (1 - ci_level) / 2
         low, high = np.quantile(boot, [alpha, 1 - alpha])
@@ -627,7 +794,7 @@ def _paired_comparison(
             "ci_excludes_zero": bool(low > 0 or high < 0),
             "block_length": min(block_length, len(series)),
             "n_bootstrap": n_bootstrap,
-            "bootstrap_seed": bootstrap_seed + position,
+            "bootstrap_seed": bootstrap_seed,
         }
     return {
         "name": name,
@@ -686,6 +853,19 @@ def aggregate_results(
                 )
             metrics = _metric_values(result, candidate)
             thresholds, breach_count = _threshold_profile(metrics)
+            if candidate == "garch_ccc":
+                processed.append(
+                    {
+                        "candidate": candidate,
+                        "training_seed": None,
+                        "rollout_seed": 772,
+                        "metrics": metrics,
+                        "thresholds": thresholds,
+                        "breach_count": breach_count,
+                        "pass_all": breach_count == 0,
+                    }
+                )
+                continue
             window_scores = run.get("window_scores")
             if not isinstance(window_scores, Mapping):
                 raise ProtocolValidationError(

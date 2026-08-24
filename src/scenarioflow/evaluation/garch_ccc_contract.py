@@ -16,6 +16,12 @@ SOURCE_TAG = "refs/tags/provenance/garch-ccc-gaussian-da91172a"
 FROZEN_SUMMARY_SHA256 = (
     "d1431f0dc94974301f0bd8642666ba70c8d093bb06cad8a43311f8900b33a771"
 )
+FROZEN_REPLAY_RESULT_SHA256 = (
+    "4749ef068a1510595a68e2227e9fe1be8cabc6927fcb8ad39b4b0b1271369f5a"
+)
+FROZEN_REPLAY_MANIFEST_SHA256 = (
+    "ea16b3a2f59fc066ab6c394190ac15fd70a66e47c2aa5d70b07111700646882d"
+)
 FROZEN_TABLE_SHA256 = "1492cf31ee50c99ded8c068c714c98fb0c793a0dce4f49137c20d37cccfd2589"
 REPORT_SCHEMA = "scenarioflow.garch-ccc-published-row.v1"
 
@@ -137,11 +143,14 @@ def build_garch_ccc_contract_report(
     result: Mapping[str, Any],
     manifest: Mapping[str, Any],
     table_text: str,
+    provenance: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Validate already authenticated documents against the immutable row."""
-    provenance = manifest.get("provenance")
-    if not isinstance(provenance, Mapping):
-        provenance = manifest
+    resolved_provenance = provenance
+    if not isinstance(resolved_provenance, Mapping):
+        resolved_provenance = manifest.get("provenance")
+    if not isinstance(resolved_provenance, Mapping):
+        resolved_provenance = manifest
     checks = [
         _require("baseline name", result.get("baseline_name"), "garch_ccc"),
         _require("result mode", result.get("mode"), "current_realvix_39_state_panel"),
@@ -156,18 +165,42 @@ def build_garch_ccc_contract_report(
         _require("manifest deck size", manifest.get("n_samples"), 64),
         _require("result state count", len(result.get("state_specs", [])), 39),
         _require("manifest state count", len(manifest.get("state_specs", [])), 39),
+        _require("manifest source column count", len(manifest.get("columns", [])), 53),
         _require(
             "matching state specs",
             result.get("state_specs"),
             manifest.get("state_specs"),
         ),
         _require(
+            "joint finite rate",
+            result.get("joint_panel_quality", {}).get("finite_rate"),
+            1.0,
+        ),
+        _require(
+            "joint windows", result.get("joint_panel_quality", {}).get("n_windows"), 441
+        ),
+        _require(
+            "joint deck size",
+            result.get("joint_panel_quality", {}).get("n_samples"),
+            64,
+        ),
+        _require(
+            "forecast horizon",
+            result.get("joint_panel_quality", {}).get("future_len"),
+            30,
+        ),
+        _require(
+            "factor count", result.get("joint_panel_quality", {}).get("n_factors"), 14
+        ),
+        _require(
             "source revision",
-            provenance.get("source_revision"),
+            resolved_provenance.get("source_revision"),
             EXPECTED_SOURCE_REVISION,
         ),
-        _require("source blob", provenance.get("source_blob"), EXPECTED_SOURCE_BLOB),
-        _require("source tag", provenance.get("source_tag"), SOURCE_TAG),
+        _require(
+            "source blob", resolved_provenance.get("source_blob"), EXPECTED_SOURCE_BLOB
+        ),
+        _require("source tag", resolved_provenance.get("source_tag"), SOURCE_TAG),
     ]
     metadata = (
         manifest.get("metadata")
@@ -186,6 +219,8 @@ def build_garch_ccc_contract_report(
                 metadata.get("positive_level_policy"),
                 "reference_based",
             ),
+            _require("IV lower bound", metadata.get("iv_lower_bound"), 0.0001),
+            _require("IV upper bound", metadata.get("iv_upper_bound"), 1.0),
         ]
     )
     headline_checks = []
@@ -227,6 +262,8 @@ def build_garch_ccc_contract_report(
         "immutable_authority": True,
         "authority": {
             "summary_sha256": FROZEN_SUMMARY_SHA256,
+            "replay_result_sha256": FROZEN_REPLAY_RESULT_SHA256,
+            "replay_manifest_sha256": FROZEN_REPLAY_MANIFEST_SHA256,
             "table_sha256": FROZEN_TABLE_SHA256,
             "source_revision": EXPECTED_SOURCE_REVISION,
             "source_blob": EXPECTED_SOURCE_BLOB,
@@ -243,35 +280,55 @@ def build_garch_ccc_contract_report(
 def validate_published_row(
     *,
     summary_path: str | Path,
+    replay_result_path: str | Path,
+    replay_manifest_path: str | Path,
     table_path: str | Path,
     output_dir: str | Path,
 ) -> dict[str, Any]:
     """Authenticate the exact frozen summary/table bytes and write their report."""
     summary_source = Path(summary_path).expanduser().resolve()
+    result_source = Path(replay_result_path).expanduser().resolve()
+    manifest_source = Path(replay_manifest_path).expanduser().resolve()
     table_source = Path(table_path).expanduser().resolve()
-    sources = (summary_source, table_source)
+    sources = (summary_source, result_source, manifest_source, table_source)
     if any(not source.is_file() for source in sources):
         raise FileNotFoundError("frozen GARCH summary and published table are required")
     output = Path(output_dir).expanduser().resolve()
     _assert_isolated(output, sources)
     if _sha256(summary_source) != FROZEN_SUMMARY_SHA256:
         raise ValueError("frozen summary checksum mismatch")
+    if _sha256(result_source) != FROZEN_REPLAY_RESULT_SHA256:
+        raise ValueError("frozen replay result checksum mismatch")
+    if _sha256(manifest_source) != FROZEN_REPLAY_MANIFEST_SHA256:
+        raise ValueError("frozen replay manifest checksum mismatch")
     if _sha256(table_source) != FROZEN_TABLE_SHA256:
         raise ValueError("frozen table checksum mismatch")
     summary = _read_object(summary_source)
-    result = _result_from_document(summary)
-    manifest = summary.get("manifest")
-    if not isinstance(manifest, Mapping):
-        manifest = summary.get("replay_manifest")
-    if not isinstance(manifest, Mapping):
-        raise ValueError("frozen summary does not contain its replay manifest")
+    summary_result = _result_from_document(summary)
+    result = _result_from_document(_read_object(result_source))
+    if summary_result != result:
+        raise ValueError("frozen summary and replay result disagree")
+    manifest = _read_object(manifest_source)
     report = build_garch_ccc_contract_report(
         result=result,
         manifest=manifest,
         table_text=table_source.read_text(encoding="utf-8"),
+        provenance={
+            "source_revision": EXPECTED_SOURCE_REVISION,
+            "source_blob": EXPECTED_SOURCE_BLOB,
+            "source_tag": SOURCE_TAG,
+        },
     )
     report["source_artifacts"] = {
         "summary": {"path": str(summary_source), "sha256": FROZEN_SUMMARY_SHA256},
+        "replay_result": {
+            "path": str(result_source),
+            "sha256": FROZEN_REPLAY_RESULT_SHA256,
+        },
+        "replay_manifest": {
+            "path": str(manifest_source),
+            "sha256": FROZEN_REPLAY_MANIFEST_SHA256,
+        },
         "table": {"path": str(table_source), "sha256": FROZEN_TABLE_SHA256},
     }
     output.mkdir(parents=True, exist_ok=True)
@@ -285,14 +342,34 @@ def validate_published_row(
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--summary", required=True)
+    parser.add_argument("--result", required=True)
+    parser.add_argument("--manifest", required=True)
     parser.add_argument("--table", required=True)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--protocol")
+    parser.add_argument("--node-id")
     args = parser.parse_args(argv)
-    validate_published_row(
+    report = validate_published_row(
         summary_path=args.summary,
+        replay_result_path=args.result,
+        replay_manifest_path=args.manifest,
         table_path=args.table,
         output_dir=args.output_dir,
     )
+    if (args.protocol is None) != (args.node_id is None):
+        parser.error("--protocol and --node-id must be supplied together")
+    if args.protocol is not None:
+        from ..workflows.reproduction import record_completed_node
+
+        protocol = _read_object(Path(args.protocol))
+        result = _result_from_document(_read_object(Path(args.result)))
+        record_completed_node(
+            output_dir=args.output_dir,
+            protocol=protocol,
+            node_id=args.node_id,
+            result=result,
+            garch_contract_report=report,
+        )
     print("GARCH-CCC published-row contract: PASS")
 
 

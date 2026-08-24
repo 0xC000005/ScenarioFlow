@@ -34,6 +34,7 @@ from ..state import (
     reconstruct_state_from_increments,
 )
 from ..model import load_model as load_scenarioflow_model
+from .iv_suite import run_full_iv_suite
 
 MODE = "current_realvix_39_state_panel"
 
@@ -626,10 +627,12 @@ def _safe_spearman(left: np.ndarray, right: np.ndarray) -> float:
     left = np.asarray(left, dtype=np.float64).reshape(-1)
     right = np.asarray(right, dtype=np.float64).reshape(-1)
     keep = np.isfinite(left) & np.isfinite(right)
-    if keep.sum() < 3 or np.ptp(left[keep]) < 1e-12 or np.ptp(right[keep]) < 1e-12:
-        return 0.0
-    value = float(sp_stats.spearmanr(left[keep], right[keep]).statistic)
-    return value if np.isfinite(value) else 0.0
+    left, right = left[keep], right[keep]
+    if left.size < 3 or np.std(left) < 1e-12 or np.std(right) < 1e-12:
+        return float("nan")
+    left_rank = np.argsort(np.argsort(left)).astype(np.float64)
+    right_rank = np.argsort(np.argsort(right)).astype(np.float64)
+    return float(np.corrcoef(left_rank, right_rank)[0, 1])
 
 
 def _safe_corr(left: np.ndarray, right: np.ndarray) -> float:
@@ -648,135 +651,42 @@ def _finite_ratio(numerator: float, denominator: float) -> float:
     return float(numerator / denominator)
 
 
+def _ks_statistic(left: np.ndarray, right: np.ndarray) -> float:
+    left_values = np.sort(np.asarray(left, dtype=np.float64).reshape(-1))
+    right_values = np.sort(np.asarray(right, dtype=np.float64).reshape(-1))
+    left_values = left_values[np.isfinite(left_values)]
+    right_values = right_values[np.isfinite(right_values)]
+    if left_values.size == 0 or right_values.size == 0:
+        return float("nan")
+    values = np.concatenate([left_values, right_values])
+    left_cdf = np.searchsorted(left_values, values, side="right") / left_values.size
+    right_cdf = np.searchsorted(right_values, values, side="right") / right_values.size
+    return float(np.max(np.abs(left_cdf - right_cdf)))
+
+
 def evaluate_iv_suite(
     conditional_samples: np.ndarray,
     ground_truth: np.ndarray,
     history: np.ndarray,
+    *,
+    returns: np.ndarray,
+    window_indices: np.ndarray,
 ) -> tuple[dict[str, Any], dict[str, float]]:
     """Compute the complete published IV diagnostic payload on raw IV levels."""
-    samples = np.asarray(conditional_samples, dtype=np.float64)
-    truth = np.asarray(ground_truth, dtype=np.float64)
-    history_arr = np.asarray(history, dtype=np.float64)
-    coverage: dict[str, float] = {}
-    for level in (0.5, 0.8, 0.9, 0.95):
-        alpha = (1.0 - level) / 2.0
-        lower = np.quantile(samples, alpha, axis=1)
-        upper = np.quantile(samples, 1.0 - alpha, axis=1)
-        coverage[str(level)] = float(((truth >= lower) & (truth <= upper)).mean())
-    calibration_error = float(
-        np.mean([abs(coverage[str(level)] - level) for level in (0.5, 0.8, 0.9, 0.95)])
+    return run_full_iv_suite(
+        conditional_samples,
+        ground_truth,
+        history,
+        returns=returns,
+        window_indices=window_indices,
     )
-    ks_statistics = [
-        float(
-            sp_stats.ks_2samp(
-                samples[..., index].reshape(-1), truth[..., index].reshape(-1)
-            ).statistic
-        )
-        for index in range(truth.shape[-1])
-    ]
-    median_prediction = np.median(samples, axis=1)
-    above_fraction = (median_prediction >= truth).mean(axis=(0, 1)).tolist()
-    history_activity = (np.diff(history_arr, axis=1) ** 2).mean(axis=(1, 2))
-    width = (
-        np.quantile(samples, 0.95, axis=1) - np.quantile(samples, 0.05, axis=1)
-    ).mean(axis=(1, 2))
-    width_rho = _safe_spearman(history_activity, width)
-
-    historical_mean = history_arr.mean(axis=1)
-    anchor = history_arr[:, -1]
-    truth_reversion = np.mean(
-        np.abs(anchor - historical_mean) - np.abs(truth[:, -1] - historical_mean)
-    )
-    sample_reversion = np.mean(
-        np.abs(anchor[:, None] - historical_mean[:, None])
-        - np.abs(samples[:, :, -1] - historical_mean[:, None])
-    )
-    mr_ratio = _finite_ratio(float(sample_reversion), float(truth_reversion))
-
-    truth_change = np.diff(np.concatenate([anchor[:, None], truth], axis=1), axis=1)
-    sample_anchor = np.repeat(anchor[:, None, None], samples.shape[1], axis=1)
-    sample_change = np.diff(np.concatenate([sample_anchor, samples], axis=2), axis=2)
-    truth_market = truth_change.mean(axis=-1)
-    sample_market = sample_change.mean(axis=-1)
-    economic_ratio = _finite_ratio(
-        abs(
-            _safe_corr(
-                sample_market.reshape(-1),
-                np.tile(truth_market[:, None], (1, samples.shape[1], 1)).reshape(-1),
-            )
-        ),
-        1.0,
-    )
-
-    truth_flat = truth_change.reshape(-1, truth.shape[-1])
-    sample_flat = sample_change.reshape(-1, truth.shape[-1])
-    truth_kurtosis = float(
-        np.nanmedian(
-            sp_stats.kurtosis(truth_flat, axis=0, fisher=False, nan_policy="omit")
-        )
-    )
-    sample_kurtosis = float(
-        np.nanmedian(
-            sp_stats.kurtosis(sample_flat, axis=0, fisher=False, nan_policy="omit")
-        )
-    )
-    kurtosis_ratio = _finite_ratio(sample_kurtosis, truth_kurtosis)
-    jump_ks = float(
-        sp_stats.ks_2samp(
-            np.max(np.abs(sample_change), axis=(2, 3)).reshape(-1),
-            np.max(np.abs(truth_change), axis=(1, 2)).reshape(-1),
-        ).statistic
-    )
-    truth_acf = np.asarray(
-        [
-            _safe_corr(truth_change[:, :-1, index], truth_change[:, 1:, index])
-            for index in range(truth.shape[-1])
-        ]
-    )
-    sample_acf = np.asarray(
-        [
-            _safe_corr(sample_change[:, :, :-1, index], sample_change[:, :, 1:, index])
-            for index in range(truth.shape[-1])
-        ]
-    )
-    acf_corr = _safe_corr(truth_acf, sample_acf)
-    suite = {
-        "coverage": {"overall": coverage, "calibration_error": calibration_error},
-        "distributional_fidelity": {
-            "ks_level_test": {
-                "median_stat": float(np.median(ks_statistics)),
-                "per_dimension": ks_statistics,
-            },
-            "median_bias": {"above_frac": above_fraction},
-        },
-        "risk_state_allocation": {"history_width_spearman": width_rho},
-        "mean_reversion": {"mr_gt_ratio": mr_ratio},
-        "cointegration": {"gen_gt_ratio": economic_ratio},
-        "time_series": {
-            "acf": {"acf_correlation": acf_corr},
-            "kurtosis": {"kurtosis_ratio": kurtosis_ratio},
-        },
-        "pathwise_jump_realism": {"pathwise_max_jump": {"ks_stat": jump_ks}},
-    }
-    metrics = {
-        "cov90": coverage["0.9"],
-        "calibration_error": calibration_error,
-        "level_ks_median": float(np.median(ks_statistics)),
-        "median_abs_dev": float(np.median(np.abs(np.asarray(above_fraction) - 0.5))),
-        "width_rho": width_rho,
-        "mr_ratio": mr_ratio,
-        "economic_ratio": economic_ratio,
-        "jump_ks": jump_ks,
-        "kurtosis_ratio": kurtosis_ratio,
-        "acf_corr": acf_corr,
-    }
-    return suite, metrics
 
 
 def summarize_joint_quality(
     raw_history: np.ndarray,
     raw_future: np.ndarray,
     sample_raw: np.ndarray,
+    factor_names: Sequence[str],
     *,
     iv_count: int,
 ) -> dict[str, Any]:
@@ -784,21 +694,75 @@ def summarize_joint_quality(
     truth_delta = np.diff(np.concatenate([anchor[:, None], raw_future], axis=1), axis=1)
     sample_anchor = np.repeat(anchor[:, None, None], sample_raw.shape[1], axis=1)
     sample_delta = np.diff(np.concatenate([sample_anchor, sample_raw], axis=2), axis=2)
-    factor_ks = [
-        float(
-            sp_stats.ks_2samp(
-                sample_delta[..., index].reshape(-1),
-                truth_delta[..., index].reshape(-1),
-            ).statistic
+    factor_slice = slice(iv_count, raw_future.shape[-1])
+    gt_factor_delta = truth_delta[..., factor_slice]
+    gen_factor_delta = sample_delta[..., factor_slice]
+    gt_factor_level = raw_future[..., factor_slice]
+    gen_factor_level = sample_raw[..., factor_slice]
+    factor_ks, tail_ratios, per_factor = [], [], []
+    for position, name in enumerate(factor_names):
+        observed = gt_factor_delta[..., position]
+        generated = gen_factor_delta[..., position]
+        ks_value = _ks_statistic(observed, generated)
+        q99_ratio = float(np.quantile(np.abs(generated), 0.99)) / max(
+            float(np.quantile(np.abs(observed), 0.99)), 1e-12
         )
-        for index in range(iv_count, raw_future.shape[-1])
-    ]
-    tail_ratios = []
-    for index in range(iv_count, raw_future.shape[-1]):
-        generated = float(np.quantile(np.abs(sample_delta[..., index]), 0.99))
-        observed = float(np.quantile(np.abs(truth_delta[..., index]), 0.99))
-        tail_ratios.append(_finite_ratio(generated, observed))
-    history_activity = (np.diff(raw_history, axis=1) ** 2).mean(axis=(1, 2))
+        factor_ks.append(ks_value)
+        tail_ratios.append(q99_ratio)
+        per_factor.append(
+            {
+                "name": str(name),
+                "gt_min": float(np.nanmin(gt_factor_level[..., position])),
+                "gt_max": float(np.nanmax(gt_factor_level[..., position])),
+                "gen_min": float(np.nanmin(gen_factor_level[..., position])),
+                "gen_max": float(np.nanmax(gen_factor_level[..., position])),
+                "ks_delta": ks_value,
+                "q99_abs_delta_ratio": q99_ratio,
+            }
+        )
+
+    def safe_corrcoef(values: np.ndarray) -> np.ndarray:
+        values = np.asarray(values, dtype=np.float64)
+        keep = values.std(axis=0) > 1e-12
+        output = np.eye(values.shape[1], dtype=np.float64)
+        if keep.sum() >= 2:
+            output[np.ix_(keep, keep)] = np.nan_to_num(
+                np.corrcoef(values[:, keep], rowvar=False), nan=0.0
+            )
+        return output
+
+    def corr_similarity(left: np.ndarray, right: np.ndarray) -> dict[str, float]:
+        upper = np.triu_indices(left.shape[0], 1)
+        left_values, right_values = left[upper], right[upper]
+        return {
+            "upper_corr": _safe_corr(left_values, right_values),
+            "mae": float(np.mean(np.abs(left_values - right_values))),
+            "frobenius": float(
+                np.linalg.norm(left - right) / max(np.linalg.norm(left), 1e-12)
+            ),
+            "gt_mean_abs": float(np.mean(np.abs(left_values))),
+            "gen_mean_abs": float(np.mean(np.abs(right_values))),
+        }
+
+    gt_all = truth_delta.reshape(-1, truth_delta.shape[-1])
+    gen_all = sample_delta.reshape(-1, sample_delta.shape[-1])
+    gt_corr, gen_corr = safe_corrcoef(gt_all), safe_corrcoef(gen_all)
+    factor_corr = corr_similarity(
+        gt_corr[iv_count:, iv_count:], gen_corr[iv_count:, iv_count:]
+    )
+    gt_cross, gen_cross = gt_corr[:iv_count, iv_count:], gen_corr[:iv_count, iv_count:]
+    cross = {
+        "matrix_corr": _safe_corr(gt_cross, gen_cross),
+        "mae": float(np.mean(np.abs(gt_cross - gen_cross))),
+        "gt_mean_abs": float(np.mean(np.abs(gt_cross))),
+        "gen_mean_abs": float(np.mean(np.abs(gen_cross))),
+    }
+    median = np.median(sample_raw, axis=1)
+    rolled = np.roll(median, 1, axis=0)
+    conditional_mae = float(np.mean(np.abs(median - raw_future)))
+    rolled_mae = float(np.mean(np.abs(rolled - raw_future)))
+    history_activity = np.mean(np.diff(raw_history, axis=1) ** 2, axis=(1, 2))
+    future_activity = np.mean(truth_delta**2, axis=(1, 2))
     deck_width = (
         np.quantile(sample_raw, 0.95, axis=1) - np.quantile(sample_raw, 0.05, axis=1)
     ).mean(axis=(1, 2))
@@ -807,14 +771,29 @@ def summarize_joint_quality(
         "n_windows": int(raw_future.shape[0]),
         "n_samples": int(sample_raw.shape[1]),
         "future_len": int(raw_future.shape[1]),
-        "n_factors": int(raw_future.shape[-1] - iv_count),
+        "n_factors": int(len(factor_names)),
         "factor_delta_ks_mean": float(np.mean(factor_ks)),
+        "factor_delta_ks_pass_020": int(np.sum(np.asarray(factor_ks) < 0.20)),
         "factor_tail_q99_ratio_median": float(np.median(tail_ratios)),
+        "factor_tail_q99_pass_05_20": int(
+            np.sum((np.asarray(tail_ratios) >= 0.5) & (np.asarray(tail_ratios) <= 2.0))
+        ),
+        "factor_factor_corr": factor_corr,
+        "iv_factor_corr": cross,
         "conditional_panel": {
+            "conditional_median_mae": conditional_mae,
+            "rolled_median_mae": rolled_mae,
+            "median_mae_reduction_vs_rolled_pct": float(
+                (rolled_mae - conditional_mae) / max(rolled_mae, 1e-12) * 100.0
+            ),
             "history_activity_width_spearman": _safe_spearman(
                 history_activity, deck_width
-            )
+            ),
+            "future_activity_width_spearman": _safe_spearman(
+                future_activity, deck_width
+            ),
         },
+        "per_factor": per_factor,
     }
 
 
@@ -826,6 +805,7 @@ def evaluate_baseline(
     validation_block: Any,
     n_samples: int,
     batch_size: int,
+    returns: np.ndarray,
     iv_count: int = 25,
 ) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     """Sample, reconstruct, and score one prepared current-panel baseline."""
@@ -868,7 +848,13 @@ def evaluate_baseline(
     iv_samples = sample_raw[..., :iv_count]
     iv_truth = raw_future[..., :iv_count]
     iv_history = raw_history[..., :iv_count]
-    iv_suite, iv_metrics = evaluate_iv_suite(iv_samples, iv_truth, iv_history)
+    iv_suite, iv_metrics = evaluate_iv_suite(
+        iv_samples,
+        iv_truth,
+        iv_history,
+        returns=returns,
+        window_indices=validation_block.indices,
+    )
     factor_names = [spec.name for spec in validation_block.specs[iv_count:]]
     result = {
         "baseline_name": name,
@@ -880,7 +866,11 @@ def evaluate_baseline(
         "current_panel_iv": iv_suite,
         "current_panel_iv_metrics": iv_metrics,
         "joint_panel_quality": summarize_joint_quality(
-            raw_history, raw_future, sample_raw, iv_count=iv_count
+            raw_history,
+            raw_future,
+            sample_raw,
+            factor_names,
+            iv_count=iv_count,
         ),
         "panel_b_crps": compute_crps(sample_delta, gt_delta, iv_count=iv_count),
         "panel_b_energy_score": compute_energy_score(
@@ -999,6 +989,9 @@ def main(argv: list[str] | None = None) -> None:
         validation_block=validation,
         n_samples=args.n_samples,
         batch_size=args.batch_size,
+        returns=np.load(
+            Path(args.data_dir) / "vol_surface_with_ret.npz", allow_pickle=False
+        )["ret"],
     )
     result_path = write_result(args.output_dir, result)
     metadata = {

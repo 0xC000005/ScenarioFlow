@@ -22,7 +22,9 @@ from scenarioflow.evaluation.current_panel import (
     TABLE_THRESHOLD_RULES,
     WindowHistoricalSim,
     build_run_manifest,
+    evaluate_iv_suite,
     main as evaluator_main,
+    summarize_joint_quality,
     validate_result_schema,
 )
 from scenarioflow.evaluation.window_scores import build_window_score_artifact
@@ -274,6 +276,116 @@ def test_portable_evaluator_cli_executes_a_bounded_committed_panel_run(
     assert result["n_samples"] == 2
     assert set(result) == set(CURRENT_PANEL_RESULT_KEYS)
     validate_result_schema(result, canonical_counts=False)
+
+
+def test_full_frozen_iv_and_joint_quality_surfaces_are_preserved() -> None:
+    rng = np.random.default_rng(91)
+    history = rng.uniform(0.1, 0.6, size=(4, 30, 25))
+    truth = rng.uniform(0.1, 0.6, size=(4, 30, 25))
+    samples = rng.uniform(0.1, 0.6, size=(4, 3, 30, 25))
+    returns = rng.normal(0.0, 0.01, size=200)
+    suite, metrics = evaluate_iv_suite(
+        samples,
+        truth,
+        history,
+        returns=returns,
+        window_indices=np.arange(40, 44),
+    )
+    assert tuple(suite) == (
+        "surface",
+        "coverage",
+        "conditionality",
+        "time_series",
+        "block_ar",
+        "cointegration",
+        "iv_ewma_economic_link",
+        "regime_coverage",
+        "risk_state_allocation",
+        "distributional_fidelity",
+        "cross_cell_correlation",
+        "mean_reversion",
+        "pathwise_jump_realism",
+        "summary",
+    )
+    assert suite["summary"]["n_total"] == 11
+    assert metrics["economic_ratio"] == suite["cointegration"]["gen_gt_ratio_legacy"]
+    assert suite["cointegration"]["n_valid_windows"] == 4
+    assert suite["iv_ewma_economic_link"]["methodology"] == (
+        "pooled_iv_ewma_relationship_strength_not_engle_granger"
+    )
+    assert suite["iv_ewma_economic_link"]["n_valid_windows"] == 4
+    assert set(suite["coverage"]) == {
+        "overall",
+        "per_horizon",
+        "per_cell_coverage",
+        "worst_cell_per_horizon",
+        "best_cell_per_horizon",
+        "worst_cell_pass",
+        "calibration",
+        "calibration_error",
+        "horizon_pass",
+        "overall_pass",
+    }
+    assert {"boundary_smoothness", "growing_uncertainty"} <= set(suite["block_ar"])
+    assert {"tail_scale", "move_size_profile"} <= set(suite["time_series"])
+    assert {"ks_test", "window_floor", "explosion", "cell_mae"} <= set(
+        suite["distributional_fidelity"]
+    )
+    assert {"per_cell_q99", "window_extreme_incidence"} <= set(
+        suite["pathwise_jump_realism"]
+    )
+    assert {"gt_eff_rank", "gen_eff_rank", "rank_ratio", "rank_pass"} <= set(
+        suite["cross_cell_correlation"]
+    )
+    assert {"history_buckets", "future_buckets", "overall_pass_rule"} <= set(
+        suite["risk_state_allocation"]
+    )
+    assert "full_horizon" in suite["mean_reversion"]
+
+    raw_history = rng.normal(size=(4, 30, 39))
+    raw_future = rng.normal(size=(4, 30, 39))
+    raw_samples = rng.normal(size=(4, 3, 30, 39))
+    quality = summarize_joint_quality(
+        raw_history,
+        raw_future,
+        raw_samples,
+        factor_names=[f"factor-{index}" for index in range(14)],
+        iv_count=25,
+    )
+    assert tuple(quality) == (
+        "finite_rate",
+        "n_windows",
+        "n_samples",
+        "future_len",
+        "n_factors",
+        "factor_delta_ks_mean",
+        "factor_delta_ks_pass_020",
+        "factor_tail_q99_ratio_median",
+        "factor_tail_q99_pass_05_20",
+        "factor_factor_corr",
+        "iv_factor_corr",
+        "conditional_panel",
+        "per_factor",
+    )
+    assert len(quality["per_factor"]) == 14
+
+
+def test_joint_quality_preserves_frozen_ordinal_and_nan_behavior() -> None:
+    history = np.ones((3, 4, 39), dtype=np.float32)
+    future = np.ones((3, 2, 39), dtype=np.float32)
+    samples = np.ones((3, 2, 2, 39), dtype=np.float32)
+    quality = summarize_joint_quality(
+        history,
+        future,
+        samples,
+        factor_names=[f"factor-{index}" for index in range(14)],
+        iv_count=25,
+    )
+    conditional = quality["conditional_panel"]
+    assert np.isnan(conditional["history_activity_width_spearman"])
+    assert np.isnan(conditional["future_activity_width_spearman"])
+    assert all(row["ks_delta"] == 0.0 for row in quality["per_factor"])
+    assert all(row["q99_abs_delta_ratio"] == 0.0 for row in quality["per_factor"])
 
 
 def test_window_score_deck_reconciles_to_published_aggregates() -> None:

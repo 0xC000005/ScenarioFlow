@@ -16,6 +16,7 @@ from scenarioflow.workflows.multiseed import (
     prepare_output_root,
 )
 from scenarioflow.workflows.reproduction import record_completed_node
+import scenarioflow.workflows.reproduction as reproduction
 
 
 def test_multiseed_candidate_and_seed_order_is_frozen() -> None:
@@ -78,6 +79,53 @@ def test_protocol_is_native_manifest_bound_and_resume_idempotent(
         for node in evaluation_nodes
         if node["candidate"] != "garch_ccc"
     )
+    by_id = {node["node_id"]: node for node in first["nodes"]}
+    for seed in TRAIN_SEEDS:
+        stage1 = by_id[f"train:scenarioflow:stage1:{seed}"]
+        stage2 = by_id[f"train:scenarioflow:stage2:{seed}"]
+        graph = by_id[f"train:scenarioflow_graph:graph:{seed}"]
+        assert stage2["depends_on"] == [stage1["node_id"]]
+        assert graph["depends_on"] == [stage2["node_id"]]
+        assert stage1["command"][stage1["command"].index("--epochs") + 1] == "8"
+        assert stage2["command"][stage2["command"].index("--epochs") + 1] == "3"
+        assert graph["command"][graph["command"].index("--epochs") + 1] == "2"
+        assert stage1["command"][stage1["command"].index("--batch-size") + 1] == "32"
+        assert (
+            stage1["command"][stage1["command"].index("--max-train-windows") + 1]
+            == "2048"
+        )
+        for fine_tune in (stage2, graph):
+            assert (
+                fine_tune["command"][fine_tune["command"].index("--batch-size") + 1]
+                == "8"
+            )
+            assert (
+                fine_tune["command"][
+                    fine_tune["command"].index("--train-sample-count") + 1
+                ]
+                == "2"
+            )
+            assert (
+                fine_tune["command"][
+                    fine_tune["command"].index("--rollout-flow-steps") + 1
+                ]
+                == "4"
+            )
+        assert (
+            stage2["command"][stage2["command"].index("--max-train-windows") + 1] == "0"
+        )
+        assert (
+            graph["command"][graph["command"].index("--max-train-windows") + 1]
+            == "2048"
+        )
+    for node in first["nodes"]:
+        if node["action"] == "train" and node["candidate"] in {
+            "deepvar",
+            "timegrad",
+            "path_diffusion",
+            "deepvar_sni",
+        }:
+            assert node["command"][node["command"].index("--epochs") + 1] == "10"
     assert any(node["action"] == "train" for node in first["nodes"])
     assert all(
         node["protocol_contract_hash"] == first["contract_hash"]
@@ -205,6 +253,35 @@ def test_paired_comparison_preserves_seed_pairs_and_chronological_bootstrap() ->
     paired = summary["paired_comparisons"]["interface"]
     assert paired["n_seed_pairs"] == 15
     assert paired["window_uncertainty"]["CRPS"]["mean_delta"] == -0.25
+    assert {
+        item["bootstrap_seed"] for item in paired["window_uncertainty"].values()
+    } == {20260805}
+
+
+def test_aggregate_cli_always_requests_both_frozen_paired_controls(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured = {}
+    monkeypatch.setattr(reproduction, "collect_completed_runs", lambda _root: [])
+
+    def fake_aggregate(_runs, **kwargs):
+        captured.update(kwargs)
+        return {"ok": True}
+
+    monkeypatch.setattr(reproduction, "aggregate_results", fake_aggregate)
+    reproduction.main(
+        [
+            "aggregate",
+            "--output-root",
+            str(tmp_path),
+            "--output",
+            str(tmp_path / "summary.json"),
+        ]
+    )
+    assert captured["paired_comparisons"] == (
+        ("deepvar_vs_deepvar_support", "deepvar", "deepvar_sni"),
+        ("scenarioflow_vs_graph", "scenarioflow", "scenarioflow_graph"),
+    )
 
 
 def test_node_completion_is_hash_bound_and_resumable(tmp_path: Path) -> None:

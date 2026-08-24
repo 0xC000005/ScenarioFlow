@@ -154,7 +154,9 @@ def _load_batch(path: Path, device: torch.device) -> tuple[torch.Tensor, ...]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stage", choices=["stage1", "stage2"], default="stage1")
+    parser.add_argument(
+        "--stage", choices=["stage1", "stage2", "graph"], default="stage1"
+    )
     parser.add_argument(
         "--batch-npz", type=Path, help="Portable six-array training batch"
     )
@@ -166,6 +168,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--output", type=Path, help="Output checkpoint path")
     parser.add_argument("--steps", type=int, default=1)
+    parser.add_argument("--epochs", type=int)
+    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--max-train-windows", type=int, default=0)
+    parser.add_argument("--config-overrides", type=Path)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--seed", type=int, default=662)
@@ -186,39 +192,58 @@ def main(argv: list[str] | None = None) -> None:
     np.random.seed(int(args.seed))
     device = torch.device(args.device)
     if args.checkpoint is not None:
-        model, _ = load_model(args.checkpoint, device)
+        overrides = (
+            None
+            if args.config_overrides is None
+            else json.loads(args.config_overrides.read_text(encoding="utf-8"))
+        )
+        model, _ = load_model(args.checkpoint, device, cfg_overrides=overrides)
     else:
         config = json.loads(args.config.read_text(encoding="utf-8"))
         model = GenericStateAwareNormalizedInnovationFlowMatching(
             GenericStateAwareNormalizedInnovationFMConfig(**config)
         ).to(device)
     batch = _load_batch(args.batch_npz, device)
+    if args.max_train_windows > 0:
+        batch = tuple(value[: args.max_train_windows] for value in batch)
+    if not batch[0].shape[0]:
+        parser.error("the training batch must contain at least one window")
     if args.config is not None:
         initialize_level_quantiles(model, batch[0], batch[2])
     optimizer = torch.optim.AdamW(model.parameters(), lr=float(args.lr))
     metrics: dict[str, float] = {}
-    for _ in range(int(args.steps)):
-        if args.stage == "stage1":
-            metrics = stage1_training_step(model, optimizer, *batch)
-        else:
-            metrics = stage2_training_step(
-                model,
-                optimizer,
-                *batch,
-                train_sample_count=int(args.train_sample_count),
-                rollout_flow_steps=int(args.rollout_flow_steps),
-                energy_weight=float(args.energy_weight),
-                fm_anchor_weight=1.0,
-                horizon_end_weight=1.2,
-                energy_eps=1e-6,
-                temperature=1.0,
-            )
+    training_steps = int(args.epochs if args.epochs is not None else args.steps)
+    generator = torch.Generator(device="cpu").manual_seed(int(args.seed))
+    window_count = int(batch[0].shape[0])
+    batch_size = min(int(args.batch_size), window_count)
+    if batch_size <= 0:
+        parser.error("--batch-size must be positive")
+    for _ in range(training_steps):
+        permutation = torch.randperm(window_count, generator=generator)
+        for start in range(0, window_count, batch_size):
+            positions = permutation[start : start + batch_size].to(device)
+            mini_batch = tuple(value.index_select(0, positions) for value in batch)
+            if args.stage == "stage1":
+                metrics = stage1_training_step(model, optimizer, *mini_batch)
+            else:
+                metrics = stage2_training_step(
+                    model,
+                    optimizer,
+                    *mini_batch,
+                    train_sample_count=int(args.train_sample_count),
+                    rollout_flow_steps=int(args.rollout_flow_steps),
+                    energy_weight=float(args.energy_weight),
+                    fm_anchor_weight=1.0,
+                    horizon_end_weight=1.2,
+                    energy_eps=1e-6,
+                    temperature=1.0,
+                )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     save_checkpoint(
         args.output,
         model,
         model.cfg,
-        epoch=int(args.steps),
+        epoch=training_steps,
         best_val=float(metrics.get("total", float("nan"))),
         extra={"training_stage": args.stage},
     )

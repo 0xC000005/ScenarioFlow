@@ -6,10 +6,14 @@ from pathlib import Path
 
 import pytest
 
+import scenarioflow.evaluation.garch_ccc_contract as garch_contract
+
 from scenarioflow.evaluation.garch_ccc_contract import (
     EXPECTED_SOURCE_BLOB,
     EXPECTED_SOURCE_REVISION,
     FROZEN_SUMMARY_SHA256,
+    FROZEN_REPLAY_MANIFEST_SHA256,
+    FROZEN_REPLAY_RESULT_SHA256,
     FROZEN_TABLE_SHA256,
     SOURCE_TAG,
     build_garch_ccc_contract_report,
@@ -97,6 +101,10 @@ def test_frozen_gaussian_document_contract_validates_precision_and_identity() ->
     assert report["overall_pass"] is True
     assert report["candidate"] == "garch_ccc"
     assert report["authority"]["summary_sha256"] == FROZEN_SUMMARY_SHA256
+    assert report["authority"]["replay_result_sha256"] == FROZEN_REPLAY_RESULT_SHA256
+    assert (
+        report["authority"]["replay_manifest_sha256"] == FROZEN_REPLAY_MANIFEST_SHA256
+    )
     assert report["authority"]["table_sha256"] == FROZEN_TABLE_SHA256
 
 
@@ -117,10 +125,50 @@ def test_public_validator_rejects_arbitrary_self_hashed_fixture(tmp_path: Path) 
     summary = source / "summary.json"
     table_path = source / "table.tex"
     summary.write_text(json.dumps({"result": result, "manifest": manifest}))
+    replay_result = source / "result.json"
+    replay_manifest = source / "manifest.json"
+    replay_result.write_text(json.dumps(result))
+    replay_manifest.write_text(json.dumps(manifest))
     table_path.write_text(table)
     with pytest.raises(ValueError, match="frozen summary checksum"):
         validate_published_row(
             summary_path=summary,
+            replay_result_path=replay_result,
+            replay_manifest_path=replay_manifest,
             table_path=table_path,
             output_dir=tmp_path / "report",
         )
+
+
+def test_public_validator_authenticates_separate_replay_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    result, manifest, table = _documents()
+    summary = source / "summary.json"
+    replay_manifest = source / "manifest.json"
+    replay_result = source / "result.json"
+    table_path = source / "table.tex"
+    summary.write_text(json.dumps({"result": result}))
+    replay_result.write_text(json.dumps(result))
+    replay_manifest.write_text(json.dumps(manifest))
+    table_path.write_text(table)
+    monkeypatch.setattr(garch_contract, "FROZEN_SUMMARY_SHA256", _sha(summary))
+    monkeypatch.setattr(
+        garch_contract, "FROZEN_REPLAY_RESULT_SHA256", _sha(replay_result)
+    )
+    monkeypatch.setattr(
+        garch_contract, "FROZEN_REPLAY_MANIFEST_SHA256", _sha(replay_manifest)
+    )
+    monkeypatch.setattr(garch_contract, "FROZEN_TABLE_SHA256", _sha(table_path))
+    report = validate_published_row(
+        summary_path=summary,
+        replay_result_path=replay_result,
+        replay_manifest_path=replay_manifest,
+        table_path=table_path,
+        output_dir=tmp_path / "report",
+    )
+    assert report["source_artifacts"]["replay_manifest"]["sha256"] == _sha(
+        replay_manifest
+    )

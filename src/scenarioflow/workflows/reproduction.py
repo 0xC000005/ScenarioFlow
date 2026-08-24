@@ -19,6 +19,8 @@ from ..evaluation.garch_ccc_contract import (
     EXPECTED_SOURCE_BLOB,
     EXPECTED_SOURCE_REVISION,
     FROZEN_SUMMARY_SHA256,
+    FROZEN_REPLAY_MANIFEST_SHA256,
+    FROZEN_REPLAY_RESULT_SHA256,
     FROZEN_TABLE_SHA256,
     REPORT_SCHEMA,
     SOURCE_TAG,
@@ -60,7 +62,9 @@ def _validate_identity(
 ) -> None:
     if candidate not in CANDIDATE_IDS:
         raise ProtocolValidationError(f"unknown candidate {candidate!r}")
-    if rollout_seed not in ROLLOUT_SEEDS:
+    if rollout_seed not in ROLLOUT_SEEDS and not (
+        candidate == "garch_ccc" and rollout_seed == 772
+    ):
         raise ProtocolValidationError(
             f"rollout seed must be one of {list(ROLLOUT_SEEDS)}"
         )
@@ -113,8 +117,10 @@ def record_completed_node(
     if len(matching) != 1:
         raise ProtocolValidationError("node ID is absent or duplicated in protocol")
     node = matching[0]
-    if node.get("action") != "evaluate":
-        raise ProtocolValidationError("only evaluation nodes produce result manifests")
+    if node.get("action") not in {"evaluate", "authority"}:
+        raise ProtocolValidationError(
+            "only evaluation/authority nodes produce result manifests"
+        )
     candidate = str(node["candidate"])
     train_seed = node.get("train_seed")
     rollout_seed = int(node["rollout_seed"])
@@ -142,6 +148,8 @@ def record_completed_node(
     if candidate == "garch_ccc":
         expected_authority = {
             "summary_sha256": FROZEN_SUMMARY_SHA256,
+            "replay_result_sha256": FROZEN_REPLAY_RESULT_SHA256,
+            "replay_manifest_sha256": FROZEN_REPLAY_MANIFEST_SHA256,
             "table_sha256": FROZEN_TABLE_SHA256,
             "source_revision": EXPECTED_SOURCE_REVISION,
             "source_blob": EXPECTED_SOURCE_BLOB,
@@ -154,6 +162,19 @@ def record_completed_node(
             and garch_contract_report.get("overall_pass") is True
             and garch_contract_report.get("immutable_authority") is True
             and garch_contract_report.get("authority") == expected_authority
+            and {
+                key: value.get("sha256")
+                for key, value in garch_contract_report.get(
+                    "source_artifacts", {}
+                ).items()
+                if isinstance(value, Mapping)
+            }
+            == {
+                "summary": FROZEN_SUMMARY_SHA256,
+                "replay_result": FROZEN_REPLAY_RESULT_SHA256,
+                "replay_manifest": FROZEN_REPLAY_MANIFEST_SHA256,
+                "table": FROZEN_TABLE_SHA256,
+            }
             and isinstance(garch_contract_report.get("structural_checks"), list)
             and isinstance(garch_contract_report.get("exact_headline_checks"), list)
             and isinstance(garch_contract_report.get("display_rounded_checks"), list)
@@ -230,7 +251,7 @@ def collect_completed_runs(output_root: str | Path) -> list[dict[str, Any]]:
     nodes = {
         node["node_id"]: node
         for node in protocol.get("nodes", [])
-        if isinstance(node, Mapping) and node.get("action") == "evaluate"
+        if isinstance(node, Mapping) and node.get("action") in {"evaluate", "authority"}
     }
     runs: list[dict[str, Any]] = []
     for manifest_path in sorted(root.rglob("run_manifest.json")):
@@ -256,28 +277,32 @@ def collect_completed_runs(output_root: str | Path) -> list[dict[str, Any]]:
             raise ProtocolValidationError(
                 f"completed result checksum mismatch: {result_path}"
             )
-        window_path = manifest_path.parent / manifest["candidate"] / "window_scores.npz"
-        if not window_path.is_file():
-            raise ProtocolValidationError(
-                f"completed run has no window scores: {window_path}"
+        window_scores = None
+        if manifest["candidate"] != "garch_ccc":
+            window_path = (
+                manifest_path.parent / manifest["candidate"] / "window_scores.npz"
             )
-        with np.load(window_path, allow_pickle=False) as deck:
-            window_scores = {
-                name: np.asarray(deck[name])
-                for name in (
-                    "window_indices",
-                    "crps_contributions",
-                    "energy_contributions",
-                    "variogram_h30_contributions",
+            if not window_path.is_file():
+                raise ProtocolValidationError(
+                    f"completed run has no window scores: {window_path}"
                 )
-            }
+            with np.load(window_path, allow_pickle=False) as deck:
+                window_scores = {
+                    name: np.asarray(deck[name])
+                    for name in (
+                        "window_indices",
+                        "crps_contributions",
+                        "energy_contributions",
+                        "variogram_h30_contributions",
+                    )
+                }
         runs.append(
             {
                 "candidate": manifest["candidate"],
                 "train_seed": manifest["train_seed"],
                 "rollout_seed": manifest["rollout_seed"],
                 "result": json.loads(text),
-                "window_scores": window_scores,
+                **({} if window_scores is None else {"window_scores": window_scores}),
             }
         )
     return runs
@@ -289,7 +314,7 @@ def train_baseline(
     data_dir: str | Path,
     checkpoint_out: str | Path,
     train_seed: int,
-    steps: int = 1,
+    epochs: int = 10,
     batch_size: int = 64,
 ) -> Path:
     """Fit a package neural baseline from the committed pre-test window block."""
@@ -346,17 +371,17 @@ def train_baseline(
     rng = np.random.default_rng(train_seed)
     last = 0.0
     model.train()
-    for _ in range(steps):
-        indices = rng.choice(
-            history.shape[0], size=min(batch_size, history.shape[0]), replace=False
-        )
-        h = torch.from_numpy(history[indices])
-        f = torch.from_numpy(future[indices])
-        optimizer.zero_grad(set_to_none=True)
-        loss = model(h, f)
-        loss.backward()
-        optimizer.step()
-        last = float(loss.detach())
+    for _ in range(epochs):
+        indices = rng.permutation(history.shape[0])
+        for start in range(0, history.shape[0], batch_size):
+            positions = indices[start : start + batch_size]
+            h = torch.from_numpy(history[positions])
+            f = torch.from_numpy(future[positions])
+            optimizer.zero_grad(set_to_none=True)
+            loss = model(h, f)
+            loss.backward()
+            optimizer.step()
+            last = float(loss.detach())
     destination = Path(checkpoint_out)
     if candidate == "deepvar_sni":
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -407,7 +432,7 @@ def build_parser() -> argparse.ArgumentParser:
     training.add_argument("--data-dir", required=True)
     training.add_argument("--checkpoint-out", required=True)
     training.add_argument("--train-seed", required=True, type=int)
-    training.add_argument("--steps", type=int, default=1)
+    training.add_argument("--epochs", type=int, required=True)
     training.add_argument("--batch-size", type=int, default=64)
     aggregate = subcommands.add_parser(
         "aggregate", help="aggregate a complete resumed DAG"
@@ -463,12 +488,18 @@ def main(argv: list[str] | None = None) -> None:
                 data_dir=args.data_dir,
                 checkpoint_out=args.checkpoint_out,
                 train_seed=args.train_seed,
-                steps=args.steps,
+                epochs=args.epochs,
                 batch_size=args.batch_size,
             )
         )
         return
-    summary = aggregate_results(collect_completed_runs(args.output_root))
+    summary = aggregate_results(
+        collect_completed_runs(args.output_root),
+        paired_comparisons=(
+            ("deepvar_vs_deepvar_support", "deepvar", "deepvar_sni"),
+            ("scenarioflow_vs_graph", "scenarioflow", "scenarioflow_graph"),
+        ),
+    )
     output = Path(args.output)
     _write_atomic(output, json.dumps(summary, indent=2, sort_keys=True) + "\n")
     print(output)
