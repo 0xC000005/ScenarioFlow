@@ -246,7 +246,7 @@ def _run_paper(arguments: list[str]) -> int:
         raise ArtifactError(f"unknown paper command: {arguments[0]}")
     from .paper import tables
 
-    return tables.main(arguments[1:])
+    return tables.main(arguments[1:], prog="scenarioflow paper export-tables")
 
 
 def main(argv: list[str] | None = None) -> int | None:

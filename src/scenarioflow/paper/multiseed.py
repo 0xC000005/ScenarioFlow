@@ -490,16 +490,31 @@ def _assert_output_is_safe(path: Path) -> None:
         raise MultiseedExportError("refusing to overwrite frozen evidence")
 
 
+def render_multiseed_table(summary_path: Path) -> str:
+    """Validate the frozen aggregate and render the reader-facing table."""
+    return _render_table(_load_summary(Path(summary_path)))
+
+
 def export_multiseed_table(summary_path: Path, output_path: Path) -> Path:
     """Validate the sole frozen aggregate and render its exact paper table."""
-    source = Path(summary_path)
     destination = Path(output_path)
-    _assert_output_is_safe(destination)
-    summary = _load_summary(source)
-    text = _render_table(summary)
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary: Path | None = None
     try:
+        _assert_output_is_safe(destination)
+    except (OSError, RuntimeError) as error:
+        raise MultiseedExportError("multi-seed output path is unusable") from error
+    text = render_multiseed_table(summary_path)
+    temporary: Path | None = None
+    output_error: OSError | None = None
+    try:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if destination.is_dir():
+            raise IsADirectoryError
+        if (
+            (destination.exists() or destination.is_symlink())
+            and not destination.is_file()
+            and not destination.is_symlink()
+        ):
+            raise OSError
         with tempfile.NamedTemporaryFile(
             mode="w",
             encoding="utf-8",
@@ -512,25 +527,38 @@ def export_multiseed_table(summary_path: Path, output_path: Path) -> Path:
             temporary = Path(handle.name)
             handle.write(text)
         temporary.replace(destination)
+    except OSError as error:
+        output_error = error
     finally:
         if temporary is not None:
-            temporary.unlink(missing_ok=True)
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError as error:
+                if output_error is None:
+                    output_error = error
+    if output_error is not None:
+        raise MultiseedExportError(
+            "multi-seed output path is unusable"
+        ) from output_error
     return destination
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog="python -m scenarioflow.paper.multiseed", description=__doc__
+    )
     parser.add_argument("--summary", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
+    parser = _parser()
+    args = parser.parse_args(argv)
     try:
         path = export_multiseed_table(args.summary, args.output)
     except MultiseedExportError as error:
-        _parser().error(str(error))
+        parser.error(str(error))
     print(path)
     return 0
 

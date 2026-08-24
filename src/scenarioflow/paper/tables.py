@@ -22,7 +22,7 @@ from ..evaluation.current_panel import (
 )
 from ..workflows.multiseed import CANDIDATE_IDS
 from .authority import AuthorityError, verify_release_authorities
-from .multiseed import METRIC_SPECS, MultiseedExportError, export_multiseed_table
+from .multiseed import METRIC_SPECS, MultiseedExportError, render_multiseed_table
 
 
 BENCHMARK_SCHEMA = "scenarioflow.paper-benchmark.v1"
@@ -569,24 +569,130 @@ def _golden_payload(name: str) -> bytes:
     return path.read_bytes()
 
 
-def _atomic_bytes(path: Path, payload: bytes) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary: Path | None = None
+def _path_entry_exists(path: Path) -> bool:
+    return path.exists() or path.is_symlink()
+
+
+def _cleanup_paths(paths: Sequence[Path]) -> list[OSError]:
+    errors: list[OSError] = []
+    for path in paths:
+        try:
+            path.unlink(missing_ok=True)
+        except OSError as error:
+            errors.append(error)
+    return errors
+
+
+def _preflight_output_paths(destinations: Sequence[Path]) -> None:
+    if not destinations:
+        raise BenchmarkExportError("benchmark output set is empty")
+    output = destinations[0].parent
+    try:
+        output.mkdir(parents=True, exist_ok=True)
+        if not output.is_dir():
+            raise NotADirectoryError
+        for destination in destinations:
+            if destination.parent != output:
+                raise BenchmarkExportError("benchmark outputs must share one directory")
+            if destination.is_dir():
+                raise IsADirectoryError
+            if (
+                _path_entry_exists(destination)
+                and not destination.is_file()
+                and not destination.is_symlink()
+            ):
+                raise OSError
+    except OSError as error:
+        raise BenchmarkExportError("benchmark output path is unusable") from error
+
+
+def _stage_output(destination: Path, payload: bytes) -> Path:
+    staged: Path | None = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="wb",
-            dir=path.parent,
-            prefix=f".{path.name}.",
+            dir=destination.parent,
+            prefix=f".{destination.name}.stage.",
             suffix=".tmp",
             delete=False,
         ) as handle:
-            temporary = Path(handle.name)
+            staged = Path(handle.name)
             handle.write(payload)
-        temporary.replace(path)
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
-    return path
+        return staged
+    except OSError:
+        if staged is not None:
+            _cleanup_paths((staged,))
+        raise
+
+
+def _reserve_backup(destination: Path) -> Path:
+    backup: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            dir=destination.parent,
+            prefix=f".{destination.name}.restore.",
+            suffix=".backup",
+            delete=False,
+        ) as handle:
+            backup = Path(handle.name)
+        return backup
+    except OSError:
+        if backup is not None:
+            _cleanup_paths((backup,))
+        raise
+
+
+def _write_output_batch(payloads: Mapping[Path, bytes]) -> None:
+    destinations = tuple(payloads)
+    _preflight_output_paths(destinations)
+    staged: dict[Path, Path] = {}
+    try:
+        for destination, payload in payloads.items():
+            staged[destination] = _stage_output(destination, payload)
+    except OSError as error:
+        _cleanup_paths(tuple(staged.values()))
+        raise BenchmarkExportError("benchmark output path is unusable") from error
+
+    backups: dict[Path, Path] = {}
+    committed: list[Path] = []
+    try:
+        for destination in destinations:
+            if not _path_entry_exists(destination):
+                continue
+            backup = _reserve_backup(destination)
+            try:
+                destination.replace(backup)
+            except OSError:
+                _cleanup_paths((backup,))
+                raise
+            backups[destination] = backup
+        for destination in destinations:
+            staged[destination].replace(destination)
+            committed.append(destination)
+    except OSError as error:
+        rollback_errors = _cleanup_paths(tuple(reversed(committed)))
+        for destination in reversed(destinations):
+            backup = backups.get(destination)
+            if backup is None:
+                continue
+            try:
+                backup.replace(destination)
+            except OSError as rollback_error:
+                rollback_errors.append(rollback_error)
+        rollback_errors.extend(_cleanup_paths(tuple(staged.values())))
+        rollback_errors.extend(_cleanup_paths(tuple(backups.values())))
+        message = (
+            "benchmark output commit failed and rollback was incomplete"
+            if rollback_errors
+            else "benchmark output commit failed; previous outputs restored"
+        )
+        raise BenchmarkExportError(message) from error
+
+    # Every destination is committed at this point. Cleanup is best effort so a
+    # stale backup cannot relabel a successful export as a failed transaction.
+    _cleanup_paths(tuple(backups.values()))
+    _cleanup_paths(tuple(staged.values()))
 
 
 def _json_bytes(document: Mapping[str, Any]) -> bytes:
@@ -602,7 +708,7 @@ def _json_bytes(document: Mapping[str, Any]) -> bytes:
     ).encode("utf-8")
 
 
-def _write_csv(path: Path, document: Mapping[str, Any]) -> Path:
+def _csv_bytes(document: Mapping[str, Any]) -> bytes:
     metric_names = [name for name, _metric_path in METRIC_PATHS]
     fields = [
         "candidate_id",
@@ -639,7 +745,7 @@ def _write_csv(path: Path, document: Mapping[str, Any]) -> Path:
                 "FMTS Econ ratio": repr(row["fmts_metrics"]["Econ ratio"]),
             }
         )
-    return _atomic_bytes(path, handle.getvalue().encode("utf-8"))
+    return handle.getvalue().encode("utf-8")
 
 
 def _validated_render_rows(
@@ -903,11 +1009,14 @@ def render_benchmark_fragments(document: Mapping[str, Any]) -> dict[str, str]:
     }
 
 
-def export_benchmark_tables(
+def _benchmark_export_payloads(
     authorities: Mapping[str, Path], output_dir: Path
-) -> dict[str, Path]:
-    """Validate frozen result authorities and export reader-facing table views."""
-    output = _assert_output_is_safe(output_dir)
+) -> tuple[dict[str, Path], dict[Path, bytes]]:
+    """Validate authorities and prepare the complete benchmark output set."""
+    try:
+        output = _assert_output_is_safe(output_dir)
+    except (OSError, RuntimeError) as error:
+        raise BenchmarkExportError("benchmark output path is unusable") from error
     verified = _verified_authorities(authorities)
     document = _build_document(verified)
     paths = {
@@ -917,9 +1026,11 @@ def export_benchmark_tables(
         "fmts_short_tex": output / "fmts-benchmark-short.tex",
         "icaif_tex": output / "icaif-benchmark.tex",
     }
-    _atomic_bytes(paths["benchmark_json"], _json_bytes(document))
-    _write_csv(paths["benchmark_csv"], document)
     fragments = render_benchmark_fragments(document)
+    payloads = {
+        paths["benchmark_json"]: _json_bytes(document),
+        paths["benchmark_csv"]: _csv_bytes(document),
+    }
     for output_key, golden_name in (
         ("fmts_full_tex", "fmts-benchmark-full.tex"),
         ("fmts_short_tex", "fmts-benchmark-short.tex"),
@@ -930,27 +1041,43 @@ def export_benchmark_tables(
             raise BenchmarkExportError(
                 f"rendered {golden_name} drifted from its verified golden"
             )
-        _atomic_bytes(paths[output_key], payload)
+        payloads[paths[output_key]] = payload
+    return paths, payloads
+
+
+def export_benchmark_tables(
+    authorities: Mapping[str, Path], output_dir: Path
+) -> dict[str, Path]:
+    """Validate frozen result authorities and export reader-facing table views."""
+    paths, payloads = _benchmark_export_payloads(authorities, output_dir)
+    _write_output_batch(payloads)
     return paths
 
 
-def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+def _parser(*, prog: str) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog=prog, description=__doc__)
     parser.add_argument("--authority", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    parser = _parser()
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    prog: str = "python -m scenarioflow.paper.tables",
+) -> int:
+    parser = _parser(prog=prog)
     args = parser.parse_args(argv)
     try:
         root = args.authority.expanduser().resolve().parent.parent
         authorities = authority_paths_from_manifest(args.authority, root=root)
-        paths = export_benchmark_tables(authorities, args.output)
-        paths["fmts_multiseed_tex"] = export_multiseed_table(
-            authorities[MULTISEED_ID], args.output / "fmts-multiseed.tex"
-        )
+        paths, payloads = _benchmark_export_payloads(authorities, args.output)
+        multiseed_path = paths["benchmark_json"].parent / "fmts-multiseed.tex"
+        paths["fmts_multiseed_tex"] = multiseed_path
+        payloads[multiseed_path] = render_multiseed_table(
+            authorities[MULTISEED_ID]
+        ).encode("utf-8")
+        _write_output_batch(payloads)
     except (BenchmarkExportError, MultiseedExportError) as error:
         parser.error(str(error))
     print(

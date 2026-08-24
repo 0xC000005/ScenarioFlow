@@ -7,11 +7,14 @@ import json
 import math
 from pathlib import Path
 import statistics
+import subprocess
+import sys
 
+import pytest
 from scipy.stats import t as student_t
 
 from scenarioflow.evaluation.current_panel import METRIC_PATHS
-from scenarioflow.paper.multiseed import export_multiseed_table
+from scenarioflow.paper.multiseed import MultiseedExportError, export_multiseed_table
 from scenarioflow.workflows.multiseed import ROLLOUT_SEEDS, TRAIN_SEEDS
 
 
@@ -138,3 +141,53 @@ def test_multiseed_export_cannot_follow_a_preexisting_temporary_symlink(
 
     assert victim.read_bytes() == b"leave this file unchanged"
     assert exported.read_bytes() == GOLDEN.read_bytes()
+
+
+def test_multiseed_unwritable_output_is_an_exporter_error(tmp_path: Path) -> None:
+    """A real permission failure must not escape as a raw OSError."""
+    output_dir = tmp_path / "readonly"
+    output_dir.mkdir(mode=0o500)
+    try:
+        with pytest.raises(MultiseedExportError, match="output path"):
+            export_multiseed_table(SUMMARY, output_dir / "table.tex")
+        assert list(output_dir.iterdir()) == []
+    finally:
+        output_dir.chmod(0o700)
+
+
+def test_multiseed_module_help_uses_a_copyable_command_name() -> None:
+    """Direct module help must identify the module command explicitly."""
+    completed = subprocess.run(
+        [sys.executable, "-m", "scenarioflow.paper.multiseed", "--help"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout.startswith("usage: python -m scenarioflow.paper.multiseed ")
+
+
+def test_multiseed_cli_normalizes_unusable_output_path(tmp_path: Path) -> None:
+    """The module command must turn an output OSError into exit 2."""
+    output = tmp_path / "existing-directory"
+    output.mkdir()
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scenarioflow.paper.multiseed",
+            "--summary",
+            str(SUMMARY),
+            "--output",
+            str(output),
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 2
+    assert "Traceback" not in completed.stderr
+    assert "multi-seed output path is unusable" in completed.stderr
+    assert output.is_dir()

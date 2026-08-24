@@ -11,6 +11,7 @@ import sys
 
 import pytest
 
+from scenarioflow.paper import tables as paper_tables
 from scenarioflow.paper.tables import (
     BenchmarkExportError,
     authority_paths_from_manifest,
@@ -66,6 +67,13 @@ ICAIF_CANDIDATES = [
     "timegrad",
     "path_diffusion",
 ]
+BENCHMARK_FILENAMES = (
+    "benchmark.json",
+    "benchmark.csv",
+    "fmts-benchmark-full.tex",
+    "fmts-benchmark-short.tex",
+    "icaif-benchmark.tex",
+)
 
 
 def _sha256(path: Path) -> str:
@@ -235,6 +243,141 @@ def test_benchmark_export_cannot_follow_a_preexisting_temporary_symlink(
     assert paths["benchmark_csv"].is_file()
 
 
+def test_benchmark_preflights_every_destination_before_writing(
+    tmp_path: Path,
+) -> None:
+    """A bad final destination must not leave earlier table files behind."""
+    authorities = authority_paths_from_manifest(AUTHORITY_MANIFEST, root=ROOT)
+    output = tmp_path / "output"
+    output.mkdir()
+    blocked = output / "icaif-benchmark.tex"
+    blocked.mkdir()
+
+    with pytest.raises(BenchmarkExportError, match="output path"):
+        export_benchmark_tables(authorities, output)
+
+    assert list(output.iterdir()) == [blocked]
+
+
+def test_benchmark_late_commit_failure_restores_all_existing_outputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failed later rename must restore every pre-export destination byte."""
+    authorities = authority_paths_from_manifest(AUTHORITY_MANIFEST, root=ROOT)
+    output = tmp_path / "output"
+    output.mkdir()
+    original = {}
+    for name in BENCHMARK_FILENAMES:
+        payload = f"original:{name}".encode()
+        original[name] = payload
+        (output / name).write_bytes(payload)
+
+    real_replace = Path.replace
+
+    def fail_on_fourth_table(source: Path, target: Path) -> Path:
+        destination = Path(target)
+        if (
+            destination.name == "fmts-benchmark-short.tex"
+            and source.name.startswith(f".{destination.name}.")
+            and source.suffix == ".tmp"
+        ):
+            raise OSError("injected late commit failure")
+        return real_replace(source, target)
+
+    monkeypatch.setattr(Path, "replace", fail_on_fourth_table)
+
+    with pytest.raises(BenchmarkExportError, match="commit"):
+        export_benchmark_tables(authorities, output)
+
+    assert {
+        name: (output / name).read_bytes() for name in BENCHMARK_FILENAMES
+    } == original
+    assert {path.name for path in output.iterdir()} == set(BENCHMARK_FILENAMES)
+
+
+def test_backup_cleanup_failure_does_not_relabel_a_successful_commit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Once every output commits, stale-backup cleanup is best effort."""
+    authorities = authority_paths_from_manifest(AUTHORITY_MANIFEST, root=ROOT)
+    output = tmp_path / "output"
+    output.mkdir()
+    for name in BENCHMARK_FILENAMES:
+        (output / name).write_bytes(f"original:{name}".encode())
+
+    real_unlink = Path.unlink
+
+    def fail_backup_cleanup(path: Path, *args: object, **kwargs: object) -> None:
+        if path.suffix == ".backup":
+            raise OSError("injected backup cleanup failure")
+        real_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "unlink", fail_backup_cleanup)
+
+    paths = export_benchmark_tables(authorities, output)
+
+    assert paths["benchmark_json"].read_text(encoding="utf-8").startswith("{")
+    assert (
+        paths["fmts_full_tex"].read_bytes()
+        == (GOLDEN / "fmts-benchmark-full.tex").read_bytes()
+    )
+
+
+def test_benchmark_unwritable_output_is_an_exporter_error(tmp_path: Path) -> None:
+    """A real permission failure must not escape as a raw OSError."""
+    authorities = authority_paths_from_manifest(AUTHORITY_MANIFEST, root=ROOT)
+    output = tmp_path / "readonly"
+    output.mkdir(mode=0o500)
+    try:
+        with pytest.raises(BenchmarkExportError, match="output path"):
+            export_benchmark_tables(authorities, output)
+        assert list(output.iterdir()) == []
+    finally:
+        output.chmod(0o700)
+
+
+def test_failed_stage_write_removes_its_partial_temporary_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A write failure inside one stage file must not orphan hidden output."""
+    authorities = authority_paths_from_manifest(AUTHORITY_MANIFEST, root=ROOT)
+    output = tmp_path / "output"
+    output.mkdir()
+    real_named_temporary_file = paper_tables.tempfile.NamedTemporaryFile
+
+    class FailingTemporaryFile:
+        def __init__(self, handle: object) -> None:
+            self.handle = handle
+            self.name = handle.name
+
+        def __enter__(self) -> "FailingTemporaryFile":
+            self.handle.__enter__()
+            return self
+
+        def write(self, payload: bytes) -> None:
+            self.handle.write(payload[:1])
+            self.handle.flush()
+            raise OSError("injected staged write failure")
+
+        def __exit__(self, *args: object) -> object:
+            return self.handle.__exit__(*args)
+
+    stage_count = 0
+
+    def fail_during_write(*args: object, **kwargs: object) -> object:
+        nonlocal stage_count
+        stage_count += 1
+        handle = real_named_temporary_file(*args, **kwargs)
+        return FailingTemporaryFile(handle) if stage_count == 2 else handle
+
+    monkeypatch.setattr(paper_tables.tempfile, "NamedTemporaryFile", fail_during_write)
+
+    with pytest.raises(BenchmarkExportError, match="output path"):
+        export_benchmark_tables(authorities, output)
+
+    assert list(output.iterdir()) == []
+
+
 def test_table_module_and_native_cli_export_only_to_requested_directory(
     tmp_path: Path,
 ) -> None:
@@ -303,3 +446,156 @@ def test_table_cli_reports_invalid_authority_without_a_traceback(
     assert completed.returncode == 2
     assert "Traceback" not in completed.stderr
     assert "error:" in completed.stderr
+
+
+@pytest.mark.parametrize(
+    ("command", "expected_prog"),
+    [
+        (
+            [sys.executable, "-m", "scenarioflow.paper.tables", "--help"],
+            "python -m scenarioflow.paper.tables",
+        ),
+        (
+            [
+                sys.executable,
+                "-m",
+                "scenarioflow.cli",
+                "paper",
+                "export-tables",
+                "--help",
+            ],
+            "scenarioflow paper export-tables",
+        ),
+    ],
+)
+def test_benchmark_help_uses_the_invoked_command_name(
+    command: list[str], expected_prog: str
+) -> None:
+    """Nested and direct help must show a command the reader can copy."""
+    completed = subprocess.run(
+        command,
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout.startswith(f"usage: {expected_prog} ")
+
+
+@pytest.mark.parametrize("surface", ["module", "native"])
+def test_benchmark_cli_normalizes_unusable_output_path(
+    tmp_path: Path, surface: str
+) -> None:
+    """Both benchmark command surfaces must turn output OSErrors into exit 2."""
+    output = tmp_path / "not-a-directory"
+    output.write_bytes(b"keep")
+    prefix = (
+        [sys.executable, "-m", "scenarioflow.paper.tables"]
+        if surface == "module"
+        else [
+            sys.executable,
+            "-m",
+            "scenarioflow.cli",
+            "paper",
+            "export-tables",
+        ]
+    )
+    completed = subprocess.run(
+        [
+            *prefix,
+            "--authority",
+            str(AUTHORITY_MANIFEST),
+            "--output",
+            str(output),
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 2
+    assert "Traceback" not in completed.stderr
+    assert "benchmark output path is unusable" in completed.stderr
+    assert output.read_bytes() == b"keep"
+
+
+@pytest.mark.parametrize("surface", ["module", "native"])
+def test_combined_table_cli_does_not_commit_benchmark_before_bad_multiseed_path(
+    tmp_path: Path, surface: str
+) -> None:
+    """A blocked sixth output must leave none of the first five files behind."""
+    output = tmp_path / "output"
+    output.mkdir()
+    blocked = output / "fmts-multiseed.tex"
+    blocked.mkdir()
+    prefix = (
+        [sys.executable, "-m", "scenarioflow.paper.tables"]
+        if surface == "module"
+        else [
+            sys.executable,
+            "-m",
+            "scenarioflow.cli",
+            "paper",
+            "export-tables",
+        ]
+    )
+    completed = subprocess.run(
+        [
+            *prefix,
+            "--authority",
+            str(AUTHORITY_MANIFEST),
+            "--output",
+            str(output),
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 2
+    assert "Traceback" not in completed.stderr
+    assert list(output.iterdir()) == [blocked]
+
+
+def test_combined_table_cli_restores_all_outputs_if_sixth_commit_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The combined command must roll back benchmark files with its sixth file."""
+    output = tmp_path / "output"
+    output.mkdir()
+    names = (*BENCHMARK_FILENAMES, "fmts-multiseed.tex")
+    original = {}
+    for name in names:
+        payload = f"original:{name}".encode()
+        original[name] = payload
+        (output / name).write_bytes(payload)
+
+    real_replace = Path.replace
+
+    def fail_on_multiseed_commit(source: Path, target: Path) -> Path:
+        destination = Path(target)
+        if (
+            destination.name == "fmts-multiseed.tex"
+            and source.name.startswith(f".{destination.name}.stage.")
+            and source.suffix == ".tmp"
+        ):
+            raise OSError("injected sixth commit failure")
+        return real_replace(source, target)
+
+    monkeypatch.setattr(Path, "replace", fail_on_multiseed_commit)
+
+    with pytest.raises(SystemExit) as error:
+        paper_tables.main(
+            [
+                "--authority",
+                str(AUTHORITY_MANIFEST),
+                "--output",
+                str(output),
+            ]
+        )
+
+    assert error.value.code == 2
+    assert "Traceback" not in capsys.readouterr().err
+    assert {name: (output / name).read_bytes() for name in names} == original
+    assert {path.name for path in output.iterdir()} == set(names)
