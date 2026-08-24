@@ -1,0 +1,50 @@
+{
+  "window_index": 120,
+  "context": {
+    "SPX": [2020.0, 2025.0, 2018.0],
+    "VIX": [18.0, 19.2, 20.1]
+  },
+  "report": {
+    "generation": {
+      "path_quantiles": [
+        {
+          "market": "SPX",
+          "display_name": "S&P 500",
+          "value_kind": "raw_level",
+          "start_level": 2018.0,
+          "p10": [1990.0, 1970.0],
+          "p50": [2010.0, 2000.0],
+          "p90": [2040.0, 2050.0],
+          "mean": [2008.0, 1998.0],
+          "sample_paths": [[2005.0, 1995.0], [2022.0, 2012.0]]
+        }
+      ],
+      "start_only_baseline": {
+        "path_quantiles": [
+          {
+            "market": "SPX",
+            "display_name": "S&P 500",
+            "value_kind": "raw_level",
+            "start_level": 2018.0,
+            "p10": [1995.0, 1980.0],
+            "p50": [2016.0, 2014.0],
+            "p90": [2042.0, 2048.0],
+            "mean": [2016.0, 2013.0],
+            "sample_paths": [[2011.0, 2009.0]]
+          }
+        ]
+      },
+      "posterior_ensemble": {
+        "selected_support": [
+          {
+            "history_start_date": "2005-09-09",
+            "window_id": "window-120",
+            "base_support_weight": 0.55,
+            "memory_support_cosine": 0.84,
+            "component_sample_count": 84
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "sidecar": {
+    "scenario_id": "historical-2016-03-22",
+    "scenario_type": "historical_joint39",
+    "scenario_title": "Dollar liquidity shock",
+    "archetype": "risk_off",
+    "horizon_days": 30,
+    "factor_rows": [
+      {
+        "factor": "SPX",
+        "start": 2049.8,
+        "end": 2035.9,
+        "delta": -13.9,
+        "direction": "down",
+        "magnitude": "small",
+        "confidence": "observed",
+        "evidence": "SPX fell by 13.9 points.",
+        "path_values": [2049.8, 2040.1, 2035.9]
+      }
+    ],
+    "mechanical_summary": "SPX down small",
+    "normalization_warnings": [],
+    "summary_source": "historical_joint39",
+    "sample_count": null,
+    "source_artifacts": {"cards_jsonl": "nl.episode-cards"}
+  },
+  "packet": {
+    "scenario_sidecar": {
+      "scenario_id": "historical-2016-03-22",
+      "scenario_type": "historical_joint39",
+      "scenario_title": "Dollar liquidity shock",
+      "archetype": "risk_off",
+      "horizon_days": 30,
+      "factor_rows": [
+        {
+          "factor": "SPX",
+          "start": 2049.8,
+          "end": 2035.9,
+          "delta": -13.9,
+          "direction": "down",
+          "magnitude": "small",
+          "confidence": "observed",
+          "evidence": "SPX fell by 13.9 points.",
+          "path_values": [2049.8, 2040.1, 2035.9]
+        }
+      ],
+      "mechanical_summary": "SPX down small",
+      "normalization_warnings": [],
+      "summary_source": "historical_joint39",
+      "sample_count": null,
+      "source_artifacts": {"cards_jsonl": "nl.episode-cards"}
+    },
+    "positive_narratives": [
+      {"view": "risk_manager", "text": "Equities softened over the month."}
+    ],
+    "hard_negative_narratives": [
+      {"view": "risk_manager", "text": "Equities rallied sharply."}
+    ],
+    "paired_review": [],
+    "validation": {"status": "passed", "error_count": 0},
+    "artifact_paths": {}
+  }
+}
