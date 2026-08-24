@@ -155,3 +155,24 @@ def test_release_scanner_ignores_local_virtual_environments(tmp_path: Path) -> N
     )
     assert result.returncode == 0
     assert result.stdout == "release checks passed\n"
+
+
+def test_release_scanner_ignores_internal_plan_bookkeeping(tmp_path: Path) -> None:
+    """Ignored execution ledgers must not enter the candidate release scan."""
+    ledger = tmp_path / ".superpowers" / "sdd" / "release-plan" / "progress.md"
+    ledger.parent.mkdir(parents=True)
+    ledger.write_text("working copy: /" + "home" + "/example/private\n")
+    result = subprocess.run(
+        [
+            "python",
+            str(ROOT / "scripts" / "check_release.py"),
+            "--root",
+            str(tmp_path),
+            "--all",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0
+    assert result.stdout == "release checks passed\n"

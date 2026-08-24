@@ -22,6 +22,10 @@ dependencies = [
 dev = ["pytest>=8"]
 baseline-classical = ["arch>=7"]
 baseline-deep = []
+demo-openai = ["openai>=1"]
+
+[project.scripts]
+scenarioflow = "scenarioflow.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

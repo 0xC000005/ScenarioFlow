@@ -11,7 +11,7 @@ from typing import Iterable
 
 MAX_GITHUB_FILE_BYTES = 100 * 1024 * 1024
 SKIP_SUFFIXES = {".npz", ".parquet", ".pyc", ".pyo"}
-SKIP_DIRECTORY_NAMES = {".git", ".venv", "__pycache__"}
+SKIP_DIRECTORY_NAMES = {".git", ".superpowers", ".venv", "__pycache__"}
 SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----"),
     re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
