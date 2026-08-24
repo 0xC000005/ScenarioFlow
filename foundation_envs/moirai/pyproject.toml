@@ -1,0 +1,12 @@
+[project]
+name = "scenarioflow-moirai-baseline"
+version = "0.1.0"
+requires-python = "==3.11.*"
+dependencies = [
+  "numpy==1.26.4",
+  "torch==2.4.1",
+  "uni2ts @ git+https://github.com/SalesforceAIResearch/uni2ts.git@cfd46d4510ed8896f263116f32928eede05b0a75",
+]
+
+[tool.uv]
+package = false
