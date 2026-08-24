@@ -176,3 +176,74 @@ def test_release_scanner_ignores_internal_plan_bookkeeping(tmp_path: Path) -> No
     )
     assert result.returncode == 0
     assert result.stdout == "release checks passed\n"
+
+
+def test_release_scanner_excludes_only_the_fetched_artifact_cache(
+    tmp_path: Path,
+) -> None:
+    """Fetched files may exceed GitHub limits, but other large files must still fail."""
+    cached = tmp_path / "artifacts" / "cache" / "foundation" / "model.ckpt"
+    cached.parent.mkdir(parents=True)
+    with cached.open("wb") as handle:
+        handle.seek(100 * 1024 * 1024)
+        handle.write(b"x")
+    command = [
+        "python",
+        str(ROOT / "scripts" / "check_release.py"),
+        "--root",
+        str(tmp_path),
+        "--size",
+    ]
+    cached_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert cached_result.returncode == 0
+
+    other = tmp_path / "artifacts" / "other-cache" / "model.ckpt"
+    other.parent.mkdir(parents=True)
+    with other.open("wb") as handle:
+        handle.seek(100 * 1024 * 1024)
+        handle.write(b"x")
+    other_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert other_result.returncode == 1
+    assert "artifacts/other-cache/model.ckpt" in other_result.stdout
+
+    file_shaped_root = tmp_path / "file-shaped-cache"
+    file_shaped = file_shaped_root / "artifacts" / "cache"
+    file_shaped.parent.mkdir(parents=True)
+    with file_shaped.open("wb") as handle:
+        handle.seek(100 * 1024 * 1024)
+        handle.write(b"x")
+    file_shaped_result = subprocess.run(
+        [command[0], command[1], "--root", str(file_shaped_root), "--size"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert file_shaped_result.returncode == 1
+    assert "file exceeds GitHub 100 MiB limit: artifacts/cache" in file_shaped_result.stdout
+
+
+def test_release_scanner_still_scans_tracked_artifact_authorities(
+    tmp_path: Path,
+) -> None:
+    """Skipping fetched bytes must not hide unsafe tracked manifest text."""
+    manifest = tmp_path / "artifacts" / "manifest-v1.tsv"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("source=/" + "home" + "/example/private\n")
+    result = subprocess.run(
+        [
+            "python",
+            str(ROOT / "scripts" / "check_release.py"),
+            "--root",
+            str(tmp_path),
+            "--all",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "absolute host path: artifacts/manifest-v1.tsv" in result.stdout

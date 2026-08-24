@@ -103,8 +103,17 @@ def _verified(path: Path, record: ArtifactRecord) -> bool:
     )
 
 
-def _root_path(root: str | Path) -> Path:
-    return Path(root).expanduser().resolve(strict=False)
+def _root_path(root: str | Path, *, label: str) -> Path:
+    supplied = Path(root).expanduser()
+    if not supplied.is_absolute():
+        supplied = Path.cwd() / supplied
+    lexical = Path(os.path.abspath(supplied))
+    current = Path(lexical.anchor)
+    for component in lexical.parts[1:]:
+        current = current / component
+        if current.is_symlink():
+            raise ArtifactError(f"{label} or an ancestor is a symlink")
+    return lexical
 
 
 def _safe_target(root: Path, relative_path: str) -> Path:
@@ -255,7 +264,7 @@ class ArtifactResolver:
 
     def status(self, artifact_id: str, artifact_root: str | Path) -> ArtifactStatus:
         record = self.record(artifact_id)
-        root = _root_path(artifact_root)
+        root = _root_path(artifact_root, label="artifact root")
         try:
             final = _safe_target(root, record.relative_path)
             part = final.with_name(final.name + ".part")
@@ -288,7 +297,7 @@ class ArtifactResolver:
 
     def resolve(self, artifact_id: str, artifact_root: str | Path) -> Path:
         record = self.record(artifact_id)
-        root = _root_path(artifact_root)
+        root = _root_path(artifact_root, label="artifact root")
         target = _safe_target(root, record.relative_path)
         status = self.status(artifact_id, root)
         if status.state != "present":
@@ -315,7 +324,10 @@ class ArtifactResolver:
         selected = [self.record(artifact_id) for artifact_id in artifact_ids]
         if not selected:
             raise ArtifactError("no artifacts were selected")
-        root = _root_path(artifact_root)
+        root = _root_path(artifact_root, label="artifact root")
+        bundle_root = (
+            None if bundle_dir is None else _root_path(bundle_dir, label="bundle root")
+        )
         pending: list[ArtifactRecord] = []
         for record in selected:
             status = self.status(record.artifact_id, root)
@@ -345,7 +357,6 @@ class ArtifactResolver:
                 "no artifact source configured; provide --base-url or --bundle-dir"
             )
 
-        bundle_root = None if bundle_dir is None else _root_path(bundle_dir)
         for record in pending:
             target = _safe_target(root, record.relative_path)
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -411,15 +422,15 @@ class ArtifactResolver:
         headers = {"Accept-Encoding": "identity"}
         if start is not None:
             headers["Range"] = f"bytes={start}-"
-        request = Request(url, headers=headers)
         try:
+            request = Request(url, headers=headers)
             return urlopen(request, timeout=60)
         except HTTPError as error:
             if start is not None and error.code == 416:
                 error.close()
                 return None
             raise ArtifactError("remote artifact request failed") from error
-        except (URLError, OSError) as error:
+        except (URLError, OSError, ValueError) as error:
             raise ArtifactError("remote artifact request failed") from error
 
     def _fetch_remote(
@@ -439,7 +450,12 @@ class ArtifactResolver:
         if start >= record.expected_bytes:
             part.unlink()
             start = 0
-        url = urljoin(base_url.rstrip("/") + "/", record.url_path)
+        try:
+            url = urljoin(base_url.rstrip("/") + "/", record.url_path)
+        except (TypeError, ValueError) as error:
+            raise self._source_failure(
+                record, "artifact base URL is invalid"
+            ) from error
         try:
             response = self._open_remote(url, start=start if start else None)
         except ArtifactError as error:

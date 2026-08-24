@@ -318,6 +318,62 @@ def test_symlink_destination_is_never_followed(tmp_path: Path) -> None:
     assert not list(outside.iterdir())
 
 
+@pytest.mark.parametrize("root_kind", ["root", "ancestor"])
+def test_symlinked_artifact_root_or_ancestor_is_rejected_before_resolution(
+    tmp_path: Path, root_kind: str
+) -> None:
+    """A caller-supplied artifact root must remain lexical and never follow a link."""
+    resolver = ArtifactResolver.from_tsv(_write_manifest(tmp_path / "manifest.tsv"))
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link = tmp_path / "linked-root"
+    link.symlink_to(outside, target_is_directory=True)
+    artifact_root = link if root_kind == "root" else link / "nested-cache"
+    with pytest.raises(ArtifactError, match="artifact root.*symlink"):
+        resolver.fetch(
+            ["core.fixture"],
+            artifact_root,
+            bundle_dir=tmp_path / "missing-bundle",
+        )
+    assert not list(outside.iterdir())
+
+
+@pytest.mark.parametrize("bundle_kind", ["root", "ancestor"])
+def test_symlinked_bundle_root_or_ancestor_is_rejected_before_resolution(
+    tmp_path: Path, bundle_kind: str
+) -> None:
+    """Local bundle selection must not follow a caller-controlled directory link."""
+    resolver = ArtifactResolver.from_tsv(_write_manifest(tmp_path / "manifest.tsv"))
+    outside = tmp_path / "outside-bundle"
+    outside.mkdir()
+    link = tmp_path / "linked-bundle"
+    link.symlink_to(outside, target_is_directory=True)
+    bundle = link if bundle_kind == "root" else link / "nested-bundle"
+    with pytest.raises(ArtifactError, match="bundle root.*symlink"):
+        resolver.fetch(["core.fixture"], tmp_path / "cache", bundle_dir=bundle)
+    assert not (tmp_path / "cache").exists()
+
+
+def test_symlinked_bundle_root_is_rejected_when_artifact_is_already_present(
+    tmp_path: Path,
+) -> None:
+    """Idempotent fetches must still reject an unsafe explicitly supplied source."""
+    payload = b"artifact-payload"
+    resolver = ArtifactResolver.from_tsv(
+        _write_manifest(tmp_path / "manifest.tsv", payload=payload)
+    )
+    cache = tmp_path / "cache"
+    final = cache / "models/core/fixture/best_model.pt"
+    final.parent.mkdir(parents=True)
+    final.write_bytes(payload)
+    outside = tmp_path / "outside-bundle"
+    outside.mkdir()
+    link = tmp_path / "linked-bundle"
+    link.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ArtifactError, match="bundle root.*symlink"):
+        resolver.fetch(["core.fixture"], cache, bundle_dir=link)
+
+
 class _RangeServer:
     def __init__(self, body: bytes, mode: str = "good") -> None:
         self.body = body
@@ -465,6 +521,22 @@ def test_remote_missing_member_uses_the_same_safe_authority_fields(
     assert "user" not in message
     assert "secret" not in message
     assert str(tmp_path) not in message
+
+
+def test_malformed_credential_bearing_base_url_is_redacted(tmp_path: Path) -> None:
+    """URL parsing failures must use only safe manifest authority fields."""
+    resolver = ArtifactResolver.from_tsv(_write_manifest(tmp_path / "manifest.tsv"))
+    malformed = "http://user:secret@[::1/release/"
+    with pytest.raises(ArtifactError) as caught:
+        resolver.fetch(["core.fixture"], tmp_path / "cache", base_url=malformed)
+    message = str(caught.value)
+    record = resolver.record("core.fixture")
+    assert record.artifact_id in message
+    assert record.url_path in message
+    assert record.sha256 in message
+    assert "user" not in message
+    assert "secret" not in message
+    assert malformed not in message
 
 
 def test_offline_mode_never_attempts_a_network_connection(

@@ -12,6 +12,7 @@ from typing import Iterable
 MAX_GITHUB_FILE_BYTES = 100 * 1024 * 1024
 SKIP_SUFFIXES = {".npz", ".parquet", ".pyc", ".pyo"}
 SKIP_DIRECTORY_NAMES = {".git", ".superpowers", ".venv", "__pycache__"}
+SKIP_RELATIVE_PREFIXES = {("artifacts", "cache")}
 SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----"),
     re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
@@ -25,7 +26,16 @@ WINDOWS_HOST_PATH_PATTERN = re.compile(r"\b[A-Za-z]:\\Users\\[^\s\"']+")
 def _release_files(root: Path) -> Iterable[Path]:
     for path in root.rglob("*"):
         relative_parts = path.relative_to(root).parts
-        if not path.is_file() or any(part in SKIP_DIRECTORY_NAMES for part in relative_parts):
+        ignored_prefix = any(
+            len(relative_parts) > len(prefix)
+            and relative_parts[: len(prefix)] == prefix
+            for prefix in SKIP_RELATIVE_PREFIXES
+        )
+        if (
+            not path.is_file()
+            or ignored_prefix
+            or any(part in SKIP_DIRECTORY_NAMES for part in relative_parts)
+        ):
             continue
         yield path
 
