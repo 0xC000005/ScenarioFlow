@@ -10,7 +10,6 @@ from pathlib import Path
 import re
 from typing import Iterable, Iterator
 
-
 MAX_GITHUB_FILE_BYTES = 100 * 1024 * 1024
 SKIP_SUFFIXES = {".npz", ".parquet", ".pyc", ".pyo"}
 SKIP_DIRECTORY_NAMES = {
@@ -19,6 +18,8 @@ SKIP_DIRECTORY_NAMES = {
     ".superpowers",
     ".venv",
     "__pycache__",
+    "dist",
+    "node_modules",
 }
 SKIP_RELATIVE_PREFIXES = {("artifacts", "cache")}
 SECRET_PATTERNS = (

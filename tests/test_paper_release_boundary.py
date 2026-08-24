@@ -10,7 +10,15 @@ PAPER_ASSETS = ROOT / "paper_assets"
 
 
 def _release_files() -> list[Path]:
-    ignored = {".git", ".pytest_cache", ".superpowers", ".venv", "__pycache__"}
+    ignored = {
+        ".git",
+        ".pytest_cache",
+        ".superpowers",
+        ".venv",
+        "__pycache__",
+        "dist",
+        "node_modules",
+    }
     return [
         path
         for path in ROOT.rglob("*")

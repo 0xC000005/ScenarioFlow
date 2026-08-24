@@ -11,7 +11,6 @@ import subprocess
 import numpy as np
 import pandas as pd
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 EXPECTED_DATA = {
@@ -210,6 +209,36 @@ def test_release_scanner_ignores_local_virtual_environments(tmp_path: Path) -> N
     )
     assert result.returncode == 0
     assert result.stdout == "release checks passed\n"
+
+
+def test_release_scanner_ignores_only_generated_web_dependencies_and_builds(
+    tmp_path: Path,
+) -> None:
+    """Installed npm packages and ignored builds are not public source files."""
+    for directory in ("node_modules", "dist"):
+        generated = tmp_path / "web" / directory / "generated.js"
+        generated.parent.mkdir(parents=True)
+        generated.write_text("/" + "home/example/dependency/source.js\n")
+    command = [
+        "python",
+        str(ROOT / "scripts" / "check_release.py"),
+        "--root",
+        str(tmp_path),
+        "--all",
+    ]
+    generated_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert generated_result.returncode == 0
+
+    lookalike = tmp_path / "web" / "dist-copy" / "generated.js"
+    lookalike.parent.mkdir()
+    lookalike.write_text("/" + "home/example/private/source.js\n")
+    lookalike_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert lookalike_result.returncode == 1
+    assert "web/dist-copy/generated.js" in lookalike_result.stdout
 
 
 def test_release_scanner_ignores_only_the_pytest_cache_directory(
