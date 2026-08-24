@@ -38,8 +38,11 @@ def _sha256(path: Path) -> str:
 
 def test_processed_data_filenames_checksums_and_total_size() -> None:
     """A renamed, changed, or omitted frozen data byte must fail this release gate."""
-    assert {path.name for path in DATA_DIR.iterdir() if path.is_file()} >= set(EXPECTED_DATA)
-    assert sum(path.stat().st_size for path in DATA_DIR.iterdir() if path.name in EXPECTED_DATA) == 4_392_783
+    released_files = {path.name for path in DATA_DIR.iterdir() if path.is_file()}
+    assert released_files == set(EXPECTED_DATA) | {"CHECKSUMS.tsv"}
+    dataset_files = released_files - {"CHECKSUMS.tsv"}
+    assert dataset_files == set(EXPECTED_DATA)
+    assert sum((DATA_DIR / filename).stat().st_size for filename in dataset_files) == 4_392_783
     for filename, (expected_size, expected_hash) in EXPECTED_DATA.items():
         path = DATA_DIR / filename
         assert path.stat().st_size == expected_size
@@ -129,3 +132,26 @@ def test_release_scanners_reject_secrets_and_host_paths(tmp_path: Path) -> None:
     assert result.returncode == 1
     assert "credential-shaped value" in result.stdout
     assert "absolute host path" in result.stdout
+
+
+def test_release_scanner_ignores_local_virtual_environments(tmp_path: Path) -> None:
+    """Host paths in ignored local dependencies must not block a source-release scan."""
+    virtual_environment = tmp_path / ".venv"
+    virtual_environment.mkdir()
+    (virtual_environment / "pyvenv.cfg").write_text(
+        "/" + "home" + "/" + "example" + "/python"
+    )
+    result = subprocess.run(
+        [
+            "python",
+            str(ROOT / "scripts" / "check_release.py"),
+            "--root",
+            str(tmp_path),
+            "--all",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0
+    assert result.stdout == "release checks passed\n"

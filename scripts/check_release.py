@@ -11,6 +11,7 @@ from typing import Iterable
 
 MAX_GITHUB_FILE_BYTES = 100 * 1024 * 1024
 SKIP_SUFFIXES = {".npz", ".parquet", ".pyc", ".pyo"}
+SKIP_DIRECTORY_NAMES = {".git", ".venv", "__pycache__"}
 SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----"),
     re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
@@ -21,9 +22,17 @@ HOST_PATH_PATTERN = re.compile(r"(?<![A-Za-z0-9_.-])/(?:home|Users|private|tmp)/
 WINDOWS_HOST_PATH_PATTERN = re.compile(r"\b[A-Za-z]:\\Users\\[^\s\"']+")
 
 
-def _text_files(root: Path) -> Iterable[Path]:
+def _release_files(root: Path) -> Iterable[Path]:
     for path in root.rglob("*"):
-        if not path.is_file() or ".git" in path.parts or path.suffix in SKIP_SUFFIXES:
+        relative_parts = path.relative_to(root).parts
+        if not path.is_file() or any(part in SKIP_DIRECTORY_NAMES for part in relative_parts):
+            continue
+        yield path
+
+
+def _text_files(root: Path) -> Iterable[Path]:
+    for path in _release_files(root):
+        if path.suffix in SKIP_SUFFIXES:
             continue
         try:
             path.read_text(encoding="utf-8")
@@ -57,8 +66,8 @@ def _host_path_issues(root: Path) -> list[str]:
 def _large_file_issues(root: Path) -> list[str]:
     return [
         f"file exceeds GitHub 100 MiB limit: {_relative(root, path)}"
-        for path in root.rglob("*")
-        if path.is_file() and ".git" not in path.parts and path.stat().st_size > MAX_GITHUB_FILE_BYTES
+        for path in _release_files(root)
+        if path.stat().st_size > MAX_GITHUB_FILE_BYTES
     ]
 
 
