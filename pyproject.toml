@@ -13,6 +13,7 @@ dependencies = [
     "numpy>=1.26",
     "pandas>=2.2",
     "pyarrow>=15",
+    "torch>=2.2",
 ]
 
 [project.optional-dependencies]
@@ -21,6 +22,9 @@ dev = ["pytest>=8"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
+filterwarnings = [
+    "ignore:enable_nested_tensor is True.*:UserWarning",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
