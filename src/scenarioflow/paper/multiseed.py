@@ -22,7 +22,6 @@ from ..workflows.multiseed import (
     TRAIN_SEEDS,
 )
 
-
 FROZEN_SUMMARY_BYTES = 692_525
 FROZEN_SUMMARY_SHA256 = (
     "4ebb4d26666cf3d05f8f85c03f678584c23be799479e94f328078fd6783eb3fb"
@@ -527,6 +526,7 @@ def export_multiseed_table(summary_path: Path, output_path: Path) -> Path:
             temporary = Path(handle.name)
             handle.write(text)
         temporary.replace(destination)
+        temporary = None
     except OSError as error:
         output_error = error
     finally:

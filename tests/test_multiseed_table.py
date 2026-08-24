@@ -17,7 +17,6 @@ from scenarioflow.evaluation.current_panel import METRIC_PATHS
 from scenarioflow.paper.multiseed import MultiseedExportError, export_multiseed_table
 from scenarioflow.workflows.multiseed import ROLLOUT_SEEDS, TRAIN_SEEDS
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SUMMARY = ROOT / "results" / "frozen" / "multiseed" / "summary.json"
 GOLDEN = ROOT / "paper_assets" / "tables" / "golden" / "fmts-multiseed.tex"
@@ -141,6 +140,27 @@ def test_multiseed_export_cannot_follow_a_preexisting_temporary_symlink(
 
     assert victim.read_bytes() == b"leave this file unchanged"
     assert exported.read_bytes() == GOLDEN.read_bytes()
+
+
+def test_multiseed_committed_output_survives_obsolete_temp_cleanup_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A completed atomic replace must remain a successful export."""
+    output = tmp_path / "table.tex"
+    output.write_bytes(b"previous output")
+    real_unlink = Path.unlink
+
+    def fail_temp_cleanup(path: Path, *args: object, **kwargs: object) -> None:
+        if path.name.startswith(".table.tex.") and path.suffix == ".tmp":
+            raise OSError("injected obsolete-temp cleanup failure")
+        real_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "unlink", fail_temp_cleanup)
+
+    exported = export_multiseed_table(SUMMARY, output)
+
+    assert exported == output
+    assert output.read_bytes() == GOLDEN.read_bytes()
 
 
 def test_multiseed_unwritable_output_is_an_exporter_error(tmp_path: Path) -> None:

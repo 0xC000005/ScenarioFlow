@@ -19,7 +19,6 @@ from scenarioflow.paper.tables import (
     render_benchmark_fragments,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 AUTHORITY_MANIFEST = ROOT / "results" / "FROZEN_AUTHORITY.tsv"
 GOLDEN = ROOT / "paper_assets" / "tables" / "golden"
@@ -293,6 +292,49 @@ def test_benchmark_late_commit_failure_restores_all_existing_outputs(
         name: (output / name).read_bytes() for name in BENCHMARK_FILENAMES
     } == original
     assert {path.name for path in output.iterdir()} == set(BENCHMARK_FILENAMES)
+
+
+def test_failed_restore_preserves_and_reports_the_original_backup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A double failure must leave the unrestored original recoverable."""
+    authorities = authority_paths_from_manifest(AUTHORITY_MANIFEST, root=ROOT)
+    output = tmp_path / "output"
+    output.mkdir()
+    original = {}
+    for name in BENCHMARK_FILENAMES:
+        payload = f"original:{name}".encode()
+        original[name] = payload
+        (output / name).write_bytes(payload)
+
+    real_replace = Path.replace
+    failed_restore: dict[str, Path] = {}
+
+    def fail_commit_then_restore(source: Path, target: Path) -> Path:
+        destination = Path(target)
+        if (
+            destination.name == "fmts-benchmark-short.tex"
+            and source.name.startswith(f".{destination.name}.stage.")
+            and source.suffix == ".tmp"
+        ):
+            raise OSError("injected commit failure")
+        if source.suffix == ".backup" and destination.name == "benchmark.json":
+            failed_restore["backup"] = source
+            raise OSError("injected restore failure")
+        return real_replace(source, target)
+
+    monkeypatch.setattr(Path, "replace", fail_commit_then_restore)
+
+    with pytest.raises(BenchmarkExportError) as error:
+        export_benchmark_tables(authorities, output)
+
+    recovery = failed_restore["backup"]
+    assert recovery.is_file()
+    assert recovery.read_bytes() == original["benchmark.json"]
+    assert str(recovery) in str(error.value)
+    assert "recovery" in str(error.value)
+    for name in BENCHMARK_FILENAMES[1:]:
+        assert (output / name).read_bytes() == original[name]
 
 
 def test_backup_cleanup_failure_does_not_relabel_a_successful_commit(

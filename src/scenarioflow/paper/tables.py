@@ -24,7 +24,6 @@ from ..workflows.multiseed import CANDIDATE_IDS
 from .authority import AuthorityError, verify_release_authorities
 from .multiseed import METRIC_SPECS, MultiseedExportError, render_multiseed_table
 
-
 BENCHMARK_SCHEMA = "scenarioflow.paper-benchmark.v1"
 
 SCENARIOFLOW_CURRENT_ID = (
@@ -672,6 +671,7 @@ def _write_output_batch(payloads: Mapping[Path, bytes]) -> None:
             committed.append(destination)
     except OSError as error:
         rollback_errors = _cleanup_paths(tuple(reversed(committed)))
+        failed_restores: dict[Path, Path] = {}
         for destination in reversed(destinations):
             backup = backups.get(destination)
             if backup is None:
@@ -680,13 +680,26 @@ def _write_output_batch(payloads: Mapping[Path, bytes]) -> None:
                 backup.replace(destination)
             except OSError as rollback_error:
                 rollback_errors.append(rollback_error)
+                failed_restores[destination] = backup
         rollback_errors.extend(_cleanup_paths(tuple(staged.values())))
-        rollback_errors.extend(_cleanup_paths(tuple(backups.values())))
-        message = (
-            "benchmark output commit failed and rollback was incomplete"
-            if rollback_errors
-            else "benchmark output commit failed; previous outputs restored"
+        preserved = set(failed_restores.values())
+        rollback_errors.extend(
+            _cleanup_paths(
+                tuple(backup for backup in backups.values() if backup not in preserved)
+            )
         )
+        if failed_restores:
+            recovery_paths = "; ".join(
+                sorted(str(path) for path in failed_restores.values())
+            )
+            message = (
+                "benchmark output commit failed and rollback was incomplete; "
+                f"original output recovery backup(s) preserved at: {recovery_paths}"
+            )
+        elif rollback_errors:
+            message = "benchmark output commit failed and rollback was incomplete"
+        else:
+            message = "benchmark output commit failed; previous outputs restored"
         raise BenchmarkExportError(message) from error
 
     # Every destination is committed at this point. Cleanup is best effort so a
