@@ -203,14 +203,30 @@ def _panel_batches(
     from .evaluation.current_panel import prepare_validation_blocks
 
     _panel, _columns, train, validation = prepare_validation_blocks(data_dir=data_dir)
-    return _block_batch(train, device), tuple(
-        value[:256] for value in _block_batch(validation, device)
-    )
+    return _block_batch(train, device), _block_batch(validation, device)
 
 
 def _frozen_stage1_config(
-    n_cells: int,
+    n_cells: int, *, smoke_model: bool = False
 ) -> GenericStateAwareNormalizedInnovationFMConfig:
+    if smoke_model:
+        return GenericStateAwareNormalizedInnovationFMConfig(
+            history_len=30,
+            future_len=30,
+            n_cells=int(n_cells),
+            memory_dim=16,
+            memory_layers=1,
+            memory_heads=1,
+            memory_ff=32,
+            token_dim=16,
+            token_layers=1,
+            token_heads=1,
+            token_ff=32,
+            model_dropout=0.0,
+            time_dim=8,
+            flow_steps=2,
+            prefix_feature_mode="scale",
+        )
     return GenericStateAwareNormalizedInnovationFMConfig(
         history_len=30,
         future_len=30,
@@ -250,6 +266,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--max-train-windows", type=int, default=0)
+    parser.add_argument("--max-val-windows", type=int, default=0)
+    parser.add_argument(
+        "--smoke-model",
+        action="store_true",
+        help="use an explicitly non-paper tiny architecture for bounded DAG smoke",
+    )
     parser.add_argument("--config-overrides", type=Path)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--device", default="cpu")
@@ -263,6 +285,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--free-running-fm-weight", type=float, default=0.0)
     parser.add_argument("--free-running-fm-prefix-steps", type=int, default=0)
     parser.add_argument("--graph-k", type=int, default=8)
+    parser.add_argument("--drop-last", action="store_true")
+    parser.add_argument(
+        "--channel-level-energy-coordinate",
+        choices=("level", "scaled_delta"),
+        default="level",
+    )
     return parser
 
 
@@ -309,7 +337,12 @@ def main(argv: list[str] | None = None) -> None:
         if config is None:
             preloaded_batches = _panel_batches(args.data_dir, device)
             train_preview, _validation_preview = preloaded_batches
-            config = asdict(_frozen_stage1_config(int(train_preview[0].shape[-1])))
+            config = asdict(
+                _frozen_stage1_config(
+                    int(train_preview[0].shape[-1]),
+                    smoke_model=bool(args.smoke_model),
+                )
+            )
         model = GenericStateAwareNormalizedInnovationFlowMatching(
             GenericStateAwareNormalizedInnovationFMConfig(**config)
         ).to(device)
@@ -322,6 +355,10 @@ def main(argv: list[str] | None = None) -> None:
         validation_batch = batch
     if args.max_train_windows > 0:
         batch = tuple(value[: args.max_train_windows] for value in batch)
+    if args.max_val_windows > 0:
+        validation_batch = tuple(
+            value[: args.max_val_windows] for value in validation_batch
+        )
     if not batch[0].shape[0]:
         parser.error("the training batch must contain at least one window")
     if args.stage == "stage1":
@@ -344,6 +381,8 @@ def main(argv: list[str] | None = None) -> None:
         permutation = torch.randperm(window_count, generator=generator)
         for start in range(0, window_count, batch_size):
             positions = permutation[start : start + batch_size].to(device)
+            if args.drop_last and positions.numel() < batch_size:
+                continue
             mini_batch = tuple(value.index_select(0, positions) for value in batch)
             if args.stage == "stage1":
                 metrics = stage1_training_step(
@@ -358,9 +397,7 @@ def main(argv: list[str] | None = None) -> None:
                     rollout_flow_steps=int(args.rollout_flow_steps),
                     energy_weight=float(args.energy_weight),
                     channel_level_energy_weight=float(args.channel_level_energy_weight),
-                    channel_level_energy_coordinate=(
-                        "scaled_delta" if args.stage == "graph" else "level"
-                    ),
+                    channel_level_energy_coordinate=args.channel_level_energy_coordinate,
                     free_running_fm_weight=float(args.free_running_fm_weight),
                     free_running_fm_prefix_steps=int(args.free_running_fm_prefix_steps),
                     fm_anchor_weight=1.0,
@@ -393,7 +430,7 @@ def main(argv: list[str] | None = None) -> None:
                             args.channel_level_energy_weight
                         ),
                         channel_level_energy_coordinate=(
-                            "scaled_delta" if args.stage == "graph" else "level"
+                            args.channel_level_energy_coordinate
                         ),
                         free_running_fm_weight=float(args.free_running_fm_weight),
                         free_running_fm_prefix_steps=int(

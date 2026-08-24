@@ -31,6 +31,7 @@ from ..baselines.g2 import DeepVARSNIInterfaceBaseline
 from ..data import load_aligned_iv_factor_panel, official_train_val_indices
 from ..state import (
     build_increment_coordinate_block,
+    clean_nonpositive_log_level_factors,
     normalize_increment_windows,
     reconstruct_state_from_increments,
     state_panel_from_specs,
@@ -529,9 +530,19 @@ def prepare_validation_blocks(
     *,
     data_dir: str | Path,
     protocol: ValidationProtocol = PUBLISHED_VALIDATION_PROTOCOL,
-) -> tuple[np.ndarray, list[str], Any, Any]:
+    include_metadata: bool = False,
+) -> (
+    tuple[np.ndarray, list[str], Any, Any]
+    | tuple[np.ndarray, list[str], Any, Any, dict[str, Any]]
+):
     """Build the exact pre-test train and published 441-window validation blocks."""
-    panel, columns, _dates = load_aligned_iv_factor_panel(data_dir=data_dir)
+    panel, columns, dates = load_aligned_iv_factor_panel(data_dir=data_dir)
+    panel, cleaning_report = clean_nonpositive_log_level_factors(
+        panel,
+        columns,
+        iv_count=protocol.iv_count,
+        positive_level_policy="reference_based",
+    )
     train_indices, val_indices = official_train_val_indices(
         test_start=protocol.test_start,
         val_size=protocol.val_size,
@@ -558,6 +569,22 @@ def prepare_validation_blocks(
     )
     if len(validation.specs) != protocol.state_count:
         raise RuntimeError(f"expected {protocol.state_count} states")
+    metadata = {
+        "dates_start": str(dates[0]) if len(dates) else None,
+        "dates_end": str(dates[-1]) if len(dates) else None,
+        "source_columns": list(columns),
+        "positive_level_policy": "reference_based",
+        "iv_transform": "bounded_logit",
+        "iv_lower_bound": 1e-4,
+        "iv_upper_bound": 1.0,
+        "cleaning_report": cleaning_report,
+        "train_indices_start": int(train_indices[0]) if len(train_indices) else None,
+        "train_indices_end": int(train_indices[-1]) if len(train_indices) else None,
+        "val_indices_start": int(val_indices[0]) if len(val_indices) else None,
+        "val_indices_end": int(val_indices[-1]) if len(val_indices) else None,
+    }
+    if include_metadata:
+        return panel, columns, train, validation, metadata
     return panel, columns, train, validation
 
 
@@ -877,7 +904,7 @@ def evaluate_baseline(
         local = torch.randperm(base.size, generator=shuffle_generator).numpy()
         if base.size > 1 and np.array_equal(local, np.arange(base.size)):
             local = np.roll(local, 1)
-        shuffled_chunks.append(sample_order(base[local]))
+        shuffled_chunks.append(sample_raw[base[local]])
     shuffled_raw = np.concatenate(shuffled_chunks, axis=0)
     raw_history = validation_block.history_state.astype(np.float32)
     raw_future = validation_block.future_state.astype(np.float32)
@@ -948,6 +975,7 @@ def evaluate_baseline(
         ),
         "raw_history": raw_history,
         "sample_raw": sample_raw,
+        "shuffled_sample_raw": shuffled_raw,
         "window_indices": validation_block.indices,
         "variable_names": [spec.name for spec in validation_block.specs],
     }
@@ -998,8 +1026,8 @@ def main(argv: list[str] | None = None) -> None:
     if not 1 <= args.max_windows <= PUBLISHED_VALIDATION_PROTOCOL.val_size:
         raise SystemExit("--max-windows must be between 1 and 441")
 
-    panel, columns, train, validation = prepare_validation_blocks(
-        data_dir=args.data_dir
+    panel, columns, train, validation, metadata = prepare_validation_blocks(
+        data_dir=args.data_dir, include_metadata=True
     )
     if args.max_windows < validation.indices.size:
         count = args.max_windows
@@ -1043,12 +1071,9 @@ def main(argv: list[str] | None = None) -> None:
     )
     result_path = write_result(args.output_dir, result)
     metadata = {
-        "train_indices_start": int(train.indices[0]),
-        "train_indices_end": int(train.indices[-1]),
+        **metadata,
         "val_indices_start": int(validation.indices[0]),
         "val_indices_end": int(validation.indices[-1]),
-        "iv_transform": "bounded_logit",
-        "positive_level_policy": "reference_based",
     }
     history_error, future_error = compute_block_alignment(panel, validation)
     if history_error > 1e-6 or future_error > 1e-6:
@@ -1110,7 +1135,11 @@ def main(argv: list[str] | None = None) -> None:
             enabled=True,
             output_path=candidate_dir / "window_scores.npz",
             existing_result=result,
-            **artifact_inputs,
+            **{
+                key: value
+                for key, value in artifact_inputs.items()
+                if key != "shuffled_sample_raw"
+            },
         )
     if (args.protocol is None) != (args.node_id is None):
         raise SystemExit("--protocol and --node-id must be supplied together")

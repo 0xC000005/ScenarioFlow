@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+import warnings
 
 import numpy as np
 import pytest
@@ -24,6 +25,7 @@ from scenarioflow.evaluation.current_panel import (
     build_run_manifest,
     compute_block_alignment,
     evaluate_iv_suite,
+    evaluate_baseline,
     main as evaluator_main,
     summarize_joint_quality,
     validate_result_schema,
@@ -71,6 +73,20 @@ def test_published_candidate_order_and_validation_split_are_frozen() -> None:
     )
     assert (len(train), train[0], train[-1]) == (4010, 0, 4009)
     assert (len(val), val[0], val[-1]) == (441, 4010, 4450)
+
+
+def test_validation_block_preserves_frozen_panel_metadata() -> None:
+    from scenarioflow.evaluation.current_panel import prepare_validation_blocks
+
+    _panel, columns, _train, _validation, metadata = prepare_validation_blocks(
+        data_dir="data", include_metadata=True
+    )
+    assert metadata["dates_start"] == "2000-01-03 00:00:00"
+    assert metadata["dates_end"] == "2023-02-24 00:00:00"
+    assert metadata["source_columns"] == columns
+    assert metadata["iv_lower_bound"] == 1e-4
+    assert metadata["iv_upper_bound"] == 1.0
+    assert metadata["cleaning_report"]["enabled"] is True
 
 
 @pytest.mark.parametrize("factory", [JointRandomWalk, JointBootstrap, JointPCAVAR])
@@ -413,6 +429,72 @@ def test_conditionality_uses_explicit_shuffled_model_deck_not_row_rotation() -> 
     assert diagnostics["avg_uncond_mae"] == pytest.approx(expected_mae)
     assert diagnostics["mae_reduction_pct"] > 5.0
     assert diagnostics["mae_pass"] is True
+
+
+def test_evaluator_shuffled_control_selects_existing_matched_decks_without_resampling() -> (
+    None
+):
+    from dataclasses import replace
+    from scenarioflow.evaluation.current_panel import prepare_validation_blocks
+
+    _panel, _columns, train, validation = prepare_validation_blocks(data_dir="data")
+    validation = replace(
+        validation,
+        history_increment=validation.history_increment[:4],
+        future_increment=validation.future_increment[:4],
+        history_state=validation.history_state[:4],
+        future_state=validation.future_state[:4],
+        indices=validation.indices[:4],
+    )
+
+    class CountingMatchedDeckSampler:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def sample_joint(self, history, *, n_samples, **_kwargs):
+            self.calls += 1
+            window_value = history[:, None, :1, :]
+            return np.repeat(window_value, n_samples * 30, axis=1).reshape(
+                history.shape[0], n_samples, 30, history.shape[-1]
+            )
+
+    model = CountingMatchedDeckSampler()
+    _result, artifacts = evaluate_baseline(
+        name="bootstrap",
+        model=model,
+        train_block=train,
+        validation_block=validation,
+        n_samples=2,
+        batch_size=2,
+        returns=np.load("data/vol_surface_with_ret.npz", allow_pickle=False)["ret"],
+        shuffle_seed=772,
+    )
+    assert model.calls == 2
+    matched_rows = artifacts["sample_raw"].reshape(4, -1)
+    shuffled_rows = artifacts["shuffled_sample_raw"].reshape(4, -1)
+    assert {tuple(row) for row in shuffled_rows} == {tuple(row) for row in matched_rows}
+
+
+def test_conditionality_truncates_matched_and_shuffled_decks_to_32_scenarios() -> None:
+    rng = np.random.default_rng(991)
+    history = rng.uniform(0.1, 0.4, size=(4, 30, 25))
+    truth = rng.uniform(0.1, 0.4, size=(4, 30, 25))
+    matched = np.repeat(truth[:, None], 40, axis=1)
+    shuffled = matched.copy()
+    matched[:, 32:] += 10.0
+    shuffled[:, 32:] -= 10.0
+    with warnings.catch_warnings(record=True) as caught:
+        suite, _metrics = evaluate_iv_suite(
+            matched,
+            truth,
+            history,
+            shuffled_samples=shuffled,
+            returns=rng.normal(0.0, 0.01, size=200),
+            window_indices=np.arange(40, 44),
+        )
+    assert not any(isinstance(item.message, RuntimeWarning) for item in caught)
+    assert suite["conditionality"]["avg_cond_mae"] == 0.0
+    assert suite["conditionality"]["avg_uncond_mae"] == 0.0
 
 
 def test_block_alignment_is_computed_from_panel_bytes() -> None:

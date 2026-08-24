@@ -11,6 +11,7 @@ import torch
 from scenarioflow.inference import sample_normalized_innovations
 from scenarioflow.model import save_checkpoint
 from scenarioflow.training import (
+    _panel_batches,
     initialize_level_quantiles,
     stage1_training_step,
     stage2_training_step,
@@ -152,3 +153,31 @@ def test_deep_trainer_saves_strict_best_validation_epoch_not_last(
     )
     assert saved == [1.0, 0.5]
     assert torch.load(checkpoint, weights_only=False)["best_val_loss"] == 0.5
+
+
+def test_scenarioflow_panel_batches_preserve_all_441_validation_windows(
+    monkeypatch,
+) -> None:
+    train = SimpleNamespace(
+        history_increment=np.zeros((3, 2, 3), dtype=np.float32),
+        future_increment=np.zeros((3, 2, 3), dtype=np.float32),
+        history_state=np.ones((3, 2, 3), dtype=np.float32),
+        future_state=np.ones((3, 2, 3), dtype=np.float32),
+    )
+    validation = SimpleNamespace(
+        history_increment=np.zeros((441, 2, 3), dtype=np.float32),
+        future_increment=np.zeros((441, 2, 3), dtype=np.float32),
+        history_state=np.ones((441, 2, 3), dtype=np.float32),
+        future_state=np.ones((441, 2, 3), dtype=np.float32),
+    )
+    import scenarioflow.evaluation.current_panel as current_panel
+
+    monkeypatch.setattr(
+        current_panel,
+        "prepare_validation_blocks",
+        lambda **_kwargs: (None, None, train, validation),
+    )
+    _train_batch, validation_batch = _panel_batches(
+        __import__("pathlib").Path("unused"), torch.device("cpu")
+    )
+    assert validation_batch[0].shape[0] == 441

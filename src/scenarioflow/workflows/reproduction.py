@@ -15,7 +15,12 @@ import numpy as np
 import torch
 
 from ..baselines.deep import build_model, save_checkpoint
-from ..evaluation.current_panel import METRIC_PATHS, prepare_validation_blocks
+from ..evaluation.current_panel import (
+    METRIC_PATHS,
+    ResultContractError,
+    prepare_validation_blocks,
+    validate_result_schema,
+)
 from ..state import normalize_increment_windows
 
 from ..evaluation.garch_ccc_contract import (
@@ -34,6 +39,9 @@ from .multiseed import (
     ROLLOUT_SEEDS,
     TRAIN_SEEDS,
     ProtocolValidationError,
+    FROZEN_ARTIFACT_ROWS,
+    FROZEN_SOURCE_ROWS,
+    _validate_manifest_rows,
     aggregate_results,
     build_protocol,
 )
@@ -43,6 +51,19 @@ RUN_MANIFEST_SCHEMA = "scenarioflow.multiseed-node.v1"
 
 def _canonical_json(payload: Mapping[str, Any]) -> str:
     return json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
+
+
+def _result_json(payload: Mapping[str, Any]) -> str:
+    portable = json.loads(
+        json.dumps(
+            payload,
+            allow_nan=True,
+            default=lambda value: (
+                value.item() if isinstance(value, np.generic) else value.tolist()
+            ),
+        )
+    )
+    return json.dumps(portable, sort_keys=True, separators=(",", ":"), allow_nan=True)
 
 
 def _digest_text(value: str) -> str:
@@ -105,6 +126,298 @@ def _validate_identity(
         )
 
 
+def _verify_protocol_authorities(protocol: Mapping[str, Any]) -> None:
+    contract = {
+        key: value
+        for key, value in protocol.items()
+        if key not in {"contract_hash", "output_root", "nodes"}
+    }
+    if protocol.get("contract_hash") != _digest_text(_canonical_json(contract)):
+        raise ProtocolValidationError("protocol contract hash drifted")
+    for key, expected, label in (
+        ("source_manifest", FROZEN_SOURCE_ROWS, "source"),
+        ("artifact_manifest", FROZEN_ARTIFACT_ROWS, "artifact"),
+    ):
+        authority = protocol.get(key)
+        if not isinstance(authority, Mapping):
+            raise ProtocolValidationError(f"protocol has no {label} manifest authority")
+        path = Path(str(authority.get("path", "")))
+        if not path.is_file() or hashlib.sha256(
+            path.read_bytes()
+        ).hexdigest() != authority.get("sha256"):
+            raise ProtocolValidationError(f"{label} manifest checksum drifted")
+        verified = _validate_manifest_rows(path, expected, label=label)
+        if protocol.get(f"{label}_authority") != verified:
+            raise ProtocolValidationError(f"protocol {label} authority drifted")
+
+
+def _validate_evaluation_manifest(
+    manifest: Mapping[str, Any],
+    *,
+    protocol: Mapping[str, Any],
+    node: Mapping[str, Any],
+) -> None:
+    validation = protocol["validation_protocol"]
+    if manifest.get("mode") != protocol.get("mode"):
+        raise ProtocolValidationError("evaluation manifest mode drifted")
+    if manifest.get("benchmark_split") != protocol.get("benchmark_split"):
+        raise ProtocolValidationError("evaluation manifest benchmark split drifted")
+    if manifest.get("n_val_windows") != validation.get("val_size"):
+        raise ProtocolValidationError("evaluation manifest validation count drifted")
+    if manifest.get("n_samples") != validation.get("n_samples"):
+        raise ProtocolValidationError("evaluation manifest sample count drifted")
+    if manifest.get("seed") != node.get("rollout_seed"):
+        raise ProtocolValidationError("evaluation manifest seed drifted")
+    columns = manifest.get("columns")
+    metadata = manifest.get("metadata")
+    if (
+        not isinstance(columns, list)
+        or not columns
+        or not isinstance(metadata, Mapping)
+    ):
+        raise ProtocolValidationError("evaluation panel metadata is malformed")
+    if metadata.get("source_columns") != columns:
+        raise ProtocolValidationError("evaluation source columns drifted")
+    if not all(
+        isinstance(metadata.get(key), str) and metadata.get(key)
+        for key in ("dates_start", "dates_end")
+    ):
+        raise ProtocolValidationError("evaluation panel dates are missing")
+    if (
+        metadata.get("positive_level_policy") != "reference_based"
+        or metadata.get("iv_transform") != "bounded_logit"
+        or metadata.get("iv_lower_bound") != 1e-4
+        or metadata.get("iv_upper_bound") != 1.0
+        or not isinstance(metadata.get("cleaning_report"), Mapping)
+        or metadata["cleaning_report"].get("enabled") is not True
+    ):
+        raise ProtocolValidationError("evaluation cleaning/bounds authority drifted")
+    alignment = manifest.get("iv_alignment")
+    if not isinstance(alignment, Mapping):
+        raise ProtocolValidationError("evaluation manifest has no IV alignment")
+    for key in ("history_max_abs_error", "future_max_abs_error"):
+        try:
+            value = float(alignment[key])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ProtocolValidationError(
+                "evaluation alignment is malformed"
+            ) from error
+        if not np.isfinite(value) or value > 1e-6:
+            raise ProtocolValidationError("evaluation alignment exceeds 1e-6")
+    provenance = manifest.get("provenance")
+    if not isinstance(provenance, Mapping):
+        raise ProtocolValidationError("evaluation manifest has no provenance")
+    recorded = provenance.get("data_artifacts")
+    expected_data = {
+        Path(path).name: digest for path, digest in FROZEN_ARTIFACT_ROWS.items()
+    }
+    if recorded != expected_data:
+        raise ProtocolValidationError("evaluation data artifact authority drifted")
+    evaluator = provenance.get("evaluator")
+    command_config = _command_configuration(list(node["command"]))
+    expected_evaluator = {
+        "baseline": node["candidate"],
+        "batch_size": int(command_config["batch_size"]),
+        "max_windows": int(command_config["max_windows"]),
+        "n_samples": int(command_config["n_samples"]),
+        "seed": int(command_config["seed"]),
+    }
+    if evaluator != expected_evaluator:
+        raise ProtocolValidationError("evaluation command provenance drifted")
+
+
+def _valid_garch_contract_report(report: Mapping[str, Any] | None) -> bool:
+    expected_authority = {
+        "summary_sha256": FROZEN_SUMMARY_SHA256,
+        "replay_result_sha256": FROZEN_REPLAY_RESULT_SHA256,
+        "replay_manifest_sha256": FROZEN_REPLAY_MANIFEST_SHA256,
+        "table_sha256": FROZEN_TABLE_SHA256,
+        "source_revision": EXPECTED_SOURCE_REVISION,
+        "source_blob": EXPECTED_SOURCE_BLOB,
+        "source_tag": SOURCE_TAG,
+    }
+    return bool(
+        isinstance(report, Mapping)
+        and report.get("schema_version") == REPORT_SCHEMA
+        and report.get("candidate") == "garch_ccc"
+        and report.get("overall_pass") is True
+        and report.get("immutable_authority") is True
+        and report.get("authority") == expected_authority
+        and {
+            key: value.get("sha256")
+            for key, value in report.get("source_artifacts", {}).items()
+            if isinstance(value, Mapping)
+        }
+        == {
+            "summary": FROZEN_SUMMARY_SHA256,
+            "replay_result": FROZEN_REPLAY_RESULT_SHA256,
+            "replay_manifest": FROZEN_REPLAY_MANIFEST_SHA256,
+            "table": FROZEN_TABLE_SHA256,
+        }
+        and isinstance(report.get("structural_checks"), list)
+        and isinstance(report.get("exact_headline_checks"), list)
+        and isinstance(report.get("display_rounded_checks"), list)
+        and all(
+            check.get("passed") is True
+            for key in (
+                "structural_checks",
+                "exact_headline_checks",
+                "display_rounded_checks",
+            )
+            for check in report.get(key, [])
+        )
+    )
+
+
+def _validate_window_scores(path: Path, *, n_windows: int) -> None:
+    if not path.is_file():
+        raise ProtocolValidationError(f"completed run has no window scores: {path}")
+    try:
+        with np.load(path, allow_pickle=False) as deck:
+            expected_shapes = {
+                "window_indices": (n_windows,),
+                "crps_contributions": (n_windows, 4, 39),
+                "energy_contributions": (n_windows, 4),
+                "variogram_h30_contributions": (n_windows,),
+            }
+            for name, shape in expected_shapes.items():
+                values = np.asarray(deck[name])
+                if values.shape != shape or not np.isfinite(values).all():
+                    raise ProtocolValidationError(f"window score {name} is malformed")
+            indices = np.asarray(deck["window_indices"], dtype=np.int64)
+            if indices.size > 1 and not np.all(np.diff(indices) > 0):
+                raise ProtocolValidationError("window score chronology drifted")
+    except (OSError, KeyError, ValueError) as error:
+        if isinstance(error, ProtocolValidationError):
+            raise
+        raise ProtocolValidationError("window score artifact is unreadable") from error
+
+
+def _validate_completed_evaluation(
+    root: Path,
+    protocol: Mapping[str, Any],
+    node: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+) -> dict[str, Any]:
+    _verify_protocol_authorities(protocol)
+    if manifest.get("schema_version") != RUN_MANIFEST_SCHEMA:
+        raise ProtocolValidationError(
+            "completed evaluation run manifest schema drifted"
+        )
+    if manifest.get("protocol_contract_hash") != protocol.get("contract_hash"):
+        raise ProtocolValidationError("completed evaluation protocol hash drifted")
+    if manifest.get("node_id") != node.get("node_id"):
+        raise ProtocolValidationError("completed evaluation node identity drifted")
+    expected_command = list(node["command"])
+    if manifest.get("command") != expected_command or manifest.get(
+        "command_sha256"
+    ) != _digest_text(json.dumps(expected_command, separators=(",", ":"))):
+        raise ProtocolValidationError("completed evaluation command drifted")
+    expected_configuration = dict(protocol["validation_protocol"])
+    if manifest.get("configuration") != expected_configuration or manifest.get(
+        "configuration_sha256"
+    ) != _digest_text(_canonical_json(expected_configuration)):
+        raise ProtocolValidationError("completed evaluation configuration drifted")
+    expected_sources = {
+        "source_manifest": dict(protocol["source_manifest"]),
+        "artifact_manifest": dict(protocol["artifact_manifest"]),
+        "source_authority": dict(protocol["source_authority"]),
+        "artifact_authority": dict(protocol["artifact_authority"]),
+    }
+    if manifest.get("source_verification") != expected_sources:
+        raise ProtocolValidationError("completed evaluation source authority drifted")
+    result_path = root / str(manifest.get("result_path", ""))
+    if not result_path.is_file() or hashlib.sha256(
+        result_path.read_bytes()
+    ).hexdigest() != manifest.get("result_sha256"):
+        raise ProtocolValidationError("completed result checksum mismatch")
+    try:
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        validate_result_schema(
+            result,
+            canonical_counts=protocol.get("benchmark_split") == "published_validation",
+        )
+    except (OSError, json.JSONDecodeError, ResultContractError) as error:
+        raise ProtocolValidationError("completed result contract drifted") from error
+    _validate_identity(
+        candidate=str(node["candidate"]),
+        train_seed=node.get("train_seed"),
+        rollout_seed=int(node["rollout_seed"]),
+        result=result,
+        protocol=protocol,
+    )
+    if node.get("candidate") != "garch_ccc":
+        candidate_dir = root / str(node["candidate"])
+        evaluator_path = candidate_dir / "manifest.json"
+        if not evaluator_path.is_file() or hashlib.sha256(
+            evaluator_path.read_bytes()
+        ).hexdigest() != manifest.get("evaluation_manifest_sha256"):
+            raise ProtocolValidationError("evaluation manifest checksum drifted")
+        try:
+            evaluator_manifest = json.loads(evaluator_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ProtocolValidationError(
+                "evaluation manifest is unreadable"
+            ) from error
+        if evaluator_manifest != manifest.get("evaluation_manifest"):
+            raise ProtocolValidationError("evaluation manifest payload drifted")
+        _validate_evaluation_manifest(evaluator_manifest, protocol=protocol, node=node)
+        if evaluator_manifest["provenance"].get("checkpoint") != manifest.get(
+            "input_checkpoint"
+        ):
+            raise ProtocolValidationError("evaluation checkpoint provenance drifted")
+        candidate_result = candidate_dir / "results_current_panel.json"
+        if not candidate_result.is_file() or hashlib.sha256(
+            candidate_result.read_bytes()
+        ).hexdigest() != manifest.get("candidate_result_sha256"):
+            raise ProtocolValidationError("candidate result checksum drifted")
+        try:
+            if _result_json(
+                json.loads(candidate_result.read_text(encoding="utf-8"))
+            ) != _result_json(result):
+                raise ProtocolValidationError("candidate result payload drifted")
+        except (OSError, json.JSONDecodeError) as error:
+            raise ProtocolValidationError("candidate result is unreadable") from error
+        score_path = candidate_dir / "window_scores.npz"
+        if not score_path.is_file() or hashlib.sha256(
+            score_path.read_bytes()
+        ).hexdigest() != manifest.get("window_scores_sha256"):
+            raise ProtocolValidationError("window scores checksum drifted")
+        _validate_window_scores(score_path, n_windows=int(result["n_windows"]))
+    else:
+        report = manifest.get("garch_contract_report")
+        if not _valid_garch_contract_report(report) or _digest_text(
+            _canonical_json(report)
+        ) != manifest.get("garch_contract_sha256"):
+            raise ProtocolValidationError("garch authority report drifted")
+    checkpoint = manifest.get("input_checkpoint")
+    if checkpoint is not None:
+        path = Path(str(checkpoint.get("path", "")))
+        if not path.is_file() or hashlib.sha256(
+            path.read_bytes()
+        ).hexdigest() != checkpoint.get("sha256"):
+            raise ProtocolValidationError("evaluation input checkpoint drifted")
+        dependencies = list(node.get("depends_on", []))
+        dependency_nodes = [
+            item
+            for item in protocol.get("nodes", [])
+            if item.get("node_id") in dependencies and item.get("action") == "train"
+        ]
+        if len(dependency_nodes) != 1:
+            raise ProtocolValidationError("evaluation checkpoint dependency drifted")
+        dependency = dependency_nodes[0]
+        seal_path = path.with_suffix(path.suffix + ".node_manifest.json")
+        try:
+            seal = json.loads(seal_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ProtocolValidationError(
+                "evaluation checkpoint seal is missing"
+            ) from error
+        if seal != _training_node_manifest(dependency, protocol, path):
+            raise ProtocolValidationError("evaluation checkpoint seal drifted")
+    return result
+
+
 def record_completed_node(
     *,
     output_dir: str | Path,
@@ -161,52 +474,13 @@ def record_completed_node(
     if node.get("protocol_contract_hash") != contract_hash:
         raise ProtocolValidationError("node protocol contract hash mismatch")
     if candidate == "garch_ccc":
-        expected_authority = {
-            "summary_sha256": FROZEN_SUMMARY_SHA256,
-            "replay_result_sha256": FROZEN_REPLAY_RESULT_SHA256,
-            "replay_manifest_sha256": FROZEN_REPLAY_MANIFEST_SHA256,
-            "table_sha256": FROZEN_TABLE_SHA256,
-            "source_revision": EXPECTED_SOURCE_REVISION,
-            "source_blob": EXPECTED_SOURCE_BLOB,
-            "source_tag": SOURCE_TAG,
-        }
-        valid = (
-            isinstance(garch_contract_report, Mapping)
-            and garch_contract_report.get("schema_version") == REPORT_SCHEMA
-            and garch_contract_report.get("candidate") == "garch_ccc"
-            and garch_contract_report.get("overall_pass") is True
-            and garch_contract_report.get("immutable_authority") is True
-            and garch_contract_report.get("authority") == expected_authority
-            and {
-                key: value.get("sha256")
-                for key, value in garch_contract_report.get(
-                    "source_artifacts", {}
-                ).items()
-                if isinstance(value, Mapping)
-            }
-            == {
-                "summary": FROZEN_SUMMARY_SHA256,
-                "replay_result": FROZEN_REPLAY_RESULT_SHA256,
-                "replay_manifest": FROZEN_REPLAY_MANIFEST_SHA256,
-                "table": FROZEN_TABLE_SHA256,
-            }
-            and isinstance(garch_contract_report.get("structural_checks"), list)
-            and isinstance(garch_contract_report.get("exact_headline_checks"), list)
-            and isinstance(garch_contract_report.get("display_rounded_checks"), list)
-            and all(
-                check.get("passed") is True
-                for key in (
-                    "structural_checks",
-                    "exact_headline_checks",
-                    "display_rounded_checks",
-                )
-                for check in garch_contract_report.get(key, [])
-            )
-        )
-        if not valid:
+        if not _valid_garch_contract_report(garch_contract_report):
             raise ProtocolValidationError(
                 "garch_ccc requires the full immutable published-row contract"
             )
+    elif evaluation_manifest is None:
+        raise ProtocolValidationError("evaluation manifest is required")
+    _verify_protocol_authorities(protocol)
     result_text = (
         json.dumps(
             dict(result),
@@ -225,11 +499,57 @@ def record_completed_node(
         if garch_contract_report is None
         else _digest_text(_canonical_json(garch_contract_report))
     )
-    evaluator_hash = (
-        None
-        if evaluation_manifest is None
-        else _digest_text(_canonical_json(evaluation_manifest))
-    )
+    candidate_dir = root / candidate
+    evaluator_path = candidate_dir / "manifest.json"
+    candidate_result_path = candidate_dir / "results_current_panel.json"
+    window_scores_path = candidate_dir / "window_scores.npz"
+    evaluator_hash = None
+    candidate_result_hash = None
+    window_scores_hash = None
+    if evaluation_manifest is not None:
+        if not evaluator_path.is_file():
+            raise ProtocolValidationError("evaluation manifest artifact is missing")
+        try:
+            stored_evaluator = json.loads(evaluator_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ProtocolValidationError(
+                "evaluation manifest artifact is unreadable"
+            ) from error
+        if stored_evaluator != dict(evaluation_manifest):
+            raise ProtocolValidationError(
+                "evaluation manifest argument differs from artifact"
+            )
+        _validate_evaluation_manifest(evaluation_manifest, protocol=protocol, node=node)
+        if not candidate_result_path.is_file():
+            raise ProtocolValidationError("candidate result artifact is missing")
+        try:
+            stored_result_text = _result_json(
+                json.loads(candidate_result_path.read_text(encoding="utf-8"))
+            )
+            supplied_result_text = _result_json(result)
+            if stored_result_text != supplied_result_text:
+                for offset, (left, right) in enumerate(
+                    zip(stored_result_text, supplied_result_text)
+                ):
+                    if left != right:
+                        break
+                else:
+                    offset = min(len(stored_result_text), len(supplied_result_text))
+                raise ProtocolValidationError(
+                    "candidate result differs from sealed result near "
+                    f"{offset}: {stored_result_text[offset:offset+80]!r} != "
+                    f"{supplied_result_text[offset:offset+80]!r}"
+                )
+        except (OSError, json.JSONDecodeError) as error:
+            raise ProtocolValidationError(
+                "candidate result artifact is unreadable"
+            ) from error
+        _validate_window_scores(window_scores_path, n_windows=int(result["n_windows"]))
+        evaluator_hash = hashlib.sha256(evaluator_path.read_bytes()).hexdigest()
+        candidate_result_hash = hashlib.sha256(
+            candidate_result_path.read_bytes()
+        ).hexdigest()
+        window_scores_hash = hashlib.sha256(window_scores_path.read_bytes()).hexdigest()
     checkpoint_path = next(
         (
             Path(node["command"][index + 1])
@@ -258,6 +578,9 @@ def record_completed_node(
         "result_path": "results_current_panel.json",
         "result_sha256": result_sha256,
         "garch_contract_sha256": authority_hash,
+        "garch_contract_report": (
+            None if garch_contract_report is None else dict(garch_contract_report)
+        ),
         "command_sha256": _digest_text(
             json.dumps(node["command"], separators=(",", ":"))
         ),
@@ -269,6 +592,8 @@ def record_completed_node(
         "source_verification": {
             "source_manifest": dict(protocol["source_manifest"]),
             "artifact_manifest": dict(protocol["artifact_manifest"]),
+            "source_authority": dict(protocol["source_authority"]),
+            "artifact_authority": dict(protocol["artifact_authority"]),
         },
         "runtime_provenance": {
             "python": platform.python_version(),
@@ -280,6 +605,8 @@ def record_completed_node(
             None if evaluation_manifest is None else dict(evaluation_manifest)
         ),
         "evaluation_manifest_sha256": evaluator_hash,
+        "candidate_result_sha256": candidate_result_hash,
+        "window_scores_sha256": window_scores_hash,
     }
     result_path = root / "results_current_panel.json"
     manifest_path = root / "run_manifest.json"
@@ -297,12 +624,14 @@ def record_completed_node(
             raise ProtocolValidationError(
                 "refusing to replace a different completed node"
             )
+        _validate_completed_evaluation(root, protocol, node, existing_manifest)
         return {**manifest_core, "resumed": True}
     root.mkdir(parents=True, exist_ok=True)
     _write_atomic(result_path, result_text)
     _write_atomic(
         manifest_path, json.dumps(manifest_core, indent=2, sort_keys=True) + "\n"
     )
+    _validate_completed_evaluation(root, protocol, node, manifest_core)
     return {**manifest_core, "resumed": False}
 
 
@@ -321,12 +650,6 @@ def collect_completed_runs(output_root: str | Path) -> list[dict[str, Any]]:
     runs: list[dict[str, Any]] = []
     for manifest_path in sorted(root.rglob("run_manifest.json")):
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if manifest.get("schema_version") != RUN_MANIFEST_SCHEMA:
-            raise ProtocolValidationError(f"unexpected run manifest: {manifest_path}")
-        if manifest.get("protocol_contract_hash") != expected_hash:
-            raise ProtocolValidationError(
-                f"run manifest protocol hash mismatch: {manifest_path}"
-            )
         node = nodes.get(manifest.get("node_id"))
         if (
             node is None
@@ -336,12 +659,9 @@ def collect_completed_runs(output_root: str | Path) -> list[dict[str, Any]]:
             raise ProtocolValidationError(
                 f"copied or misplaced run manifest: {manifest_path}"
             )
-        result_path = manifest_path.parent / str(manifest.get("result_path"))
-        text = result_path.read_text(encoding="utf-8")
-        if _digest_text(text) != manifest.get("result_sha256"):
-            raise ProtocolValidationError(
-                f"completed result checksum mismatch: {result_path}"
-            )
+        result = _validate_completed_evaluation(
+            manifest_path.parent, protocol, node, manifest
+        )
         window_scores = None
         if manifest["candidate"] != "garch_ccc":
             window_path = (
@@ -366,7 +686,7 @@ def collect_completed_runs(output_root: str | Path) -> list[dict[str, Any]]:
                 "candidate": manifest["candidate"],
                 "train_seed": manifest["train_seed"],
                 "rollout_seed": manifest["rollout_seed"],
-                "result": json.loads(text),
+                "result": result,
                 **({} if window_scores is None else {"window_scores": window_scores}),
             }
         )
@@ -401,6 +721,7 @@ def _command_configuration(command: list[str]) -> dict[str, Any]:
 def _training_node_manifest(
     node: Mapping[str, Any], protocol: Mapping[str, Any], destination: Path
 ) -> dict[str, Any]:
+    _verify_protocol_authorities(protocol)
     configuration = _command_configuration(list(node["command"]))
     checkpoint_input = configuration.get("checkpoint")
     input_provenance = None
@@ -425,6 +746,8 @@ def _training_node_manifest(
         "source_verification": {
             "source_manifest": dict(protocol["source_manifest"]),
             "artifact_manifest": dict(protocol["artifact_manifest"]),
+            "source_authority": dict(protocol["source_authority"]),
+            "artifact_authority": dict(protocol["artifact_authority"]),
         },
         "runtime_provenance": {
             "python": platform.python_version(),
@@ -456,13 +779,9 @@ def execute_protocol(protocol: Mapping[str, Any]) -> dict[str, int]:
             manifest_path = destination / "run_manifest.json"
             if manifest_path.is_file():
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                if (
-                    manifest.get("node_id") != node_id
-                    or manifest.get("protocol_contract_hash") != contract_hash
-                ):
-                    raise ProtocolValidationError(
-                        "completed evaluation manifest drifted"
-                    )
+                _validate_completed_evaluation(
+                    destination.resolve(), protocol, node, manifest
+                )
                 resumed += 1
             else:
                 _run_command(list(node["command"]))
@@ -682,6 +1001,7 @@ def build_parser() -> argparse.ArgumentParser:
     reproduce.add_argument("--max-windows", type=int, default=441)
     reproduce.add_argument("--n-samples", type=int, default=64)
     reproduce.add_argument("--rollout-seed", action="append", type=int)
+    reproduce.add_argument("--train-seed", action="append", type=int)
     node = subcommands.add_parser(
         "run-node", help="seal an explicitly produced package result"
     )
@@ -736,6 +1056,11 @@ def main(argv: list[str] | None = None) -> None:
         rollout_seeds = (
             tuple(args.rollout_seed) if args.rollout_seed is not None else ROLLOUT_SEEDS
         )
+        train_seeds = (
+            tuple(args.train_seed)
+            if args.train_seed is not None
+            else ((TRAIN_SEEDS[0],) if args.smoke else TRAIN_SEEDS)
+        )
         candidates = tuple(args.candidate) if args.candidate else CANDIDATE_IDS
         payload = build_protocol(
             output_root=args.output_root,
@@ -745,6 +1070,7 @@ def main(argv: list[str] | None = None) -> None:
             checkpoint_root=args.checkpoint_root,
             artifact_root=args.artifact_root,
             rollout_seeds=rollout_seeds,
+            train_seeds=train_seeds,
             candidates=candidates,
             smoke=bool(args.smoke),
             max_windows=int(args.max_windows),

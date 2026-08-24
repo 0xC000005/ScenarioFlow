@@ -457,10 +457,12 @@ def run_full_iv_suite(
     )
     cond_cell_mae = np.abs(cond_median - cond_truth).mean(axis=(0, 1))
     uncond_cell_mae = np.abs(rolled - shuffled_truth).mean(axis=(0, 1))
-    cell_mae_reduction = np.where(
-        uncond_cell_mae > 1e-8,
-        (uncond_cell_mae - cond_cell_mae) / uncond_cell_mae * 100.0,
-        0.0,
+    cell_mae_reduction = np.zeros_like(uncond_cell_mae)
+    np.divide(
+        (uncond_cell_mae - cond_cell_mae) * 100.0,
+        uncond_cell_mae,
+        out=cell_mae_reduction,
+        where=uncond_cell_mae > 1e-8,
     )
     per_horizon_conditionality = {
         str(horizon): {
@@ -916,13 +918,18 @@ def run_full_iv_suite(
             "width_turb_calm_ratio": _ratio(turbulent_value, calm_value),
         }
         horizon_width = conditional_width[:, horizon - 1].mean(axis=(1, 2))
-        rho = sp_stats.spearmanr(vol_of_vol, horizon_width)
+        if np.ptp(vol_of_vol) <= 1e-12 or np.ptp(horizon_width) <= 1e-12:
+            rho_statistic = rho_pvalue = float("nan")
+        else:
+            rho = sp_stats.spearmanr(vol_of_vol, horizon_width)
+            rho_statistic = float(rho.statistic)
+            rho_pvalue = float(rho.pvalue)
         q10, q90 = np.quantile(vol_of_vol, [0.1, 0.9])
         p10_width = float(horizon_width[vol_of_vol <= q10].mean())
         p90_width = float(horizon_width[vol_of_vol >= q90].mean())
         width_vs_vov[horizon] = {
-            "spearman_rho": float(rho.statistic),
-            "spearman_pval": float(rho.pvalue),
+            "spearman_rho": rho_statistic,
+            "spearman_pval": rho_pvalue,
             "p90_p10_width_ratio": _ratio(p90_width, p10_width),
             "p10_mean_width": p10_width,
             "p90_mean_width": p90_width,

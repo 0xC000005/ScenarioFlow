@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -48,6 +49,21 @@ TRAINED_CANDIDATES = tuple(
 PROTOCOL_SCHEMA = "scenarioflow.multiseed-protocol.v1"
 AGGREGATE_SCHEMA = "scenarioflow.multiseed-aggregate.v1"
 _CONTROL_FILENAME = ".scenarioflow-output-contract.json"
+FROZEN_SOURCE_ROWS = {
+    "experiments/backfill/baselines/evaluate_current_panel_baselines.py": "7224278d74ee8bfd86c81eb2d1ddc485a1bf5fd1a681f14f22f41749b1cb0147",
+    "experiments/backfill/baselines/fmts_dag_executor.py": "9a6254b59b58db27cc184d6848a001cef489a2df48c77ff5d7b73953b8ea97ff",
+    "experiments/backfill/baselines/run_fmts_multiseed_benchmark.py": "1d362bb5bce8f97267ad2afe1976b1da1d970e5741e6830d2184903f0f48c2ab",
+    "experiments/backfill/baselines/train_current_panel_deep_baselines.py": "5091da02d11870d3721ce8f5af25f53137b550bae2f87bcdb38bb12e46ab0e63",
+    "experiments/backfill/baselines/train_g2_deepvar_sni_interface.py": "be8e1eee5816b9cf1d6314db53ee71f0fad0eb24e58c5fee44b09e4dce7bd1d0",
+    "experiments/backfill/block_ar/train_666a_normalized_innovation_rollout_energy_finetune.py": "39181197d48357746c9ffb73a49e156f3011ed48634507e8bac24a62895b484a",
+    "paper/generated_tables/table_baseline_comparison.tex": "1492cf31ee50c99ded8c068c714c98fb0c793a0dce4f49137c20d37cccfd2589",
+}
+FROZEN_ARTIFACT_ROWS = {
+    "data/multi_factor_levels.parquet": "3ac3aeb04fd227fb471bc026f5f4191f5655c4cf3e09443b102e4d6d0019c75f",
+    "data/multi_factor_returns.parquet": "77970f0b506c1ea6bd0ab45b539c621e2cc4199b10b223f2a07c6d4a2003f21d",
+    "data/spx_vol_surface_history_full_data_fixed.parquet": "d657a9cf50ba513fa1806aaf8b1a30a7646438bda09ebeabc5f6804f6e0f704a",
+    "data/vol_surface_with_ret.npz": "3e5d05a4cc72cfbd60646aab6f491aac763d4667144409dd72f7969e40b4d50f",
+}
 
 
 class ProtocolValidationError(ValueError):
@@ -65,6 +81,37 @@ def _file_hash(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def _validate_manifest_rows(
+    path: Path, expected: Mapping[str, str], *, label: str
+) -> dict[str, dict[str, str]]:
+    try:
+        with path.open(newline="", encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle, delimiter="\t"))
+    except (OSError, csv.Error) as error:
+        raise ProtocolValidationError(
+            f"{label} authority manifest is unreadable"
+        ) from error
+    by_path: dict[str, dict[str, str]] = {}
+    for row in rows:
+        name = row.get("path")
+        if not name:
+            continue
+        if name in by_path:
+            raise ProtocolValidationError(f"{label} authority duplicates {name}")
+        by_path[name] = dict(row)
+    selected: dict[str, dict[str, str]] = {}
+    for name, digest in expected.items():
+        row = by_path.get(name)
+        if (
+            row is None
+            or row.get("decision") != "include"
+            or row.get("sha256") != digest
+        ):
+            raise ProtocolValidationError(f"{label} authority row drifted: {name}")
+        selected[name] = {"decision": "include", "sha256": digest}
+    return selected
 
 
 def _overlaps(first: Path, second: Path) -> bool:
@@ -290,7 +337,12 @@ def _training_node(
 
 
 def _scenarioflow_training_nodes(
-    *, output_root: Path, data_dir: Path, train_seed: int, contract_hash: str
+    *,
+    output_root: Path,
+    data_dir: Path,
+    train_seed: int,
+    contract_hash: str,
+    smoke: bool = False,
 ) -> list[dict[str, Any]]:
     stage1 = (
         output_root
@@ -365,13 +417,13 @@ def _scenarioflow_training_nodes(
             "--output",
             str(destination),
             "--epochs",
-            str(epochs),
+            str(1 if smoke else epochs),
             "--seed",
             str(train_seed),
             "--batch-size",
-            "32" if stage == "stage1" else "8",
+            "2" if smoke else ("32" if stage == "stage1" else "8"),
             "--max-train-windows",
-            "0" if stage == "stage2" else "2048",
+            "4" if smoke else ("0" if stage == "stage2" else "2048"),
             "--lr",
             "0.0007" if stage == "stage1" else "0.00002",
             "--weight-decay",
@@ -379,16 +431,21 @@ def _scenarioflow_training_nodes(
             "--clip-grad",
             "1.0",
         ]
+        if smoke:
+            command += ["--max-val-windows", "2", "--smoke-model"]
         if stage != "stage1":
             command += [
                 "--train-sample-count",
-                "2",
+                "1" if smoke else "2",
                 "--rollout-flow-steps",
-                "4",
+                "1" if smoke else "4",
                 "--energy-weight",
                 "0.2",
                 "--channel-level-energy-weight",
                 "0.05",
+                "--channel-level-energy-coordinate",
+                "level",
+                "--drop-last",
             ]
         if checkpoint is not None:
             command += ["--checkpoint", str(checkpoint)]
@@ -397,9 +454,9 @@ def _scenarioflow_training_nodes(
                 "--free-running-fm-weight",
                 "0.2",
                 "--free-running-fm-prefix-steps",
-                "5",
+                "1" if smoke else "5",
                 "--graph-k",
-                "8",
+                "2" if smoke else "8",
             ]
         nodes.append(
             {
@@ -447,12 +504,11 @@ def build_protocol(
         raise ProtocolValidationError(
             "candidate selection contains an unknown candidate"
         )
-    if smoke and any(
-        item not in CLASSICAL_CANDIDATES or item == "garch_ccc"
-        for item in selected_candidates
-    ):
+    smoke_candidates = set(CLASSICAL_CANDIDATES) - {"garch_ccc"}
+    smoke_candidates.update({"scenarioflow", "scenarioflow_graph"})
+    if smoke and any(item not in smoke_candidates for item in selected_candidates):
         raise ProtocolValidationError(
-            "smoke execution supports generated classical rows only"
+            "smoke execution supports package classical or ScenarioFlow rows only"
         )
     if smoke and (max_windows <= 0 or n_samples <= 0):
         raise ProtocolValidationError("smoke deck dimensions must be positive")
@@ -465,6 +521,12 @@ def build_protocol(
         raise FileNotFoundError(
             "explicit frozen source and artifact manifests are required"
         )
+    source_authority = _validate_manifest_rows(
+        source, FROZEN_SOURCE_ROWS, label="source"
+    )
+    artifact_authority = _validate_manifest_rows(
+        artifacts, FROZEN_ARTIFACT_ROWS, label="artifact"
+    )
     if not data.is_dir() or not checkpoints.is_dir() or not artifact_directory.is_dir():
         raise FileNotFoundError(
             "explicit data, checkpoint, and artifact roots are required"
@@ -490,6 +552,8 @@ def build_protocol(
         "thresholds": TABLE_THRESHOLD_RULES,
         "source_manifest": {"path": str(source), "sha256": _file_hash(source)},
         "artifact_manifest": {"path": str(artifacts), "sha256": _file_hash(artifacts)},
+        "source_authority": source_authority,
+        "artifact_authority": artifact_authority,
         "data_dir": str(data),
         "checkpoint_root": str(checkpoints),
         "artifact_root": str(artifact_directory),
@@ -511,6 +575,7 @@ def build_protocol(
                             data_dir=data,
                             train_seed=train_seed,
                             contract_hash=contract_hash,
+                            smoke=smoke,
                         )
                     )
         elif candidate not in CLASSICAL_CANDIDATES:
