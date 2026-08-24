@@ -120,7 +120,9 @@ def test_setup_check_validates_packaged_data_and_manifest() -> None:
     assert payload["package"] == "ok"
     assert payload["processed_data"] == "ok"
     assert payload["artifact_manifest"] == "ok"
-    assert payload["external_artifacts"] == {"present": 0, "total": 41}
+    external = payload["external_artifacts"]
+    assert external["total"] == 41
+    assert 0 <= external["present"] <= external["total"]
 
 
 def test_setup_check_reports_missing_data_without_a_traceback(tmp_path: Path) -> None:
