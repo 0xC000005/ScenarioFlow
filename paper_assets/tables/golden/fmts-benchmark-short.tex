@@ -1,0 +1,88 @@
+\begin{table}[H]
+\setlength{\intextsep}{2pt}
+\setlength{\abovecaptionskip}{3pt}
+\centering
+\caption{Benchmark on 25 SPX-IV cells and 14 other series. Red marks a failed
+screen or unavailable metric; bold marks the best result among methods with
+valid complete decks; ``Fails'' counts only the 11 screens.}
+\label{tab:numerical-summary-short}
+\scriptsize
+\setlength{\tabcolsep}{1.2pt}
+\renewcommand{\arraystretch}{0.60}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lcccccccccccccc@{}}
+\toprule
+& \multicolumn{5}{c}{Distributional quality}
+& \multicolumn{6}{c}{Calibration and historical response}
+& \multicolumn{2}{c}{Path realism} & \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-12}\cmidrule(lr){13-14}
+Model & CRPS$\downarrow$ & Energy$\downarrow$ & Corr.$\uparrow$
+& Factor KS$\downarrow$ & Tail q99$\to1$
+& Cov90$\to.90$ & CalErr$\downarrow$ & Level KS$\downarrow$
+& Width $\rho\uparrow$ & MR$\to1$ & Econ.$\to1$
+& Jump KS$\downarrow$ & Kurt.$\to1$ & Fails$\downarrow$ \\
+\midrule
+\scenarioflow{} & \textbf{3.1772} & \textbf{3.820} & 0.557 & 0.097
+& \textbf{1.011} & 0.815 & 0.058 & \textbf{0.111} & \textbf{0.402}
+& \textbf{0.873} & 0.940 & 0.294 & 1.330 & \PassCount{0} \\
+Random walk & 3.5467 & 4.000 & 0.607 & \textcolor{red}{0.162}
+& 1.206 & 0.977 & \textcolor{red}{0.289} & \textcolor{red}{0.237}
+& 0.229 & \textcolor{red}{-0.031} & \textbf{0.997} & \textcolor{red}{0.651}
+& \textcolor{red}{0.237} & \FailCount{6} \\
+Bootstrap & 3.3598 & 3.864 & 0.607 & 0.080
+& \textcolor{red}{1.530} & 0.973 & \textcolor{red}{0.245} & 0.199
+& 0.236 & \textcolor{red}{0.003} & 1.062 & 0.322 & 0.904 & \FailCount{3} \\
+Historical sim. & 3.2970 & 3.843 & 0.675 & \textbf{0.072}
+& 1.247 & \textbf{0.896} & \textbf{0.026} & 0.136 & 0.286
+& \textcolor{red}{-0.000} & 1.018 & 0.359 & 0.664 & \FailCount{1} \\
+PCA--VAR & 3.2819 & 3.859 & \textcolor{red}{0.205} & 0.113
+& 1.098 & 0.947 & 0.186 & 0.158 & 0.248 & \textcolor{red}{0.155}
+& 1.037 & \textcolor{red}{0.661} & \textcolor{red}{0.344} & \FailCount{4} \\
+GARCH--CCC & 3.3325 & 3.903 & 0.649 & 0.123
+& 1.062 & 0.973 & \textcolor{red}{0.207} & 0.177 & 0.291
+& \textcolor{red}{0.144} & 1.028 & \textcolor{red}{0.506}
+& \textbf{0.921} & \FailCount{3} \\
+Filtered hist. sim. & 3.2598 & 3.854 & 0.605 & 0.099
+& 1.244 & 0.974 & 0.191 & 0.164 & 0.349 & \textcolor{red}{0.114}
+& 1.028 & 0.420 & 1.178 & \FailCount{1} \\
+DeepVAR & 3.3136 & 3.843 & \textbf{0.685} & 0.122
+& 0.941 & 0.967 & 0.173 & 0.162 & 0.304 & \textcolor{red}{0.193}
+& 1.108 & \textcolor{red}{0.583} & 0.622 & \FailCount{2} \\
+DeepVAR + history scale & 3.2988 & 4.037 & 0.654 & 0.113
+& 1.137 & 0.954 & 0.154 & 0.169 & 0.247 & 0.364
+& 0.928 & \textbf{0.183} & 0.770 & \PassCount{0} \\
+TimeGrad & 3.4441 & 3.858 & 0.411 & 0.147
+& 1.119 & 0.932 & 0.155 & 0.163 & 0.394 & \textcolor{red}{0.135}
+& 1.044 & \textcolor{red}{0.658} & \textcolor{red}{0.233} & \FailCount{3} \\
+CSDI & 3.8358 & 4.217 & \textcolor{red}{0.286} & \textcolor{red}{0.196}
+& 1.482 & \textcolor{red}{0.985} & \textcolor{red}{0.317}
+& \textcolor{red}{0.275} & 0.206 & \textcolor{red}{-0.015} & 1.020
+& \textcolor{red}{0.562} & \textcolor{red}{0.246} & \FailCount{8} \\
+Moirai & 3.4076 & 6.665 & \textcolor{red}{0.293} & 0.082
+& \textcolor{red}{1.662} & 0.938 & 0.084 & 0.163 & 0.220
+& \textcolor{red}{0.032} & 1.106 & 0.210
+& \textcolor{red}{1.684} & \FailCount{4} \\
+Toto$^\dagger$ & \textcolor{red}{\texttt{undef.}}
+& \textcolor{red}{\texttt{undef.}} & \textcolor{red}{\texttt{undef.}}
+& \textcolor{red}{\texttt{undef.}} & \textcolor{red}{\texttt{undef.}}
+& 0.976 & 0.185 & 0.163 & \textcolor{red}{0.157}
+& 0.482 & 0.845 & 0.124 & 1.308 & \FailCount{4} \\
+\bottomrule
+\end{tabular}%
+}
+
+\vspace{0pt}
+\begin{minipage}{0.99\linewidth}
+\scriptsize\centering
+\textbf{\scenarioflow{} history checks:} high/low deck width $1.188\times$;
+matched-history MAE reduction $10.0\%$; surface cells improved $96\%$.\\[-1pt]
+\tiny\raggedright
+Screen failures are Corr.$<.30$, Factor KS$>.15$, Tail q99$\notin[.50,1.50]$,
+Cov90$\notin[.75,.98]$, CalErr$>.20$, Level KS$>.20$, Width $\rho<.20$,
+MR$\notin[.25,1.75]$, Econ.$\notin[.75,1.30]$, Jump KS$>.50$, or
+Kurt.$\notin[.50,1.50]$.\\[-1pt]
+$^\dagger$ Two Toto paths contain non-finite VIX values, so only its IV metrics
+are reported; see Appendix~\ref{app:foundation-baselines}. Definitions and
+thresholds appear in Appendix~\ref{app:numerical-benchmark}.
+\end{minipage}
+\end{table}

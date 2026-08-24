@@ -33,6 +33,7 @@ def _root_parser() -> argparse.ArgumentParser:
         ("train", "train ScenarioFlow numerically"),
         ("infer", "run numerical path inference"),
         ("reproduce", "run or resume the paper benchmark"),
+        ("paper", "export frozen paper tables"),
         ("demo", "inspect or launch optional demos"),
     ):
         commands.add_parser(name, help=help_text, add_help=False)
@@ -237,6 +238,17 @@ def _run_demo(arguments: list[str]) -> int:
     raise ArtifactError(f"unknown demo command: {arguments[0]}")
 
 
+def _run_paper(arguments: list[str]) -> int:
+    if not arguments or arguments[0] in {"-h", "--help"}:
+        print("usage: scenarioflow paper export-tables [options]")
+        return 0
+    if arguments[0] != "export-tables":
+        raise ArtifactError(f"unknown paper command: {arguments[0]}")
+    from .paper import tables
+
+    return tables.main(arguments[1:])
+
+
 def main(argv: list[str] | None = None) -> int | None:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if not arguments or arguments[0] in {"-h", "--help"}:
@@ -267,6 +279,8 @@ def main(argv: list[str] | None = None) -> int | None:
             from .workflows import reproduction
 
             return reproduction.main(["reproduce", *tail])
+        if command == "paper":
+            return _run_paper(tail)
         if command == "demo":
             return _run_demo(tail)
         raise ArtifactError(f"unknown command: {command}")

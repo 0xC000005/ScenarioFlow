@@ -1,0 +1,53 @@
+\begin{table*}[t]
+\centering
+\caption{Common joint evaluation of 39 market variables. Panel (a) reports distributional fidelity; panel (b) reports risk-facing calibration and path realism. Arrows show the preferred direction or target. Bold marks the best value, red marks a fixed-threshold failure, and a dash denotes no fixed threshold.}
+\label{tab:baseline-comparison}
+\label{tab:baseline-distributional}
+\label{tab:baseline-risk}
+\scriptsize
+\setlength{\tabcolsep}{2.0pt}
+\renewcommand{\arraystretch}{0.80}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccc@{}}
+\toprule
+\multicolumn{9}{l}{\textbf{(a) Distributional fidelity}} \\
+\midrule
+Model & CRPS$\downarrow$ & IV CRPS$\downarrow$ & Factor CRPS$\downarrow$ & Energy$\downarrow$ & Variogram$\downarrow$ & Corr.$\uparrow$ & Factor KS$\downarrow$ & Tail q99$\to1$ \\
+\textit{Fails if} & -- & -- & -- & -- & -- & $<.30$ & $>.15$ & $\notin[.50,1.50]$ \\
+\midrule
+\scenarioflow{} & \textbf{3.1772} & \textbf{0.0135} & \textbf{8.8267} & \textbf{3.820} & 0.1974 & 0.557 & 0.097 & \textbf{1.011} \\
+\scenarioflow{} + graph & 3.1802 & 0.0135 & 8.8351 & 3.854 & 0.2069 & 0.590 & 0.115 & 1.066 \\
+Random walk & 3.5467 & 0.0156 & 9.8522 & 4.000 & 0.2602 & 0.607 & \textcolor{red}{0.162} & 1.206 \\
+Bootstrap & 3.3598 & 0.0140 & 9.3344 & 3.864 & 0.2038 & 0.607 & 0.080 & \textcolor{red}{1.530} \\
+Historical sim. & 3.2970 & 0.0138 & 9.1599 & 3.843 & 0.1969 & 0.675 & \textbf{0.072} & 1.247 \\
+PCA-VAR & 3.2819 & 0.0144 & 9.1167 & 3.859 & 0.2049 & \textcolor{red}{0.205} & 0.113 & 1.098 \\
+GARCH-CCC & 3.3325 & 0.0137 & 9.2590 & 3.903 & 0.2048 & 0.649 & 0.123 & 1.062 \\
+Filtered hist. sim. & 3.2598 & 0.0136 & 9.0567 & 3.854 & 0.1911 & 0.605 & 0.099 & 1.244 \\
+DeepVAR & 3.3136 & 0.0137 & 9.2063 & 3.843 & \textbf{0.1881} & \textbf{0.685} & 0.122 & 0.941 \\
+TimeGrad & 3.4441 & 0.0149 & 9.5676 & 3.858 & 0.2196 & 0.411 & 0.147 & 1.119 \\
+CSDI & 3.8358 & 0.0163 & 10.6563 & 4.217 & 0.3419 & \textcolor{red}{0.286} & \textcolor{red}{0.196} & 1.482 \\
+\bottomrule
+\end{tabular*}
+
+\medskip
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccc@{}}
+\toprule
+\multicolumn{11}{l}{\textbf{(b) Risk-facing calibration and path realism}} \\
+\midrule
+Model & Cov90$\to0.90$ & CalErr$\downarrow$ & Level KS$_{\rm med}\downarrow$ & Med. dev.$\downarrow$ & Width $\rho\uparrow$ & MR$\to1$ & Econ.$\to1$ & Jump KS$\downarrow$ & Kurt.$\to1$ & ACF$\uparrow$ \\
+\textit{Fails if} & $\notin[.75,.98]$ & $>.20$ & $>.20$ & -- & $<.20$ & $\notin[.25,1.75]$ & $\notin[.75,1.30]$ & $>.50$ & $\notin[.50,1.50]$ & -- \\
+\midrule
+\scenarioflow{} & 0.815 & 0.058 & \textbf{0.111} & 0.089 & \textbf{0.402} & 0.873 & 0.906 & \textbf{0.294} & 1.330 & 0.984 \\
+\scenarioflow{} + graph & 0.792 & 0.076 & 0.143 & 0.109 & 0.391 & \textbf{0.939} & 0.912 & 0.329 & 1.174 & \textbf{0.984} \\
+Random walk & 0.977 & \textcolor{red}{0.289} & \textcolor{red}{0.237} & 0.039 & 0.229 & \textcolor{red}{-0.031} & 1.019 & \textcolor{red}{0.651} & \textcolor{red}{0.237} & 0.978 \\
+Bootstrap & 0.973 & \textcolor{red}{0.245} & 0.199 & 0.054 & 0.236 & \textcolor{red}{0.003} & 0.826 & 0.322 & 0.904 & 0.977 \\
+Historical sim. & \textbf{0.896} & \textbf{0.026} & 0.136 & 0.065 & 0.286 & \textcolor{red}{-0.000} & \textcolor{red}{1.339} & 0.359 & 0.664 & 0.981 \\
+PCA-VAR & 0.947 & 0.186 & 0.158 & \textbf{0.039} & 0.248 & \textcolor{red}{0.155} & 1.051 & \textcolor{red}{0.661} & \textcolor{red}{0.344} & 0.976 \\
+GARCH-CCC & 0.973 & \textcolor{red}{0.207} & 0.177 & 0.061 & 0.291 & \textcolor{red}{0.144} & 1.011 & \textcolor{red}{0.506} & \textbf{0.921} & 0.977 \\
+Filtered hist. sim. & 0.974 & 0.191 & 0.164 & 0.052 & 0.349 & \textcolor{red}{0.114} & 0.946 & 0.420 & 1.178 & 0.979 \\
+DeepVAR & 0.967 & 0.173 & 0.162 & 0.045 & 0.304 & \textcolor{red}{0.193} & 0.811 & \textcolor{red}{0.583} & 0.622 & 0.978 \\
+TimeGrad & 0.932 & 0.155 & 0.163 & 0.098 & 0.394 & \textcolor{red}{0.135} & \textbf{1.001} & \textcolor{red}{0.658} & \textcolor{red}{0.233} & 0.978 \\
+CSDI & \textcolor{red}{0.985} & \textcolor{red}{0.317} & \textcolor{red}{0.275} & 0.050 & 0.206 & \textcolor{red}{-0.015} & 1.015 & \textcolor{red}{0.562} & \textcolor{red}{0.246} & 0.979 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
