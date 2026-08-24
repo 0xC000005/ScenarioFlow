@@ -11,6 +11,7 @@ objective, adaptive-graph variant, and the frozen processed inputs.
 - `src/scenarioflow/`: state/data preparation, model, losses, training, inference,
   evaluation, and artifact APIs.
 - `artifacts/manifest-v1.tsv`: checksums and release paths for large external files.
+- `paper_assets/`: final ICAIF/FMTS tables and figures, with reproduction modes.
 - `tests/`: data and public-release contract tests.
 - `scripts/check_release.py`: secret, host-path, and file-size release checks.
 
@@ -48,4 +49,10 @@ size and SHA-256 match the tracked manifest. Missing OpenAI or Codex requirement
 affect only the corresponding optional demo; numerical workflows remain available.
 
 See [DATA_SOURCES.md](DATA_SOURCES.md) for the processed-data provenance and
+[Paper assets](paper_assets/README.md) for table and figure reproduction, and
 [LICENSE](LICENSE) for the repository license.
+
+## Papers
+
+- ICAIF paper: link will be added after publication.
+- FMTS workshop paper: link will be added after publication.
