@@ -293,6 +293,30 @@ def test_release_scanner_rejects_generic_and_unc_absolute_paths(
     assert "absolute host path: unc.txt" in result.stdout
 
 
+def test_release_scanner_allows_container_paths_but_rejects_host_paths_in_dockerfile(
+    tmp_path: Path,
+) -> None:
+    """Container filesystem paths are portable; developer home paths are not."""
+    dockerfile = tmp_path / "Dockerfile"
+    dockerfile.write_text(
+        "WORKDIR /app\nRUN rm -rf /" + "var/lib/apt/lists/*\n"
+    )
+    command = [
+        "python",
+        str(ROOT / "scripts" / "check_release.py"),
+        "--root",
+        str(tmp_path),
+        "--all",
+    ]
+    portable = subprocess.run(command, text=True, capture_output=True, check=False)
+    assert portable.returncode == 0, portable.stdout
+
+    dockerfile.write_text("COPY /" + "home/example/checkpoint.pt /app/model.pt\n")
+    leaked = subprocess.run(command, text=True, capture_output=True, check=False)
+    assert leaked.returncode == 1
+    assert "absolute host path: Dockerfile" in leaked.stdout
+
+
 def test_release_scanner_scopes_strict_paths_to_portable_authorities(
     tmp_path: Path,
 ) -> None:

@@ -33,6 +33,9 @@ TEXT_UNIX_HOST_PATH_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_.-])/(?:home|Users|private|tmp|root|var|mnt|workspace|opt|srv)/"
     r"[^\s\"']+"
 )
+DOCKERFILE_HOST_PATH_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_.-])/(?:home|Users|private)/[^\s\"']+"
+)
 WINDOWS_DRIVE_PATH_PATTERN = re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]")
 WINDOWS_UNC_PATH_PATTERN = re.compile(r"(?<!\\)\\\\[A-Za-z0-9._-]+[\\/][A-Za-z0-9._-]+")
 LOCAL_FILE_URI_PATTERN = re.compile(r"(?i)(?<![A-Za-z0-9+.-])file:[\\/]+")
@@ -103,6 +106,13 @@ def _portable_authority_paths(root: Path) -> set[str]:
 
 
 def _contains_host_path(path: Path, contents: str, *, strict_json: bool) -> bool:
+    if path.name == "Dockerfile" or path.name.startswith("Dockerfile."):
+        return bool(
+            DOCKERFILE_HOST_PATH_PATTERN.search(contents)
+            or WINDOWS_DRIVE_PATH_PATTERN.search(contents)
+            or WINDOWS_UNC_PATH_PATTERN.search(contents)
+            or LOCAL_FILE_URI_PATTERN.search(contents)
+        )
     if path.suffix == ".json":
         try:
             document = json.loads(contents)

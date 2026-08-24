@@ -1,0 +1,70 @@
+name: scenarioflow
+
+x-runtime: &runtime
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: runtime
+  volumes:
+    - type: bind
+      source: ./data
+      target: /app/data
+      read_only: true
+    - type: bind
+      source: ./artifacts/cache
+      target: /app/artifacts/cache
+      read_only: true
+
+services:
+  narrative-to-scenario:
+    <<: *runtime
+    command:
+      - scenarioflow
+      - demo
+      - launch
+      - narrative-to-scenario
+      - --host
+      - 0.0.0.0
+      - --port
+      - "7860"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    expose:
+      - "7860"
+
+  scenario-to-narrative:
+    <<: *runtime
+    command:
+      - scenarioflow
+      - demo
+      - launch
+      - scenario-to-narrative
+      - --host
+      - 0.0.0.0
+      - --port
+      - "7861"
+    environment:
+      CODEX_HOME: /run/scenarioflow/codex
+    volumes:
+      - type: bind
+        source: ./data
+        target: /app/data
+        read_only: true
+      - type: bind
+        source: ./artifacts/cache
+        target: /app/artifacts/cache
+        read_only: true
+      - type: bind
+        source: ${SCENARIOFLOW_CODEX_HOME:-./.codex-unavailable}
+        target: /run/scenarioflow/codex
+        read_only: true
+    expose:
+      - "7861"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    ports:
+      - "${SCENARIOFLOW_WEB_PORT:-8766}:80"

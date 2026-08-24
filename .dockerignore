@@ -1,0 +1,15 @@
+.git
+.venv
+.pytest_cache
+.superpowers
+__pycache__
+*.pyc
+.env
+.env.*
+.codex-unavailable
+artifacts/cache
+data
+results
+paper_assets
+web/dist
+web/node_modules

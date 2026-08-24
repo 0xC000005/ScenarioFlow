@@ -72,6 +72,22 @@ cd web && npm ci && npm run dev -- --host 127.0.0.1 --port 8766
 Open `http://127.0.0.1:8766`. A hosted demo link can be added to the repository
 description without changing the reproducible local setup.
 
+## Docker
+
+The image uses the same package and commands as the native setup. Data and fetched
+artifacts remain bind-mounted from the checkout:
+
+```bash
+docker compose build
+OPENAI_API_KEY="$OPENAI_API_KEY" \
+SCENARIOFLOW_CODEX_HOME="$HOME/.codex" \
+docker compose up frontend narrative-to-scenario scenario-to-narrative
+```
+
+Open `http://127.0.0.1:8766`. Omit either backend from the `docker compose up`
+command when its optional credential is unavailable. For numerical commands, use
+the runtime target directly and mount the required inputs and output directory.
+
 See [DATA_SOURCES.md](DATA_SOURCES.md) for the processed-data provenance and
 [Paper assets](paper_assets/README.md) for table and figure reproduction, and
 [LICENSE](LICENSE) for the repository license.
