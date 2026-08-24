@@ -1,0 +1,31 @@
+\begin{table}[H]
+\setlength{\intextsep}{1pt}
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\caption{Dominant-support dollar-liquidity scenario shift (24 March 2016).}
+\label{tab:nl-fixed-start}
+\scriptsize
+\setlength{\tabcolsep}{2.1pt}
+\renewcommand{\arraystretch}{0.54}
+\resizebox{0.84\textwidth}{!}{%
+\begin{tabular}{@{}llllllll@{}}
+\toprule
+& \multicolumn{3}{c}{Start-only deck} & \multicolumn{3}{c}{Dollar-liquidity deck} & \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Market & Direction & Majority share & Mean move & Direction & Majority share & Mean move & Narrative vs. start-only \\
+\midrule
+IV surface & \DemoViewFlat & 53\% down & $+0.0$ vol pts / $+0.0\sigma$ & \DemoViewDown & 78\% down & $-0.6$ vol pts / $-0.8\sigma$ & \DemoChangeDown{More down than baseline} \\
+SPX & \DemoViewFlat & 55\% down & $-4$ pts / $-0.2\sigma$ & \DemoViewUp & 73\% up & $+17$ pts / $+0.6\sigma$ & \DemoChangeUp{More up than baseline} \\
+US2Y & \DemoViewDown & 67\% down & $-2.4$ bp / $-0.5\sigma$ & \DemoViewFlat & 58\% down & $-1.2$ bp / $-0.2\sigma$ & \DemoChangeFlat{Similar} \\
+US10Y & \DemoViewDown & 83\% down & $-8.8$ bp / $-1.0\sigma$ & \DemoViewDown & 80\% down & $-7.9$ bp / $-0.9\sigma$ & \DemoChangeFlat{Similar} \\
+BBB OAS & \DemoViewDown & 95\% down & $-6.6$ bp / $-1.6\sigma$ & \DemoViewDown & 60\% down & $-1.0$ bp / $-0.3\sigma$ & \DemoChangeModerateDown{Less down than baseline} \\
+AAA OAS & \DemoViewDown & 92\% down & $-2.0$ bp / $-1.4\sigma$ & \DemoViewDown & 77\% down & $-0.9$ bp / $-0.7\sigma$ & \DemoChangeModerateDown{Less down than baseline} \\
+USDJPY & \DemoViewDown & 62\% down & $-0.4$ pts / $-0.3\sigma$ & \DemoViewFlat & 59\% up & $+0.2$ pts / $+0.1\sigma$ & \DemoChangeUp{More up than baseline} \\
+DXY & \DemoViewFlat & 50\% up & $+0.1$ pts / $+0.1\sigma$ & \DemoViewUp & 63\% up & $+0.4$ pts / $+0.4\sigma$ & \DemoChangeUp{More up than baseline} \\
+Gold & \DemoViewFlat & 54\% down & $-1$ pts / $+0.0\sigma$ & \DemoViewFlat & 51\% down & $+2$ pts / $+0.1\sigma$ & \DemoChangeFlat{Similar} \\
+Crude oil & \DemoViewUp & 75\% up & $+2.0$ pts / $+0.8\sigma$ & \DemoViewUp & 77\% up & $+2.8$ pts / $+0.8\sigma$ & \DemoChangeFlat{Similar} \\
+VIX & \DemoViewDown & 61\% down & $-0.3$ pts / $-0.2\sigma$ & \DemoViewDown & 76\% down & $-0.8$ pts / $-0.7\sigma$ & \DemoChangeDown{More down than baseline} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

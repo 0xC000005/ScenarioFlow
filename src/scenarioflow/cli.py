@@ -240,13 +240,26 @@ def _run_demo(arguments: list[str]) -> int:
 
 def _run_paper(arguments: list[str]) -> int:
     if not arguments or arguments[0] in {"-h", "--help"}:
-        print("usage: scenarioflow paper export-tables [options]")
+        parser = argparse.ArgumentParser(prog="scenarioflow paper")
+        commands = parser.add_subparsers(dest="command")
+        commands.add_parser("export-tables", help="export benchmark tables")
+        commands.add_parser(
+            "export-dollar-liquidity",
+            help="export the frozen dollar-liquidity table",
+        )
+        parser.print_help()
         return 0
-    if arguments[0] != "export-tables":
-        raise ArtifactError(f"unknown paper command: {arguments[0]}")
-    from .paper import tables
+    if arguments[0] == "export-tables":
+        from .paper import tables
 
-    return tables.main(arguments[1:], prog="scenarioflow paper export-tables")
+        return tables.main(arguments[1:], prog="scenarioflow paper export-tables")
+    if arguments[0] == "export-dollar-liquidity":
+        from .paper import dollar_liquidity
+
+        return dollar_liquidity.main(
+            arguments[1:], prog="scenarioflow paper export-dollar-liquidity"
+        )
+    raise ArtifactError(f"unknown paper command: {arguments[0]}")
 
 
 def main(argv: list[str] | None = None) -> int | None:
