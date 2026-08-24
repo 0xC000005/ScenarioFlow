@@ -122,32 +122,3 @@ class MemoryConditionedTokenTransitionVelocity(nn.Module):
         return self.out(
             self.hidden_tokens(x_t, current_logit, memory_state, t)
         ).squeeze(-1)
-
-
-class NarrativeConditioningAdapter(nn.Module):
-    """Zero-initialized optional additive context used by compatible checkpoints."""
-
-    def __init__(self, narrative_dim: int, memory_dim: int, hidden: int = 512) -> None:
-        super().__init__()
-        if hidden < memory_dim:
-            raise AssertionError(
-                f"hidden ({hidden}) must be >= memory_dim ({memory_dim})"
-            )
-        self.narrative_dim = int(narrative_dim)
-        self.memory_dim = int(memory_dim)
-        self.net = nn.Sequential(
-            nn.LayerNorm(narrative_dim),
-            nn.Linear(narrative_dim, hidden),
-            nn.GELU(),
-            nn.Linear(hidden, memory_dim),
-        )
-        nn.init.zeros_(self.net[-1].weight)
-        nn.init.zeros_(self.net[-1].bias)
-
-    def forward(
-        self, narrative_emb: torch.Tensor, present: torch.Tensor | None = None
-    ) -> torch.Tensor:
-        context = self.net(narrative_emb)
-        if present is None:
-            return context
-        return context * present.to(context.dtype).reshape(-1, 1)

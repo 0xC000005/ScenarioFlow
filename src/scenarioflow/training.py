@@ -37,9 +37,21 @@ def initialize_level_quantiles(
         ],
         dim=0,
     )
-    quantile_levels = model.quantile_levels.to(device=values.device, dtype=values.dtype)
-    quantiles = torch.quantile(values, quantile_levels, dim=0).transpose(0, 1)
-    model.set_level_quantiles(quantiles, quantile_levels)
+    quantile_levels = np.linspace(
+        float(model.cfg.cdf_eps),
+        1.0 - float(model.cfg.cdf_eps),
+        int(model.cfg.n_quantiles),
+        dtype=np.float64,
+    )
+    quantiles = np.quantile(
+        values.detach().cpu().numpy().astype(np.float64),
+        quantile_levels,
+        axis=0,
+    ).T.astype(np.float32)
+    model.set_level_quantiles(
+        torch.from_numpy(quantiles).to(values.device),
+        torch.from_numpy(quantile_levels.astype(np.float32)).to(values.device),
+    )
 
 
 def _finish_step(

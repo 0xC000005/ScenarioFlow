@@ -51,13 +51,21 @@ def test_reusable_stage1_and_stage2_training_steps_are_finite() -> None:
     assert np.isfinite(stage2["total"])
 
 
-def test_new_stage1_model_initializes_level_quantiles_from_training_levels() -> None:
+def test_new_stage1_model_uses_frozen_empirical_quantile_grid() -> None:
     model = tiny_model()
+    model.cfg.cdf_eps = 0.1
+    model.cfg.n_quantiles = 5
+    model.quantile_levels = torch.zeros(5)
+    model.level_quantiles = torch.zeros(model.cfg.n_cells, 5)
     model._quantiles_ready.fill_(False)
-    batch = synthetic_batch(model)
-    initialize_level_quantiles(model, batch[0], batch[2])
+    history_level = torch.arange(0.0, 6.0).view(1, 6, 1).repeat(1, 1, 3)
+    future_level = torch.arange(6.0, 11.0).view(1, 5, 1).repeat(1, 1, 3)
+    initialize_level_quantiles(model, history_level, future_level)
     assert bool(model._quantiles_ready.item())
-    assert torch.all(model.level_quantiles[:, 1:] >= model.level_quantiles[:, :-1])
+    expected_grid = torch.tensor([0.1, 0.3, 0.5, 0.7, 0.9])
+    expected_quantiles = torch.tensor([1.0, 3.0, 5.0, 7.0, 9.0]).repeat(3, 1)
+    assert torch.allclose(model.quantile_levels, expected_grid)
+    assert torch.allclose(model.level_quantiles, expected_quantiles)
 
 
 def test_synthetic_checkpoint_inference_is_deterministic(tmp_path) -> None:

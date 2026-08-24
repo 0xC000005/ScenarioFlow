@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+import inspect
 
+import pytest
 import torch
 
+import scenarioflow._causal as causal_primitives
 from scenarioflow.model import (
     AdaptiveGraphResidualTokenTransitionVelocity,
     GenericStateAwareNormalizedInnovationFMConfig,
@@ -72,3 +75,43 @@ def test_adaptive_graph_upgrade_is_output_preserving_and_checkpoint_loadable(
     loaded, _ = load_model(path, torch.device("cpu"))
     assert isinstance(loaded.velocity, AdaptiveGraphResidualTokenTransitionVelocity)
     assert set(loaded.state_dict()) == set(model.state_dict())
+
+
+def test_loader_accepts_false_narrative_metadata_but_rejects_enabled_metadata(
+    tmp_path,
+) -> None:
+    model = tiny_model()
+    base_path = tmp_path / "base.pt"
+    save_checkpoint(base_path, model, model.cfg, epoch=0, best_val=0.0)
+    payload = torch.load(base_path, map_location="cpu", weights_only=False)
+    payload["config"].update(
+        {
+            "narrative_conditioning": False,
+            "narrative_dim": 1536,
+            "narrative_hidden": 512,
+        }
+    )
+    false_path = tmp_path / "false_metadata.pt"
+    torch.save(payload, false_path)
+    loaded, _ = load_model(false_path, torch.device("cpu"))
+    assert set(loaded.state_dict()) == set(model.state_dict())
+
+    payload["config"]["narrative_conditioning"] = True
+    enabled_path = tmp_path / "enabled_metadata.pt"
+    torch.save(payload, enabled_path)
+    with pytest.raises(ValueError, match="numerical package does not support"):
+        load_model(enabled_path, torch.device("cpu"))
+
+
+def test_numerical_model_has_no_narrative_execution_surface() -> None:
+    model = tiny_model()
+    assert not hasattr(causal_primitives, "NarrativeConditioningAdapter")
+    assert not hasattr(model, "narrative_adapter")
+    for method in (model.training_loss, model.sample_batched):
+        parameters = inspect.signature(method).parameters
+        assert "narrative_emb" not in parameters
+        assert "narrative_present" not in parameters
+        assert all(
+            parameter.kind is not inspect.Parameter.VAR_KEYWORD
+            for parameter in parameters.values()
+        )
