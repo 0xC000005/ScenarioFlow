@@ -101,6 +101,12 @@ def test_loader_accepts_false_narrative_metadata_but_rejects_enabled_metadata(
     torch.save(payload, enabled_path)
     with pytest.raises(ValueError, match="numerical package does not support"):
         load_model(enabled_path, torch.device("cpu"))
+    with pytest.raises(ValueError, match="numerical package does not support"):
+        load_model(
+            enabled_path,
+            torch.device("cpu"),
+            cfg_overrides={"narrative_conditioning": False},
+        )
 
 
 def test_numerical_model_has_no_narrative_execution_surface() -> None:

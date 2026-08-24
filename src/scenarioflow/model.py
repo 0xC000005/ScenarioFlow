@@ -1369,6 +1369,10 @@ def load_model(
 ) -> tuple[GenericStateAwareNormalizedInnovationFlowMatching, dict]:
     payload = torch.load(checkpoint_path, map_location=device, weights_only=False)
     config = dict(payload["config"])
+    if bool(config.get("narrative_conditioning", False)):
+        raise ValueError(
+            "the numerical package does not support narrative conditioning"
+        )
     if cfg_overrides:
         config.update(cfg_overrides)  # e.g. risk_state_dim>0 to instantiate the inert slot
     unsupported_conditioning = bool(config.pop("narrative_conditioning", False))
