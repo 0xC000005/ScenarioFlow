@@ -9,11 +9,11 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import types
 
 import pytest
 
 from scenarioflow import cli
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -193,3 +193,87 @@ def test_demo_failure_does_not_break_numerical_help() -> None:
     assert doctor.returncode == 0
     assert _run("train", "--help").returncode == 0
     assert _run("infer", "--help").returncode == 0
+
+
+def test_demo_launch_forwards_reader_facing_arguments(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The native command must launch the selected released backend."""
+    calls: list[dict[str, object]] = []
+    report = {
+        "numerical_workflows": "available",
+        "demos": {
+            "narrative-to-scenario": {
+                "available": True,
+                "missing": [],
+                "actions": [],
+            },
+            "scenario-to-narrative": {
+                "available": True,
+                "missing": [],
+                "actions": [],
+            },
+        },
+    }
+    monkeypatch.setattr(cli, "inspect_demo_capabilities", lambda **_kwargs: report)
+    module = types.ModuleType("scenarioflow_demo.launch")
+    module.launch_demo = lambda **kwargs: calls.append(kwargs) or 0  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "scenarioflow_demo.launch", module)
+    manifest = _fixture_manifest(tmp_path / "manifest.tsv")
+
+    result = cli.main(
+        [
+            "demo",
+            "launch",
+            "narrative-to-scenario",
+            "--manifest",
+            str(manifest),
+            "--artifact-root",
+            str(tmp_path / "cache"),
+            "--data-dir",
+            str(tmp_path / "data"),
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "9010",
+        ]
+    )
+
+    assert result == 0
+    assert calls == [
+        {
+            "demo": "narrative-to-scenario",
+            "manifest": manifest,
+            "artifact_root": tmp_path / "cache",
+            "data_dir": tmp_path / "data",
+            "host": "127.0.0.1",
+            "port": 9010,
+        }
+    ]
+
+
+def test_demo_launch_stops_with_exact_doctor_actions(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An unavailable demo should fail before importing its runtime."""
+    report = {
+        "numerical_workflows": "available",
+        "demos": {
+            "narrative-to-scenario": {
+                "available": False,
+                "missing": ["OPENAI_API_KEY"],
+                "actions": ["Set OPENAI_API_KEY in your environment."],
+            },
+            "scenario-to-narrative": {
+                "available": True,
+                "missing": [],
+                "actions": [],
+            },
+        },
+    }
+    monkeypatch.setattr(cli, "inspect_demo_capabilities", lambda **_kwargs: report)
+
+    assert cli.main(["demo", "launch", "narrative-to-scenario"]) == 2
+    captured = capsys.readouterr()
+    assert captured.err == "Set OPENAI_API_KEY in your environment.\n"
+    assert "Task 6" not in captured.err

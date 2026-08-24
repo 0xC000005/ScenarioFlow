@@ -12,6 +12,32 @@ from typing import Any
 
 from .artifacts import ArtifactResolver
 
+NARRATIVE_TO_SCENARIO_ARTIFACTS = (
+    "nl.bridge-adapter",
+    "nl.full-start-bridge-arrays",
+    "nl.full-start-bridge-report",
+    "nl.support-bank",
+    "nl.support-bank-report",
+)
+
+
+def _module_available(find_spec: Callable[[str], object | None], name: str) -> bool:
+    try:
+        return find_spec(name) is not None
+    except (ImportError, ModuleNotFoundError, ValueError):
+        return False
+
+
+def _artifacts_ready(
+    resolver: ArtifactResolver,
+    artifact_root: str | Path,
+    artifact_ids: tuple[str, ...],
+) -> bool:
+    return all(
+        status.state == "present"
+        for status in resolver.verify(artifact_ids, artifact_root)
+    )
+
 
 def inspect_demo_capabilities(
     *,
@@ -24,34 +50,69 @@ def inspect_demo_capabilities(
 ) -> dict[str, Any]:
     """Report local demo readiness without making a model request or starting a server."""
     environment = os.environ if environ is None else environ
-    runtime_ready = all(
-        status.state == "present"
-        for status in resolver.verify(
-            [record.artifact_id for record in resolver.for_profile("nl-runtime")],
-            artifact_root,
-        )
+    nl_runtime_ids = tuple(
+        record.artifact_id for record in resolver.for_profile("nl-runtime")
     )
-    backend_ready = find_spec("scenarioflow_demo") is not None
+    narrative_runtime_ready = _artifacts_ready(
+        resolver,
+        artifact_root,
+        NARRATIVE_TO_SCENARIO_ARTIFACTS,
+    )
+    stage2_ready = _artifacts_ready(
+        resolver,
+        artifact_root,
+        ("core.stage2",),
+    )
+    narrative_backend_ready = _module_available(
+        find_spec, "scenarioflow_demo.narrative_to_scenario_app"
+    )
+    scenario_backend_ready = _module_available(
+        find_spec, "scenarioflow_demo.scenario_to_narrative_app"
+    )
+    server_ready = _module_available(find_spec, "gradio")
+    openai_ready = _module_available(find_spec, "openai")
 
     demo_one_missing: list[str] = []
     demo_one_actions: list[str] = []
     if not environment.get("OPENAI_API_KEY", "").strip():
         demo_one_missing.append("OPENAI_API_KEY")
         demo_one_actions.append("Set `OPENAI_API_KEY`.")
-    if find_spec("openai") is None:
+    if not openai_ready:
         demo_one_missing.append("demo-openai extra")
-        demo_one_actions.append("Install the `demo-openai` extra.")
-    if not runtime_ready:
-        demo_one_missing.append("nl-runtime artifacts")
-        demo_one_actions.append("Fetch the `nl-runtime` artifact profile.")
-    if not backend_ready:
-        demo_one_missing.append("demo backend")
         demo_one_actions.append(
-            "Install the optional demo package when Task 6 is available."
+            "Run `uv sync --extra demo-openai --extra demo-server`."
         )
+    if not server_ready:
+        demo_one_missing.append("demo-server extra")
+        if openai_ready:
+            demo_one_actions.append("Run `uv sync --extra demo-server`.")
+    if not narrative_runtime_ready:
+        demo_one_missing.append("nl-runtime artifacts")
+        demo_one_actions.append(
+            "Run `uv run scenarioflow fetch --profile nl-runtime "
+            "--bundle-dir /path/to/release-bundle`."
+        )
+    if not stage2_ready:
+        demo_one_missing.append("Stage 2 checkpoint")
+        demo_one_actions.append(
+            "Run `uv run scenarioflow fetch --artifact core.stage2 "
+            "--bundle-dir /path/to/release-bundle`."
+        )
+    if not narrative_backend_ready:
+        demo_one_missing.append("demo backend")
+        demo_one_actions.append("Run `uv sync --extra demo-server`.")
 
     demo_two_missing: list[str] = []
     demo_two_actions: list[str] = []
+    if not server_ready:
+        demo_two_missing.append("demo-server extra")
+        demo_two_actions.append("Run `uv sync --extra demo-server`.")
+    if not _artifacts_ready(resolver, artifact_root, nl_runtime_ids):
+        demo_two_missing.append("nl-runtime artifacts")
+        demo_two_actions.append(
+            "Run `uv run scenarioflow fetch --profile nl-runtime "
+            "--bundle-dir /path/to/release-bundle`."
+        )
     codex = which("codex")
     if codex is None:
         demo_two_missing.append("Codex CLI")
@@ -71,11 +132,9 @@ def inspect_demo_capabilities(
         if not logged_in:
             demo_two_missing.append("Codex CLI login")
             demo_two_actions.append("Run `codex login`.")
-    if not backend_ready:
+    if not scenario_backend_ready:
         demo_two_missing.append("demo backend")
-        demo_two_actions.append(
-            "Install the optional demo package when Task 6 is available."
-        )
+        demo_two_actions.append("Run `uv sync --extra demo-server`.")
 
     return {
         "numerical_workflows": "available",

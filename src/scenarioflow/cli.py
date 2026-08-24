@@ -93,7 +93,11 @@ def _launch_parser() -> argparse.ArgumentParser:
         choices=("narrative-to-scenario", "scenario-to-narrative"),
         nargs="?",
     )
-    parser.add_argument("arguments", nargs=argparse.REMAINDER)
+    parser.add_argument("--manifest", type=Path, default=default_manifest_path())
+    parser.add_argument("--artifact-root", type=Path, default=Path("artifacts/cache"))
+    parser.add_argument("--data-dir", type=Path, default=_repository_root() / "data")
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", type=int)
     return parser
 
 
@@ -207,7 +211,7 @@ def _run_demo(arguments: list[str]) -> int:
         parser = argparse.ArgumentParser(prog="scenarioflow demo")
         commands = parser.add_subparsers(dest="command")
         commands.add_parser("doctor", help="check optional local capabilities")
-        commands.add_parser("launch", help="launch a Task-6 demo")
+        commands.add_parser("launch", help="launch an optional demo")
         parser.print_help()
         return 0
     if arguments[0] == "doctor":
@@ -230,11 +234,30 @@ def _run_demo(arguments: list[str]) -> int:
         if args.demo is None:
             _launch_parser().print_help()
             return 0
-        print(
-            "optional demo workflow not installed; Task 6 provides the demo package",
-            file=sys.stderr,
+        resolver = ArtifactResolver.from_tsv(args.manifest)
+        report = inspect_demo_capabilities(
+            resolver=resolver,
+            artifact_root=args.artifact_root,
         )
-        return 2
+        status = report["demos"][args.demo]
+        if not status["available"]:
+            for action in status["actions"]:
+                print(action, file=sys.stderr)
+            return 2
+        from scenarioflow_demo.launch import launch_demo
+
+        return launch_demo(
+            demo=args.demo,
+            manifest=args.manifest,
+            artifact_root=args.artifact_root,
+            data_dir=args.data_dir,
+            host=args.host,
+            port=(
+                args.port
+                if args.port is not None
+                else 7860 if args.demo == "narrative-to-scenario" else 7861
+            ),
+        )
     raise ArtifactError(f"unknown demo command: {arguments[0]}")
 
 

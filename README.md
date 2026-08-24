@@ -48,6 +48,30 @@ publisher-provided URL or a local release bundle and installs a file only after 
 size and SHA-256 match the tracked manifest. Missing OpenAI or Codex requirements
 affect only the corresponding optional demo; numerical workflows remain available.
 
+## Run the demos locally
+
+Install the demo dependencies and fetch the NL runtime plus the Stage 2 checkpoint:
+
+```bash
+uv sync --extra demo-server --extra demo-openai
+uv run scenarioflow fetch --profile nl-runtime --bundle-dir /path/to/release-bundle
+uv run scenarioflow fetch --artifact core.stage2 --bundle-dir /path/to/release-bundle
+uv run scenarioflow demo doctor
+```
+
+Narrative-to-scenario requires `OPENAI_API_KEY`. Scenario-to-narrative requires an
+installed Codex CLI authenticated with `codex login`. Start the two backends and the
+React site in separate terminals:
+
+```bash
+uv run scenarioflow demo launch narrative-to-scenario
+uv run scenarioflow demo launch scenario-to-narrative
+cd web && npm ci && npm run dev -- --host 127.0.0.1 --port 8766
+```
+
+Open `http://127.0.0.1:8766`. A hosted demo link can be added to the repository
+description without changing the reproducible local setup.
+
 See [DATA_SOURCES.md](DATA_SOURCES.md) for the processed-data provenance and
 [Paper assets](paper_assets/README.md) for table and figure reproduction, and
 [LICENSE](LICENSE) for the repository license.

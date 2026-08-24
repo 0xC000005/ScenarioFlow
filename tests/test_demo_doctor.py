@@ -14,8 +14,27 @@ from scenarioflow.demo_doctor import inspect_demo_capabilities
 def _resolver_with_runtime(
     tmp_path: Path, *, present: bool
 ) -> tuple[ArtifactResolver, Path]:
-    payload = b"runtime"
-    relative = "nl/runtime/bridge/bridge_adapter.pt"
+    artifacts = (
+        ("nl.episode-cards", "nl/runtime/episode_cards/cards.jsonl", "nl-runtime,all"),
+        ("nl.bridge-adapter", "nl/runtime/bridge/bridge_adapter.pt", "nl-runtime,all"),
+        (
+            "nl.full-start-bridge-arrays",
+            "nl/runtime/state_alignment/arrays.npz",
+            "nl-runtime,all",
+        ),
+        (
+            "nl.full-start-bridge-report",
+            "nl/runtime/state_alignment/report.json",
+            "nl-runtime,all",
+        ),
+        ("nl.support-bank", "nl/runtime/support_bank/arrays.npz", "nl-runtime,all"),
+        (
+            "nl.support-bank-report",
+            "nl/runtime/support_bank/report.json",
+            "nl-runtime,all",
+        ),
+        ("core.stage2", "models/core/stage2/best_model.pt", "core,all"),
+    )
     manifest = tmp_path / "manifest.tsv"
     with manifest.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
@@ -34,24 +53,29 @@ def _resolver_with_runtime(
             delimiter="\t",
         )
         writer.writeheader()
-        writer.writerow(
-            {
-                "schema_version": "scenarioflow.artifacts.v1",
-                "artifact_id": "nl.bridge-adapter",
-                "profile": "nl-runtime,all",
-                "category": "nl-runtime",
-                "relative_path": relative,
-                "bytes": len(payload),
-                "sha256": hashlib.sha256(payload).hexdigest(),
-                "frozen_source_path": "frozen/bridge.pt",
-                "url_path": relative,
-            }
-        )
+        for artifact_id, relative, profile in artifacts:
+            payload = artifact_id.encode()
+            writer.writerow(
+                {
+                    "schema_version": "scenarioflow.artifacts.v1",
+                    "artifact_id": artifact_id,
+                    "profile": profile,
+                    "category": (
+                        "checkpoint" if artifact_id == "core.stage2" else "nl-runtime"
+                    ),
+                    "relative_path": relative,
+                    "bytes": len(payload),
+                    "sha256": hashlib.sha256(payload).hexdigest(),
+                    "frozen_source_path": f"frozen/{artifact_id}.bin",
+                    "url_path": relative,
+                }
+            )
     root = tmp_path / "cache"
     if present:
-        target = root / relative
-        target.parent.mkdir(parents=True)
-        target.write_bytes(payload)
+        for artifact_id, relative, _profile in artifacts:
+            target = root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(artifact_id.encode())
     return ArtifactResolver.from_tsv(manifest), root
 
 
@@ -77,12 +101,16 @@ def test_missing_optional_requirements_are_scoped_to_each_demo(tmp_path: Path) -
     assert set(report["demos"]["narrative-to-scenario"]["missing"]) == {
         "OPENAI_API_KEY",
         "demo-openai extra",
+        "demo-server extra",
         "nl-runtime artifacts",
+        "Stage 2 checkpoint",
         "demo backend",
     }
     assert report["demos"]["scenario-to-narrative"]["available"] is False
     assert set(report["demos"]["scenario-to-narrative"]["missing"]) == {
         "Codex CLI",
+        "demo-server extra",
+        "nl-runtime artifacts",
         "demo backend",
     }
     assert calls == []
