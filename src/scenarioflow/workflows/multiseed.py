@@ -127,6 +127,8 @@ def _evaluation_node(
     rollout_seed: int,
     train_seed: int | None,
     contract_hash: str,
+    max_windows: int = 441,
+    n_samples: int = 64,
 ) -> dict[str, Any]:
     run_id = (
         f"{candidate}/eval_seed_{rollout_seed}"
@@ -176,9 +178,9 @@ def _evaluation_node(
             "--output-dir",
             str(destination),
             "--n-samples",
-            "64",
+            str(n_samples),
             "--max-windows",
-            "441",
+            str(max_windows),
             "--batch-size",
             "32",
             "--seed",
@@ -265,6 +267,14 @@ def _training_node(
         "10",
         "--batch-size",
         "64",
+        "--n-diffusion-steps",
+        "40",
+        "--sample-steps",
+        "8",
+        "--weight-decay",
+        "0.00001",
+        "--clip-grad",
+        "1.0",
     ]
     return {
         "node_id": f"train:{candidate}:{train_seed}",
@@ -280,11 +290,8 @@ def _training_node(
 
 
 def _scenarioflow_training_nodes(
-    *, output_root: Path, artifact_root: Path, train_seed: int, contract_hash: str
+    *, output_root: Path, data_dir: Path, train_seed: int, contract_hash: str
 ) -> list[dict[str, Any]]:
-    inputs = (
-        artifact_root / "training_inputs" / "scenarioflow" / f"train_seed_{train_seed}"
-    )
     stage1 = (
         output_root
         / "generated_checkpoints"
@@ -314,7 +321,6 @@ def _scenarioflow_training_nodes(
             stage1,
             None,
             8,
-            inputs / "config.json",
             None,
         ),
         (
@@ -325,7 +331,6 @@ def _scenarioflow_training_nodes(
             stage1,
             3,
             None,
-            None,
         ),
         (
             "train:scenarioflow_graph:graph",
@@ -335,7 +340,6 @@ def _scenarioflow_training_nodes(
             stage2,
             2,
             None,
-            inputs / "graph_config_overrides.json",
         ),
     )
     nodes = []
@@ -347,8 +351,7 @@ def _scenarioflow_training_nodes(
         destination,
         checkpoint,
         epochs,
-        config,
-        overrides,
+        _unused,
     ) in specifications:
         node_id = f"{prefix}:{train_seed}"
         command = [
@@ -357,8 +360,8 @@ def _scenarioflow_training_nodes(
             "scenarioflow.training",
             "--stage",
             stage,
-            "--batch-npz",
-            str(inputs / "batch.npz"),
+            "--data-dir",
+            str(data_dir),
             "--output",
             str(destination),
             "--epochs",
@@ -371,6 +374,10 @@ def _scenarioflow_training_nodes(
             "0" if stage == "stage2" else "2048",
             "--lr",
             "0.0007" if stage == "stage1" else "0.00002",
+            "--weight-decay",
+            "0.00001",
+            "--clip-grad",
+            "1.0",
         ]
         if stage != "stage1":
             command += [
@@ -380,13 +387,20 @@ def _scenarioflow_training_nodes(
                 "4",
                 "--energy-weight",
                 "0.2",
+                "--channel-level-energy-weight",
+                "0.05",
             ]
-        if config is not None:
-            command += ["--config", str(config)]
         if checkpoint is not None:
             command += ["--checkpoint", str(checkpoint)]
-        if overrides is not None:
-            command += ["--config-overrides", str(overrides)]
+        if stage == "graph":
+            command += [
+                "--free-running-fm-weight",
+                "0.2",
+                "--free-running-fm-prefix-steps",
+                "5",
+                "--graph-k",
+                "8",
+            ]
         nodes.append(
             {
                 "node_id": node_id,
@@ -415,13 +429,33 @@ def build_protocol(
     artifact_root: str | Path,
     train_seeds: Sequence[int] = TRAIN_SEEDS,
     rollout_seeds: Sequence[int] = ROLLOUT_SEEDS,
+    candidates: Sequence[str] = CANDIDATE_IDS,
+    smoke: bool = False,
+    max_windows: int = 441,
+    n_samples: int = 64,
 ) -> dict[str, Any]:
-    if tuple(train_seeds) != TRAIN_SEEDS:
+    if not smoke and tuple(train_seeds) != TRAIN_SEEDS:
         raise ProtocolValidationError(f"training seeds must remain {list(TRAIN_SEEDS)}")
-    if tuple(rollout_seeds) != ROLLOUT_SEEDS:
+    if not smoke and tuple(rollout_seeds) != ROLLOUT_SEEDS:
         raise ProtocolValidationError(
             f"rollout seeds must remain {list(ROLLOUT_SEEDS)}"
         )
+    selected_candidates = tuple(candidates)
+    if not selected_candidates or any(
+        item not in CANDIDATE_IDS for item in selected_candidates
+    ):
+        raise ProtocolValidationError(
+            "candidate selection contains an unknown candidate"
+        )
+    if smoke and any(
+        item not in CLASSICAL_CANDIDATES or item == "garch_ccc"
+        for item in selected_candidates
+    ):
+        raise ProtocolValidationError(
+            "smoke execution supports generated classical rows only"
+        )
+    if smoke and (max_windows <= 0 or n_samples <= 0):
+        raise ProtocolValidationError("smoke deck dimensions must be positive")
     source = Path(source_manifest).expanduser().resolve()
     artifacts = Path(artifact_manifest).expanduser().resolve()
     data = Path(data_dir).expanduser().resolve()
@@ -438,13 +472,20 @@ def build_protocol(
     root = Path(output_root).expanduser().resolve()
     contract = {
         "schema_version": PROTOCOL_SCHEMA,
-        "benchmark_split": "published_validation",
+        "benchmark_split": (
+            "published_validation_prefix_smoke" if smoke else "published_validation"
+        ),
         "mode": MODE,
-        "candidate_ids": list(CANDIDATE_IDS),
-        "train_seeds": list(TRAIN_SEEDS),
-        "rollout_seeds": list(ROLLOUT_SEEDS),
+        "candidate_ids": list(selected_candidates),
+        "train_seeds": list(train_seeds),
+        "rollout_seeds": list(rollout_seeds),
         "validation_protocol": {
-            key: value for key, value in PUBLISHED_VALIDATION_PROTOCOL.__dict__.items()
+            key: (
+                max_windows
+                if smoke and key == "val_size"
+                else n_samples if smoke and key == "n_samples" else value
+            )
+            for key, value in PUBLISHED_VALIDATION_PROTOCOL.__dict__.items()
         },
         "thresholds": TABLE_THRESHOLD_RULES,
         "source_manifest": {"path": str(source), "sha256": _file_hash(source)},
@@ -460,14 +501,14 @@ def build_protocol(
         contract_hash=contract_hash,
     )
     nodes: list[dict[str, Any]] = []
-    for candidate in CANDIDATE_IDS:
+    for candidate in selected_candidates:
         if candidate in {"scenarioflow", "scenarioflow_graph"}:
             if candidate == "scenarioflow":
-                for train_seed in TRAIN_SEEDS:
+                for train_seed in train_seeds:
                     nodes.extend(
                         _scenarioflow_training_nodes(
                             output_root=root,
-                            artifact_root=artifact_directory,
+                            data_dir=data,
                             train_seed=train_seed,
                             contract_hash=contract_hash,
                         )
@@ -482,17 +523,17 @@ def build_protocol(
                     train_seed=train_seed,
                     contract_hash=contract_hash,
                 )
-                for train_seed in TRAIN_SEEDS
+                for train_seed in train_seeds
             )
         if candidate == "garch_ccc":
             seed_pairs = ((None, 772),)
         elif candidate in CLASSICAL_CANDIDATES:
-            seed_pairs = ((None, rollout) for rollout in ROLLOUT_SEEDS)
+            seed_pairs = ((None, rollout) for rollout in rollout_seeds)
         else:
             seed_pairs = (
                 (train_seed, rollout_seed)
-                for train_seed in TRAIN_SEEDS
-                for rollout_seed in ROLLOUT_SEEDS
+                for train_seed in train_seeds
+                for rollout_seed in rollout_seeds
             )
         nodes.extend(
             _evaluation_node(
@@ -504,6 +545,8 @@ def build_protocol(
                 train_seed=train_seed,
                 rollout_seed=rollout_seed,
                 contract_hash=contract_hash,
+                max_windows=max_windows,
+                n_samples=n_samples,
             )
             for train_seed, rollout_seed in seed_pairs
         )

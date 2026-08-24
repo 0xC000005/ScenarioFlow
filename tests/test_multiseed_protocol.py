@@ -79,6 +79,10 @@ def test_protocol_is_native_manifest_bound_and_resume_idempotent(
         for node in evaluation_nodes
         if node["candidate"] != "garch_ccc"
     )
+    retired_input_slug = "training_" + "inputs"
+    assert all(
+        retired_input_slug not in " ".join(node["command"]) for node in first["nodes"]
+    )
     by_id = {node["node_id"]: node for node in first["nodes"]}
     for seed in TRAIN_SEEDS:
         stage1 = by_id[f"train:scenarioflow:stage1:{seed}"]
@@ -111,6 +115,24 @@ def test_protocol_is_native_manifest_bound_and_resume_idempotent(
                 ]
                 == "4"
             )
+            assert (
+                fine_tune["command"][fine_tune["command"].index("--weight-decay") + 1]
+                == "0.00001"
+            )
+            assert (
+                fine_tune["command"][fine_tune["command"].index("--clip-grad") + 1]
+                == "1.0"
+            )
+        assert (
+            graph["command"][graph["command"].index("--free-running-fm-weight") + 1]
+            == "0.2"
+        )
+        assert (
+            graph["command"][
+                graph["command"].index("--free-running-fm-prefix-steps") + 1
+            ]
+            == "5"
+        )
         assert (
             stage2["command"][stage2["command"].index("--max-train-windows") + 1] == "0"
         )
@@ -126,6 +148,16 @@ def test_protocol_is_native_manifest_bound_and_resume_idempotent(
             "deepvar_sni",
         }:
             assert node["command"][node["command"].index("--epochs") + 1] == "10"
+            assert (
+                node["command"][node["command"].index("--n-diffusion-steps") + 1]
+                == "40"
+            )
+            assert node["command"][node["command"].index("--sample-steps") + 1] == "8"
+            assert (
+                node["command"][node["command"].index("--weight-decay") + 1]
+                == "0.00001"
+            )
+            assert node["command"][node["command"].index("--clip-grad") + 1] == "1.0"
     assert any(node["action"] == "train" for node in first["nodes"])
     assert all(
         node["protocol_contract_hash"] == first["contract_hash"]
@@ -344,3 +376,52 @@ def test_node_completion_is_hash_bound_and_resumable(tmp_path: Path) -> None:
             node_id=node["node_id"],
             result=result,
         )
+
+
+def test_one_command_smoke_plans_runs_resumes_and_aggregates(tmp_path: Path) -> None:
+    source = tmp_path / "source.tsv"
+    artifacts = tmp_path / "artifacts.tsv"
+    source.write_text("source\n")
+    artifacts.write_text("artifacts\n")
+    checkpoint_root = tmp_path / "checkpoints"
+    artifact_root = tmp_path / "artifact-root"
+    checkpoint_root.mkdir()
+    artifact_root.mkdir()
+    output_root = tmp_path / "runs"
+    summary = tmp_path / "summary.json"
+    command = [
+        "reproduce",
+        "--smoke",
+        "--candidate",
+        "bootstrap",
+        "--output-root",
+        str(output_root),
+        "--source-manifest",
+        str(source),
+        "--artifact-manifest",
+        str(artifacts),
+        "--data-dir",
+        "data",
+        "--checkpoint-root",
+        str(checkpoint_root),
+        "--artifact-root",
+        str(artifact_root),
+        "--max-windows",
+        "2",
+        "--n-samples",
+        "2",
+        "--rollout-seed",
+        "2001",
+        "--output",
+        str(summary),
+    ]
+    reproduction.main(command)
+    first = json.loads(summary.read_text())
+    assert first["schema_version"] == "scenarioflow.multiseed-smoke-aggregate.v1"
+    assert first["candidates"]["bootstrap"]["n_runs"] == 1
+    manifest_path = next(output_root.rglob("run_manifest.json"))
+    manifest = json.loads(manifest_path.read_text())
+    assert manifest["evaluation_manifest_sha256"]
+    assert manifest["evaluation_manifest"]["provenance"]["data_artifacts"]
+    reproduction.main(command)
+    assert json.loads(summary.read_text()) == first

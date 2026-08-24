@@ -22,6 +22,7 @@ from scenarioflow.evaluation.current_panel import (
     TABLE_THRESHOLD_RULES,
     WindowHistoricalSim,
     build_run_manifest,
+    compute_block_alignment,
     evaluate_iv_suite,
     main as evaluator_main,
     summarize_joint_quality,
@@ -288,6 +289,7 @@ def test_full_frozen_iv_and_joint_quality_surfaces_are_preserved() -> None:
         samples,
         truth,
         history,
+        shuffled_samples=np.flip(samples, axis=0).copy(),
         returns=returns,
         window_indices=np.arange(40, 44),
     )
@@ -341,6 +343,27 @@ def test_full_frozen_iv_and_joint_quality_surfaces_are_preserved() -> None:
         suite["risk_state_allocation"]
     )
     assert "full_horizon" in suite["mean_reversion"]
+    assert suite["conditionality"]["mae_pass"] == (
+        suite["conditionality"]["mae_reduction_pct"] > 5.0
+    )
+    assert suite["conditionality"]["worst_cell_wr_pass"] == (
+        suite["conditionality"]["worst_cell_width_ratio"] < 1.20
+    )
+    assert suite["time_series"]["move_size_profile"]["gate_lo"] == 0.9
+    assert suite["time_series"]["move_size_profile"]["gate_hi"] == 1.1
+    for row in suite["conditionality"]["per_horizon_conditionality"].values():
+        assert set(row) == {
+            "width_ratio",
+            "mae_reduction_pct",
+            "cond_width",
+            "uncond_width",
+        }
+    for regime in suite["regime_coverage"]["path_bias"].values():
+        assert set(regime) == {
+            "persistent_low_pct",
+            "persistent_high_pct",
+            "mean_frac_median_below_gt",
+        }
 
     raw_history = rng.normal(size=(4, 30, 39))
     raw_future = rng.normal(size=(4, 30, 39))
@@ -368,6 +391,54 @@ def test_full_frozen_iv_and_joint_quality_surfaces_are_preserved() -> None:
         "per_factor",
     )
     assert len(quality["per_factor"]) == 14
+
+
+def test_conditionality_uses_explicit_shuffled_model_deck_not_row_rotation() -> None:
+    rng = np.random.default_rng(731)
+    history = rng.uniform(0.15, 0.45, size=(4, 30, 25))
+    truth = rng.uniform(0.15, 0.45, size=(4, 30, 25))
+    offsets = np.array([-0.02, -0.005, 0.005, 0.02])[None, :, None, None]
+    matched = truth[:, None] + offsets
+    shuffled = truth[:, None] + 0.15 + offsets * 2.0
+    suite, _ = evaluate_iv_suite(
+        matched,
+        truth,
+        history,
+        shuffled_samples=shuffled,
+        returns=rng.normal(0.0, 0.01, size=200),
+        window_indices=np.arange(40, 44),
+    )
+    diagnostics = suite["conditionality"]
+    expected_mae = float(np.abs(np.median(shuffled, axis=1) - truth).mean())
+    assert diagnostics["avg_uncond_mae"] == pytest.approx(expected_mae)
+    assert diagnostics["mae_reduction_pct"] > 5.0
+    assert diagnostics["mae_pass"] is True
+
+
+def test_block_alignment_is_computed_from_panel_bytes() -> None:
+    from scenarioflow.state import build_increment_coordinate_block
+
+    rng = np.random.default_rng(19)
+    panel = rng.uniform(0.2, 0.8, size=(70, 39)).astype(np.float32)
+    columns = [f"iv:{index}" for index in range(25)] + [
+        f"factor:{index}" for index in range(14)
+    ]
+    block = build_increment_coordinate_block(
+        panel,
+        columns,
+        np.array([0, 1]),
+        history_len=30,
+        future_len=30,
+        iv_count=25,
+        iv_transform="bounded_logit",
+    )
+    assert compute_block_alignment(panel, block) == (0.0, 0.0)
+    altered = __import__("dataclasses").replace(
+        block, history_state=block.history_state + 0.125
+    )
+    history_error, future_error = compute_block_alignment(panel, altered)
+    assert history_error == pytest.approx(0.125)
+    assert future_error == 0.0
 
 
 def test_joint_quality_preserves_frozen_ordinal_and_nan_behavior() -> None:

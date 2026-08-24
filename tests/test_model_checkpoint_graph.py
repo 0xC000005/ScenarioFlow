@@ -15,6 +15,7 @@ from scenarioflow.model import (
     load_model,
     save_checkpoint,
 )
+from scenarioflow.training import load_training_model
 
 
 def tiny_model() -> GenericStateAwareNormalizedInnovationFlowMatching:
@@ -75,6 +76,30 @@ def test_adaptive_graph_upgrade_is_output_preserving_and_checkpoint_loadable(
     loaded, _ = load_model(path, torch.device("cpu"))
     assert isinstance(loaded.velocity, AdaptiveGraphResidualTokenTransitionVelocity)
     assert set(loaded.state_dict()) == set(model.state_dict())
+
+
+def test_graph_training_loads_ordinary_stage2_then_applies_output_preserving_upgrade(
+    tmp_path,
+) -> None:
+    ordinary = tiny_model().eval()
+    checkpoint = tmp_path / "stage2.pt"
+    save_checkpoint(checkpoint, ordinary, ordinary.cfg, epoch=3, best_val=0.25)
+    x = torch.randn(4, 3, generator=torch.Generator().manual_seed(31))
+    current = torch.randn(4, 3, generator=torch.Generator().manual_seed(32))
+    memory = torch.randn(4, 8, generator=torch.Generator().manual_seed(33))
+    time = torch.linspace(0.1, 0.9, 4)
+    expected = ordinary.velocity(x, current, memory, time)
+    migrated, payload = load_training_model(
+        checkpoint, stage="graph", device=torch.device("cpu"), graph_k=2
+    )
+    actual = migrated.velocity(x, current, memory, time)
+    assert torch.equal(expected, actual)
+    assert isinstance(migrated.velocity, AdaptiveGraphResidualTokenTransitionVelocity)
+    assert payload["graph_migration"] == {
+        "source": "ordinary_stage2_checkpoint",
+        "method": "output_preserving_zero_residual",
+        "k_neighbors": 2,
+    }
 
 
 def test_loader_accepts_false_narrative_metadata_but_rejects_enabled_metadata(

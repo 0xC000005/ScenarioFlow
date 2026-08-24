@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import time
@@ -32,6 +33,7 @@ from ..state import (
     build_increment_coordinate_block,
     normalize_increment_windows,
     reconstruct_state_from_increments,
+    state_panel_from_specs,
 )
 from ..model import load_model as load_scenarioflow_model
 from .iv_suite import run_full_iv_suite
@@ -364,8 +366,9 @@ def build_run_manifest(
     seed: int,
     history_alignment_error: float,
     future_alignment_error: float,
+    provenance: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
+    manifest = {
         "mode": MODE,
         "benchmark_split": "published_validation",
         "columns": list(columns),
@@ -380,6 +383,29 @@ def build_run_manifest(
             "future_max_abs_error": float(future_alignment_error),
         },
     }
+    if provenance is not None:
+        manifest["provenance"] = dict(provenance)
+    return manifest
+
+
+def compute_block_alignment(panel: np.ndarray, block: Any) -> tuple[float, float]:
+    """Recompute raw state windows from the source panel and report max errors."""
+    state_panel = state_panel_from_specs(np.asarray(panel), block.specs)
+    history_len = int(block.history_state.shape[1])
+    future_len = int(block.future_state.shape[1])
+    expected_history = np.stack(
+        [state_panel[start : start + history_len] for start in block.indices]
+    )
+    expected_future = np.stack(
+        [
+            state_panel[start + history_len : start + history_len + future_len]
+            for start in block.indices
+        ]
+    )
+    return (
+        float(np.max(np.abs(expected_history - block.history_state))),
+        float(np.max(np.abs(expected_future - block.future_state))),
+    )
 
 
 def compute_crps(
@@ -669,6 +695,8 @@ def evaluate_iv_suite(
     ground_truth: np.ndarray,
     history: np.ndarray,
     *,
+    shuffled_samples: np.ndarray,
+    conditionality_batch_size: int = 32,
     returns: np.ndarray,
     window_indices: np.ndarray,
 ) -> tuple[dict[str, Any], dict[str, float]]:
@@ -677,6 +705,8 @@ def evaluate_iv_suite(
         conditional_samples,
         ground_truth,
         history,
+        shuffled_samples=shuffled_samples,
+        conditionality_batch_size=conditionality_batch_size,
         returns=returns,
         window_indices=window_indices,
     )
@@ -807,33 +837,48 @@ def evaluate_baseline(
     batch_size: int,
     returns: np.ndarray,
     iv_count: int = 25,
+    shuffle_seed: int = 772,
 ) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     """Sample, reconstruct, and score one prepared current-panel baseline."""
-    generated: list[np.ndarray] = []
-    started = time.perf_counter()
-    for start in range(0, validation_block.history_increment.shape[0], batch_size):
-        end = min(start + batch_size, validation_block.history_increment.shape[0])
-        kwargs = (
-            {"history_state": validation_block.history_state[start:end]}
-            if name in {"historical_sim", "scenarioflow", "scenarioflow_graph"}
-            else {}
-        )
-        generated.append(
-            np.asarray(
-                model.sample_joint(
-                    validation_block.history_increment[start:end],
-                    n_samples=n_samples,
-                    **kwargs,
-                ),
-                dtype=np.float32,
+
+    def sample_order(order: np.ndarray) -> np.ndarray:
+        generated: list[np.ndarray] = []
+        for start in range(0, order.size, batch_size):
+            positions = order[start : start + batch_size]
+            kwargs = (
+                {"history_state": validation_block.history_state[positions]}
+                if name in {"historical_sim", "scenarioflow", "scenarioflow_graph"}
+                else {}
             )
+            generated.append(
+                np.asarray(
+                    model.sample_joint(
+                        validation_block.history_increment[positions],
+                        n_samples=n_samples,
+                        **kwargs,
+                    ),
+                    dtype=np.float32,
+                )
+            )
+        increments = np.concatenate(generated, axis=0)
+        return reconstruct_state_from_increments(
+            validation_block.history_state[order, -1],
+            increments,
+            validation_block.specs,
         )
-    sample_increment = np.concatenate(generated, axis=0)
-    sample_raw = reconstruct_state_from_increments(
-        validation_block.history_state[:, -1],
-        sample_increment,
-        validation_block.specs,
-    )
+
+    started = time.perf_counter()
+    matched_order = np.arange(validation_block.history_increment.shape[0])
+    sample_raw = sample_order(matched_order)
+    shuffle_generator = torch.Generator(device="cpu").manual_seed(int(shuffle_seed))
+    shuffled_chunks: list[np.ndarray] = []
+    for start in range(0, min(matched_order.size, batch_size * 5), batch_size):
+        base = matched_order[start : start + batch_size]
+        local = torch.randperm(base.size, generator=shuffle_generator).numpy()
+        if base.size > 1 and np.array_equal(local, np.arange(base.size)):
+            local = np.roll(local, 1)
+        shuffled_chunks.append(sample_order(base[local]))
+    shuffled_raw = np.concatenate(shuffled_chunks, axis=0)
     raw_history = validation_block.history_state.astype(np.float32)
     raw_future = validation_block.future_state.astype(np.float32)
     anchor = raw_history[:, -1]
@@ -852,6 +897,8 @@ def evaluate_baseline(
         iv_samples,
         iv_truth,
         iv_history,
+        shuffled_samples=shuffled_raw[..., :iv_count],
+        conditionality_batch_size=batch_size,
         returns=returns,
         window_indices=validation_block.indices,
     )
@@ -951,7 +998,7 @@ def main(argv: list[str] | None = None) -> None:
     if not 1 <= args.max_windows <= PUBLISHED_VALIDATION_PROTOCOL.val_size:
         raise SystemExit("--max-windows must be between 1 and 441")
 
-    _panel, columns, train, validation = prepare_validation_blocks(
+    panel, columns, train, validation = prepare_validation_blocks(
         data_dir=args.data_dir
     )
     if args.max_windows < validation.indices.size:
@@ -992,6 +1039,7 @@ def main(argv: list[str] | None = None) -> None:
         returns=np.load(
             Path(args.data_dir) / "vol_surface_with_ret.npz", allow_pickle=False
         )["ret"],
+        shuffle_seed=args.seed,
     )
     result_path = write_result(args.output_dir, result)
     metadata = {
@@ -1002,6 +1050,40 @@ def main(argv: list[str] | None = None) -> None:
         "iv_transform": "bounded_logit",
         "positive_level_policy": "reference_based",
     }
+    history_error, future_error = compute_block_alignment(panel, validation)
+    if history_error > 1e-6 or future_error > 1e-6:
+        raise RuntimeError(
+            f"IV alignment failure: history={history_error}, future={future_error}"
+        )
+    data_files = (
+        "vol_surface_with_ret.npz",
+        "spx_vol_surface_history_full_data_fixed.parquet",
+        "multi_factor_levels.parquet",
+        "multi_factor_returns.parquet",
+    )
+    provenance = {
+        "data_artifacts": {
+            name: hashlib.sha256((Path(args.data_dir) / name).read_bytes()).hexdigest()
+            for name in data_files
+        },
+        "checkpoint": (
+            None
+            if args.checkpoint is None
+            else {
+                "path": str(Path(args.checkpoint).resolve()),
+                "sha256": hashlib.sha256(
+                    Path(args.checkpoint).read_bytes()
+                ).hexdigest(),
+            }
+        ),
+        "evaluator": {
+            "baseline": args.baseline,
+            "batch_size": args.batch_size,
+            "max_windows": args.max_windows,
+            "n_samples": args.n_samples,
+            "seed": args.seed,
+        },
+    }
     manifest = build_run_manifest(
         columns=columns,
         metadata=metadata,
@@ -1010,8 +1092,9 @@ def main(argv: list[str] | None = None) -> None:
         n_val_windows=len(validation.indices),
         n_samples=args.n_samples,
         seed=args.seed,
-        history_alignment_error=0.0,
-        future_alignment_error=0.0,
+        history_alignment_error=history_error,
+        future_alignment_error=future_error,
+        provenance=provenance,
     )
     if len(validation.indices) != 441 or args.n_samples != 64:
         manifest["benchmark_split"] = "published_validation_prefix_smoke"
@@ -1040,6 +1123,7 @@ def main(argv: list[str] | None = None) -> None:
             protocol=protocol,
             node_id=args.node_id,
             result=result,
+            evaluation_manifest=manifest,
         )
     print(result_path)
 

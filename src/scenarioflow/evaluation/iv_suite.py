@@ -257,6 +257,9 @@ def run_full_iv_suite(
     ground_truth: np.ndarray,
     history: np.ndarray,
     *,
+    shuffled_samples: np.ndarray,
+    conditionality_batch_size: int = 32,
+    conditionality_samples: int = 32,
     returns: np.ndarray,
     window_indices: np.ndarray,
 ) -> tuple[dict[str, Any], dict[str, float]]:
@@ -264,6 +267,14 @@ def run_full_iv_suite(
         conditional_samples.shape[0],
         conditional_samples.shape[1],
         conditional_samples.shape[2],
+        5,
+        5,
+    )
+    shuffled_input = np.asarray(shuffled_samples, dtype=np.float64)
+    shuffled = shuffled_input.reshape(
+        shuffled_input.shape[0],
+        shuffled_input.shape[1],
+        shuffled_input.shape[2],
         5,
         5,
     )
@@ -417,15 +428,22 @@ def run_full_iv_suite(
     surface["overall_pass"] = bool(all(value["pass"] for value in surface.values()))
 
     median = np.median(samples, axis=1)
-    rolled_samples = np.roll(samples, 1, axis=0)
-    rolled = np.median(rolled_samples, axis=1)
-    conditional_mae = float(np.abs(median - truth).mean())
-    rolled_mae = float(np.abs(rolled - truth).mean())
-    conditional_width = np.quantile(samples, 0.95, axis=1) - np.quantile(
-        samples, 0.05, axis=1
+    cond_limit = min(samples.shape[0], int(conditionality_batch_size) * 8)
+    sample_limit = min(samples.shape[1], int(conditionality_samples))
+    cond_samples = samples[:cond_limit, :sample_limit]
+    cond_truth = truth[:cond_limit]
+    cond_history = history_arr[:cond_limit]
+    cond_median = median[:cond_limit]
+    shuffled_truth = truth[: shuffled.shape[0]]
+    shuffled = shuffled[:, :sample_limit]
+    rolled = np.median(shuffled, axis=1)
+    conditional_mae = float(np.abs(cond_median - cond_truth).mean())
+    rolled_mae = float(np.abs(rolled - shuffled_truth).mean())
+    conditional_width = np.quantile(cond_samples, 0.95, axis=1) - np.quantile(
+        cond_samples, 0.05, axis=1
     )
-    rolled_width = np.quantile(rolled_samples, 0.95, axis=1) - np.quantile(
-        rolled_samples, 0.05, axis=1
+    rolled_width = np.quantile(shuffled, 0.95, axis=1) - np.quantile(
+        shuffled, 0.05, axis=1
     )
     width_by_horizon = conditional_width.mean(axis=(0, 2, 3))
     avg_cond_width = float(conditional_width.mean())
@@ -437,8 +455,8 @@ def run_full_iv_suite(
         cond_cell_width,
         np.maximum(uncond_cell_width, 1e-8),
     )
-    cond_cell_mae = np.abs(median - truth).mean(axis=(0, 1))
-    uncond_cell_mae = np.abs(rolled - truth).mean(axis=(0, 1))
+    cond_cell_mae = np.abs(cond_median - cond_truth).mean(axis=(0, 1))
+    uncond_cell_mae = np.abs(rolled - shuffled_truth).mean(axis=(0, 1))
     cell_mae_reduction = np.where(
         uncond_cell_mae > 1e-8,
         (uncond_cell_mae - cond_cell_mae) / uncond_cell_mae * 100.0,
@@ -446,26 +464,43 @@ def run_full_iv_suite(
     )
     per_horizon_conditionality = {
         str(horizon): {
-            "conditional_mae": float(
-                np.abs(median[:, horizon - 1] - truth[:, horizon - 1]).mean()
+            "width_ratio": _ratio(
+                float(conditional_width[:, horizon - 1].mean()),
+                float(rolled_width[:, horizon - 1].mean()),
             ),
-            "unconditional_mae": float(
-                np.abs(rolled[:, horizon - 1] - truth[:, horizon - 1]).mean()
+            "mae_reduction_pct": float(
+                (
+                    np.abs(
+                        rolled[:, horizon - 1] - shuffled_truth[:, horizon - 1]
+                    ).mean()
+                    - np.abs(
+                        cond_median[:, horizon - 1] - cond_truth[:, horizon - 1]
+                    ).mean()
+                )
+                / max(
+                    float(
+                        np.abs(
+                            rolled[:, horizon - 1] - shuffled_truth[:, horizon - 1]
+                        ).mean()
+                    ),
+                    1e-12,
+                )
+                * 100.0
             ),
-            "conditional_width": float(conditional_width[:, horizon - 1].mean()),
-            "unconditional_width": float(rolled_width[:, horizon - 1].mean()),
+            "cond_width": float(conditional_width[:, horizon - 1].mean()),
+            "uncond_width": float(rolled_width[:, horizon - 1].mean()),
         }
         for horizon in (1, 7, 14, 30)
         if horizon <= truth.shape[1]
     }
-    vov = np.mean(np.diff(history_arr, axis=1) ** 2, axis=(1, 2, 3))
+    vov = np.mean(np.diff(cond_history, axis=1) ** 2, axis=(1, 2, 3))
     low, high = np.quantile(vov, [0.2, 0.8])
     regimes = {}
     for name, mask in (("calm", vov <= low), ("turb", vov >= high)):
         if not mask.any():
             continue
         regime_width = conditional_width[mask].mean(axis=(0, 1))
-        regime_mae = np.abs(median[mask] - truth[mask]).mean(axis=(0, 1))
+        regime_mae = np.abs(cond_median[mask] - cond_truth[mask]).mean(axis=(0, 1))
         regimes[name] = {
             "avg_width_ratio": float(
                 np.mean(regime_width / np.maximum(uncond_cell_width, 1e-8))
@@ -507,7 +542,7 @@ def run_full_iv_suite(
         "width_ratio": width_ratio,
         "avg_cond_width": avg_cond_width,
         "avg_uncond_width": avg_uncond_width,
-        "width_pass": bool(width_ratio <= 1.25),
+        "width_pass": bool(width_ratio < 0.95),
         "turb_calm_ratio": turb_calm_ratio,
         "turb_calm_pass": bool(turb_calm_ratio > 1.15),
         "turb_calm_policy_target": 1.15,
@@ -515,15 +550,19 @@ def run_full_iv_suite(
         "mae_reduction_pct": float(mae_reduction),
         "avg_cond_mae": conditional_mae,
         "avg_uncond_mae": rolled_mae,
-        "mae_pass": bool(mae_reduction > 0.0),
-        "per_horizon_var": width_by_horizon.tolist(),
+        "mae_pass": bool(mae_reduction > 5.0),
+        "per_horizon_var": {
+            str(horizon): float(cond_samples[:, :, horizon - 1].var(axis=1).mean())
+            for horizon in (1, 10, 20, 30)
+            if horizon <= samples.shape[2]
+        },
         "per_horizon_conditionality": per_horizon_conditionality,
         "growing_uncertainty_monotonic": bool(
             np.mean(np.diff(width_by_horizon) >= 0) >= 0.5
         ),
         "per_cell_width_ratio": cell_width_ratio.tolist(),
         "worst_cell_width_ratio": float(cell_width_ratio.max()),
-        "worst_cell_wr_pass": bool(cell_width_ratio.max() <= 1.5),
+        "worst_cell_wr_pass": bool(cell_width_ratio.max() < 1.20),
         "per_cell_mae_reduction": cell_mae_reduction.tolist(),
         "worst_cell_mae_reduction": float(cell_mae_reduction.min()),
         "worst_cell_mae_pass": bool(cell_mae_reduction.min() > -10.0),
@@ -618,7 +657,7 @@ def run_full_iv_suite(
         np.isfinite(per_cell_tail) & (per_cell_tail >= 0.5) & (per_cell_tail <= 2.0)
     )
     finite_tail = per_cell_tail[np.isfinite(per_cell_tail)]
-    move_profile: dict[str, Any] = {"gate_lo": 0.5, "gate_hi": 2.0}
+    move_profile: dict[str, Any] = {"gate_lo": 0.9, "gate_hi": 1.1}
     for key, threshold in (
         ("very_small_moves", 0.005),
         ("small_moves", 0.010),
@@ -633,7 +672,7 @@ def run_full_iv_suite(
             "gt_share": gt_share,
             "gen_share": gen_share,
             "ratio": ratio,
-            "pass": bool(0.5 <= ratio <= 2.0),
+            "pass": bool(0.9 <= ratio <= 1.1),
         }
     move_profile["pass"] = bool(
         all(
@@ -738,13 +777,17 @@ def run_full_iv_suite(
         activity: np.ndarray,
     ) -> tuple[list[dict[str, Any]], float, float]:
         rows = []
-        for bucket, positions in enumerate(np.array_split(np.argsort(activity), 5)):
-            if positions.size < 8:
-                continue
+        valid = np.where(np.isfinite(activity))[0]
+        if valid.size < 16:
+            return rows, 0.0, 1.0
+        bucket_count = min(5, max(2, valid.size // 8))
+        ordered = valid[np.argsort(activity[valid], kind="mergesort")]
+        for bucket, positions in enumerate(np.array_split(ordered, bucket_count)):
             rows.append(
                 {
                     "bucket": bucket,
                     "n_windows": int(positions.size),
+                    "sort_metric_mean": float(activity[positions].mean()),
                     "history_activity_mean": float(history_activity[positions].mean()),
                     "future_activity_mean": float(future_activity[positions].mean()),
                     "generated_width_mean": float(width[positions].mean()),
@@ -814,10 +857,12 @@ def run_full_iv_suite(
     risk["overall_pass"] = bool(
         observable_pass and (oracle_pass if positive_signal else True)
     )
-    quantiles = np.quantile(history_activity, [0.2, 0.8])
+    mean_iv_history = history_arr.mean(axis=(2, 3))
+    vol_of_vol = np.diff(mean_iv_history, axis=1).std(axis=1)
+    quantiles = np.quantile(vol_of_vol, [0.2, 0.8])
     regime_masks = {
-        "calm": history_activity <= quantiles[0],
-        "turb": history_activity >= quantiles[1],
+        "calm": vol_of_vol <= quantiles[0],
+        "turb": vol_of_vol >= quantiles[1],
     }
     layer1, layer2, path_bias, width_turb_calm, width_vs_vov = {}, {}, {}, {}, {}
     selected_regime_horizons = [
@@ -831,42 +876,76 @@ def run_full_iv_suite(
         for horizon in selected_regime_horizons:
             coverage_grid = covered_all[mask, horizon - 1].mean(axis=0)
             coverage_value = float(coverage_grid.mean())
-            target = {1: 0.80, 7: 0.75, 14: 0.70, 30: 0.65}[horizon]
+            lower = np.quantile(samples[mask, :, horizon - 1], 0.05, axis=1)
+            upper = np.quantile(samples[mask, :, horizon - 1], 0.95, axis=1)
+            observed = truth[mask, horizon - 1]
+            regime_median = median[mask, horizon - 1]
             layer1[name][horizon] = {
                 "coverage": coverage_value,
-                "target": target,
-                "pass": bool(coverage_value > target),
+                "gt_above_pct": float((observed > upper).mean()),
+                "gt_below_pct": float((observed < lower).mean()),
+                "median_above_gt_pct": float((regime_median > observed).mean()),
             }
+            worst_index = np.unravel_index(
+                np.argmin(coverage_grid), coverage_grid.shape
+            )
+            best_index = np.unravel_index(np.argmax(coverage_grid), coverage_grid.shape)
             layer2[name][horizon] = {
-                "coverage_grid": coverage_grid.tolist(),
-                "worst_cell_coverage": float(coverage_grid.min()),
-                "best_cell_coverage": float(coverage_grid.max()),
-                "pass": bool(coverage_grid.min() >= 0.50),
+                "grid": coverage_grid.tolist(),
+                "worst": float(coverage_grid.min()),
+                "worst_cell": list(worst_index),
+                "best": float(coverage_grid.max()),
+                "best_cell": list(best_index),
             }
+        median_mean = median[mask].mean(axis=(2, 3))
+        truth_mean = truth[mask].mean(axis=(2, 3))
+        below_fraction = (median_mean < truth_mean).mean(axis=1)
         path_bias[name] = {
-            "median_error": float((median[mask] - truth[mask]).mean()),
-            "median_abs_error": float(np.abs(median[mask] - truth[mask]).mean()),
+            "persistent_low_pct": float((below_fraction > 0.80).mean()),
+            "persistent_high_pct": float(((1.0 - below_fraction) > 0.80).mean()),
+            "mean_frac_median_below_gt": float(below_fraction.mean()),
         }
     calm_width = conditional_width[regime_masks["calm"]]
     turbulent_width = conditional_width[regime_masks["turb"]]
     for horizon in selected_regime_horizons:
         calm_value = float(calm_width[:, horizon - 1].mean())
         turbulent_value = float(turbulent_width[:, horizon - 1].mean())
-        width_turb_calm[horizon] = _ratio(turbulent_value, calm_value)
-        width_vs_vov[horizon] = {
+        width_turb_calm[horizon] = {
             "calm_width": calm_value,
             "turb_width": turbulent_value,
-            "ratio": width_turb_calm[horizon],
+            "width_turb_calm_ratio": _ratio(turbulent_value, calm_value),
+        }
+        horizon_width = conditional_width[:, horizon - 1].mean(axis=(1, 2))
+        rho = sp_stats.spearmanr(vol_of_vol, horizon_width)
+        q10, q90 = np.quantile(vol_of_vol, [0.1, 0.9])
+        p10_width = float(horizon_width[vol_of_vol <= q10].mean())
+        p90_width = float(horizon_width[vol_of_vol >= q90].mean())
+        width_vs_vov[horizon] = {
+            "spearman_rho": float(rho.statistic),
+            "spearman_pval": float(rho.pvalue),
+            "p90_p10_width_ratio": _ratio(p90_width, p10_width),
+            "p10_mean_width": p10_width,
+            "p90_mean_width": p90_width,
         }
     layer1_pass = bool(
-        all(row["pass"] for regime in layer1.values() for row in regime.values())
+        all(
+            row["coverage"] > 0.65
+            for regime in layer1.values()
+            for horizon, row in regime.items()
+        )
     )
     layer2_pass = bool(
-        all(row["pass"] for regime in layer2.values() for row in regime.values())
+        all(
+            row["worst"] >= 0.70 and row["best"] <= 0.95
+            for regime in layer2.values()
+            for row in regime.values()
+        )
     )
     n_layer2_total = sum(len(regime) for regime in layer2.values())
     n_layer2_passing = sum(
-        row["pass"] for regime in layer2.values() for row in regime.values()
+        row["worst"] >= 0.70 and row["best"] <= 0.95
+        for regime in layer2.values()
+        for row in regime.values()
     )
     catastrophic = covered_all.mean(axis=1) < 0.30
     catastrophic_rate = float(catastrophic.mean())

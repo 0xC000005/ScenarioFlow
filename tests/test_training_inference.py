@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from types import SimpleNamespace
 
 import numpy as np
 import torch
@@ -14,6 +15,7 @@ from scenarioflow.training import (
     stage1_training_step,
     stage2_training_step,
 )
+import scenarioflow.workflows.reproduction as reproduction
 
 from test_model_checkpoint_graph import tiny_model
 
@@ -102,3 +104,51 @@ def test_training_and_inference_module_help() -> None:
         )
         assert result.returncode == 0, result.stderr
         assert "usage:" in result.stdout.lower()
+
+
+def test_deep_trainer_saves_strict_best_validation_epoch_not_last(
+    tmp_path, monkeypatch
+) -> None:
+    rng = np.random.default_rng(41)
+    block = SimpleNamespace(
+        history_increment=rng.normal(size=(2, 30, 3)).astype(np.float32),
+        future_increment=rng.normal(size=(2, 30, 3)).astype(np.float32),
+    )
+    monkeypatch.setattr(
+        reproduction,
+        "prepare_validation_blocks",
+        lambda **_kwargs: (None, None, block, block),
+    )
+
+    class ValidationSequenceModel(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.tensor(0.0))
+            self.validation_losses = iter((1.0, 0.5, 0.8))
+
+        def forward(self, history, future):
+            if self.training:
+                return (self.weight - 1.0).square() + history.mean() * 0.0
+            return torch.tensor(next(self.validation_losses))
+
+    monkeypatch.setattr(
+        reproduction, "build_model", lambda *_args, **_kwargs: ValidationSequenceModel()
+    )
+    saved = []
+
+    def save(path, _model, **kwargs):
+        saved.append(kwargs["best_val_loss"])
+        torch.save({"best_val_loss": kwargs["best_val_loss"]}, path)
+
+    monkeypatch.setattr(reproduction, "save_checkpoint", save)
+    checkpoint = tmp_path / "best.pt"
+    reproduction.train_baseline(
+        candidate="deepvar",
+        data_dir=tmp_path,
+        checkpoint_out=checkpoint,
+        train_seed=1001,
+        epochs=3,
+        batch_size=2,
+    )
+    assert saved == [1.0, 0.5]
+    assert torch.load(checkpoint, weights_only=False)["best_val_loss"] == 0.5
