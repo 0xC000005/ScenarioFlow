@@ -1,0 +1,2 @@
+# Frozen CSV authorities use their original CRLF bytes.
+results/frozen/**/*.csv -text -diff

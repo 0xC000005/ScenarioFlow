@@ -1,0 +1,1236 @@
+{
+  "candidate": "garch_ccc",
+  "display_rounded_checks": [
+    {
+      "comparison": "source-table display rounding",
+      "name": "IV CRPS",
+      "passed": true,
+      "published": "0.0137",
+      "published_decimal_places": 4,
+      "replay_at_published_precision": "0.0137",
+      "replay_full_precision": 0.013749205276353947,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "panel_b_crps.iv_crps"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Factor CRPS",
+      "passed": true,
+      "published": "9.2590",
+      "published_decimal_places": 4,
+      "replay_at_published_precision": "9.2590",
+      "replay_full_precision": 9.258976812147154,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "panel_b_crps.factor_crps"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Corr score",
+      "passed": true,
+      "published": "0.649",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.649",
+      "replay_full_precision": 0.6492510480175732,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "panel_b_correlation.corr_score"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Factor KS",
+      "passed": true,
+      "published": "0.123",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.123",
+      "replay_full_precision": 0.12344905720224597,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "panel_b_factor_ks.mean_statistic"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Tail q99",
+      "passed": true,
+      "published": "1.062",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "1.062",
+      "replay_full_precision": 1.0615782249370036,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "joint_panel_quality.factor_tail_q99_ratio_median"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Cov90",
+      "passed": true,
+      "published": "0.973",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.973",
+      "replay_full_precision": 0.9730884353741497,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.cov90"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "CalErr",
+      "passed": true,
+      "published": "0.207",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.207",
+      "replay_full_precision": 0.20702242378432856,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.calibration_error"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Level KS",
+      "passed": true,
+      "published": "0.177",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.177",
+      "replay_full_precision": 0.17682539682539683,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.level_ks_median"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Median dev",
+      "passed": true,
+      "published": "0.061",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.061",
+      "replay_full_precision": 0.061224489795918324,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.median_abs_dev"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Width rho",
+      "passed": true,
+      "published": "0.291",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.291",
+      "replay_full_precision": 0.2905350951569439,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.width_rho"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "MR ratio",
+      "passed": true,
+      "published": "0.144",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.144",
+      "replay_full_precision": 0.14370616203251663,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.mr_ratio"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Econ ratio",
+      "passed": true,
+      "published": "1.011",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "1.011",
+      "replay_full_precision": 1.0112957882846538,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.economic_ratio"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Jump KS",
+      "passed": true,
+      "published": "0.506",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.506",
+      "replay_full_precision": 0.5056689342403629,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.jump_ks"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "Kurtosis",
+      "passed": true,
+      "published": "0.921",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.921",
+      "replay_full_precision": 0.9214408927764055,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.kurtosis_ratio"
+    },
+    {
+      "comparison": "source-table display rounding",
+      "name": "ACF corr",
+      "passed": true,
+      "published": "0.977",
+      "published_decimal_places": 3,
+      "replay_at_published_precision": "0.977",
+      "replay_full_precision": 0.9772877870380667,
+      "scope_note": "The full-precision historical value is unavailable; this check asserts only the value printed in the retained paper table.",
+      "source_path": "current_panel_iv_metrics.acf_corr"
+    }
+  ],
+  "evidence_policy": {
+    "display_rounded_fields": "All remaining metrics are checked only at the precision retained in the published source table; no missing digits are inferred.",
+    "exact_headlines": "CRPS, Energy Score, and Variogram are checked against retained full-precision transcript values."
+  },
+  "exact_headline_checks": [
+    {
+      "comparison": "exact",
+      "display_if_rounded": "3.3325",
+      "evidence_note": "The full-precision target survives in the retained execution transcript.",
+      "expected": 3.332548859024846,
+      "name": "CRPS",
+      "passed": true,
+      "replay": 3.332548859024846,
+      "source_path": "panel_b_crps.overall"
+    },
+    {
+      "comparison": "exact",
+      "display_if_rounded": "3.903",
+      "evidence_note": "The full-precision target survives in the retained execution transcript.",
+      "expected": 3.9032458813508333,
+      "name": "Energy Score",
+      "passed": true,
+      "replay": 3.9032458813508333,
+      "source_path": "panel_b_energy_score.overall"
+    },
+    {
+      "comparison": "exact",
+      "display_if_rounded": "0.2048",
+      "evidence_note": "The full-precision target survives in the retained execution transcript.",
+      "expected": 0.20482109487056732,
+      "name": "Variogram",
+      "passed": true,
+      "replay": 0.20482109487056732,
+      "source_path": "panel_b_variogram_score.variogram_score"
+    }
+  ],
+  "layer": "A",
+  "overall_pass": true,
+  "provenance": {
+    "actual_blob": "bca996a09b40795db04df57d6eb726bb42c6dbc6",
+    "actual_revision": "da91172a5449aa91a7f5a44c52b06f94dc5d4bf0",
+    "evidence_paths": [
+      {
+        "exists": true,
+        "path": "frozen-source://.superpowers/sdd/fmts_multiseed_benchmark_plan_2026-08-05/garch-provenance.md",
+        "sha256": "53d2a969b98d6bcfffb7e84dd467c0ed914d0db5ea677ab242faf146dabece65"
+      },
+      {
+        "exists": true,
+        "path": "frozen-source://.superpowers/sdd/fmts_multiseed_benchmark_plan_2026-08-05/garch-replay-command.md",
+        "sha256": "d25935378c1327f8ff998e40a14a2c01ec128486a760108df941fe76880a1c28"
+      },
+      {
+        "exists": true,
+        "path": "private-provenance://ca4fc8def2220de894d6c2835e493f2e317b45b130fe7f754abd29cb527f3db2",
+        "sha256": "794f1502d7995afeae944463dd245078333c979b41932fffadb4473a947ab0b0"
+      }
+    ],
+    "execution_contract": {
+      "device": "cpu",
+      "evaluation_seed": 772
+    },
+    "expected_blob": "bca996a09b40795db04df57d6eb726bb42c6dbc6",
+    "expected_revision": "da91172a5449aa91a7f5a44c52b06f94dc5d4bf0",
+    "revision_ref": "refs/tags/provenance/garch-ccc-gaussian-da91172a",
+    "source_path": "experiments/backfill/baselines/joint_classical_baselines.py"
+  },
+  "provenance_checks": [
+    {
+      "actual": "da91172a5449aa91a7f5a44c52b06f94dc5d4bf0",
+      "expected": "da91172a5449aa91a7f5a44c52b06f94dc5d4bf0",
+      "name": "source revision",
+      "passed": true
+    },
+    {
+      "actual": "bca996a09b40795db04df57d6eb726bb42c6dbc6",
+      "expected": "bca996a09b40795db04df57d6eb726bb42c6dbc6",
+      "name": "source blob",
+      "passed": true
+    },
+    {
+      "actual": "refs/tags/provenance/garch-ccc-gaussian-da91172a",
+      "expected": "refs/tags/provenance/garch-ccc-gaussian-da91172a",
+      "name": "source tag",
+      "passed": true
+    },
+    {
+      "actual": "experiments/backfill/baselines/joint_classical_baselines.py",
+      "expected": "experiments/backfill/baselines/joint_classical_baselines.py",
+      "name": "source file",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "evidence exists: frozen-source://.superpowers/sdd/fmts_multiseed_benchmark_plan_2026-08-05/garch-provenance.md",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "evidence exists: frozen-source://.superpowers/sdd/fmts_multiseed_benchmark_plan_2026-08-05/garch-replay-command.md",
+      "passed": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "name": "evidence exists: private-provenance://ca4fc8def2220de894d6c2835e493f2e317b45b130fe7f754abd29cb527f3db2",
+      "passed": true
+    }
+  ],
+  "schema_version": 1,
+  "source_artifacts": {
+    "published_table": {
+      "path": "frozen-source://paper/generated_tables/table_baseline_comparison.tex",
+      "sha256": "1492cf31ee50c99ded8c068c714c98fb0c793a0dce4f49137c20d37cccfd2589"
+    },
+    "replay_manifest": {
+      "path": "frozen-source://results/fmts_reproduction_20260805/checkpoint_replay/garch_ccc/manifest.json",
+      "sha256": "ea16b3a2f59fc066ab6c394190ac15fd70a66e47c2aa5d70b07111700646882d"
+    },
+    "replay_result": {
+      "path": "frozen-source://results/fmts_reproduction_20260805/checkpoint_replay/garch_ccc/garch_ccc/results_current_panel.json",
+      "sha256": "4749ef068a1510595a68e2227e9fe1be8cabc6927fcb8ad39b4b0b1271369f5a"
+    }
+  },
+  "structural_checks": [
+    {
+      "actual": "garch_ccc",
+      "expected": "garch_ccc",
+      "name": "baseline name",
+      "passed": true
+    },
+    {
+      "actual": "current_realvix_39_state_panel",
+      "expected": "current_realvix_39_state_panel",
+      "name": "result mode",
+      "passed": true
+    },
+    {
+      "actual": "current_realvix_39_state_panel",
+      "expected": "current_realvix_39_state_panel",
+      "name": "manifest mode",
+      "passed": true
+    },
+    {
+      "actual": 772,
+      "expected": 772,
+      "name": "evaluation seed",
+      "passed": true
+    },
+    {
+      "actual": 441,
+      "expected": 441,
+      "name": "result windows",
+      "passed": true
+    },
+    {
+      "actual": 441,
+      "expected": 441,
+      "name": "manifest validation windows",
+      "passed": true
+    },
+    {
+      "actual": 4010,
+      "expected": 4010,
+      "name": "training windows",
+      "passed": true
+    },
+    {
+      "actual": 64,
+      "expected": 64,
+      "name": "result deck size",
+      "passed": true
+    },
+    {
+      "actual": 64,
+      "expected": 64,
+      "name": "manifest deck size",
+      "passed": true
+    },
+    {
+      "actual": 39,
+      "expected": 39,
+      "name": "result state count",
+      "passed": true
+    },
+    {
+      "actual": 39,
+      "expected": 39,
+      "name": "manifest state count",
+      "passed": true
+    },
+    {
+      "actual": [
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:00",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:00",
+          "source_index": 0,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:01",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:01",
+          "source_index": 1,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:02",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:02",
+          "source_index": 2,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:03",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:03",
+          "source_index": 3,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:04",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:04",
+          "source_index": 4,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:05",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:05",
+          "source_index": 5,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:06",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:06",
+          "source_index": 6,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:07",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:07",
+          "source_index": 7,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:08",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:08",
+          "source_index": 8,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:09",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:09",
+          "source_index": 9,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:10",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:10",
+          "source_index": 10,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:11",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:11",
+          "source_index": 11,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:12",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:12",
+          "source_index": 12,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:13",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:13",
+          "source_index": 13,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:14",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:14",
+          "source_index": 14,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:15",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:15",
+          "source_index": 15,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:16",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:16",
+          "source_index": 16,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:17",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:17",
+          "source_index": 17,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:18",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:18",
+          "source_index": 18,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:19",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:19",
+          "source_index": 19,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:20",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:20",
+          "source_index": 20,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:21",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:21",
+          "source_index": 21,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:22",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:22",
+          "source_index": 22,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:23",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:23",
+          "source_index": 23,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:24",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:24",
+          "source_index": 24,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:spx",
+          "reference_increment_column": "factor:spx_logret",
+          "reference_increment_index": 39,
+          "source_column": "factor:spx",
+          "source_index": 25,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:usdcad",
+          "reference_increment_column": "factor:usdcad_logret",
+          "reference_increment_index": 40,
+          "source_column": "factor:usdcad",
+          "source_index": 26,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:usdjpy",
+          "reference_increment_column": "factor:usdjpy_logret",
+          "reference_increment_index": 41,
+          "source_column": "factor:usdjpy",
+          "source_index": 27,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:dxy",
+          "reference_increment_column": "factor:dxy_logret",
+          "reference_increment_index": 42,
+          "source_column": "factor:dxy",
+          "source_index": 28,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:copper",
+          "reference_increment_column": "factor:copper_logret",
+          "reference_increment_index": 43,
+          "source_column": "factor:copper",
+          "source_index": 29,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:wheat",
+          "reference_increment_column": "factor:wheat_logret",
+          "reference_increment_index": 44,
+          "source_column": "factor:wheat",
+          "source_index": 30,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:crude_oil",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "factor:crude_oil",
+          "source_index": 31,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:us2y",
+          "reference_increment_column": "factor:us2y_diff",
+          "reference_increment_index": 46,
+          "source_column": "factor:us2y",
+          "source_index": 32,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:us10y",
+          "reference_increment_column": "factor:us10y_diff",
+          "reference_increment_index": 47,
+          "source_column": "factor:us10y",
+          "source_index": 33,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:aaa_oas",
+          "reference_increment_column": "factor:aaa_oas_diff",
+          "reference_increment_index": 48,
+          "source_column": "factor:aaa_oas",
+          "source_index": 34,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:bbb_oas",
+          "reference_increment_column": "factor:bbb_oas_diff",
+          "reference_increment_index": 49,
+          "source_column": "factor:bbb_oas",
+          "source_index": 35,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:nikkei",
+          "reference_increment_column": "factor:nikkei_logret",
+          "reference_increment_index": 50,
+          "source_column": "factor:nikkei",
+          "source_index": 36,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:gold",
+          "reference_increment_column": "factor:gold_logret",
+          "reference_increment_index": 51,
+          "source_column": "factor:gold",
+          "source_index": 37,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:vix",
+          "reference_increment_column": "factor:vix_logret",
+          "reference_increment_index": 52,
+          "source_column": "factor:vix",
+          "source_index": 38,
+          "transform": "log_level",
+          "upper_bound": null
+        }
+      ],
+      "expected": [
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:00",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:00",
+          "source_index": 0,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:01",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:01",
+          "source_index": 1,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:02",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:02",
+          "source_index": 2,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:03",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:03",
+          "source_index": 3,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:04",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:04",
+          "source_index": 4,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:05",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:05",
+          "source_index": 5,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:06",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:06",
+          "source_index": 6,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:07",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:07",
+          "source_index": 7,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:08",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:08",
+          "source_index": 8,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:09",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:09",
+          "source_index": 9,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:10",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:10",
+          "source_index": 10,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:11",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:11",
+          "source_index": 11,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:12",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:12",
+          "source_index": 12,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:13",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:13",
+          "source_index": 13,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:14",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:14",
+          "source_index": 14,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:15",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:15",
+          "source_index": 15,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:16",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:16",
+          "source_index": 16,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:17",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:17",
+          "source_index": 17,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:18",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:18",
+          "source_index": 18,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:19",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:19",
+          "source_index": 19,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:20",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:20",
+          "source_index": 20,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:21",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:21",
+          "source_index": 21,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:22",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:22",
+          "source_index": 22,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:23",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:23",
+          "source_index": 23,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": 0.0001,
+          "name": "iv:24",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "iv:24",
+          "source_index": 24,
+          "transform": "bounded_logit",
+          "upper_bound": 1.0
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:spx",
+          "reference_increment_column": "factor:spx_logret",
+          "reference_increment_index": 39,
+          "source_column": "factor:spx",
+          "source_index": 25,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:usdcad",
+          "reference_increment_column": "factor:usdcad_logret",
+          "reference_increment_index": 40,
+          "source_column": "factor:usdcad",
+          "source_index": 26,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:usdjpy",
+          "reference_increment_column": "factor:usdjpy_logret",
+          "reference_increment_index": 41,
+          "source_column": "factor:usdjpy",
+          "source_index": 27,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:dxy",
+          "reference_increment_column": "factor:dxy_logret",
+          "reference_increment_index": 42,
+          "source_column": "factor:dxy",
+          "source_index": 28,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:copper",
+          "reference_increment_column": "factor:copper_logret",
+          "reference_increment_index": 43,
+          "source_column": "factor:copper",
+          "source_index": 29,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:wheat",
+          "reference_increment_column": "factor:wheat_logret",
+          "reference_increment_index": 44,
+          "source_column": "factor:wheat",
+          "source_index": 30,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:crude_oil",
+          "reference_increment_column": null,
+          "reference_increment_index": null,
+          "source_column": "factor:crude_oil",
+          "source_index": 31,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:us2y",
+          "reference_increment_column": "factor:us2y_diff",
+          "reference_increment_index": 46,
+          "source_column": "factor:us2y",
+          "source_index": 32,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:us10y",
+          "reference_increment_column": "factor:us10y_diff",
+          "reference_increment_index": 47,
+          "source_column": "factor:us10y",
+          "source_index": 33,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:aaa_oas",
+          "reference_increment_column": "factor:aaa_oas_diff",
+          "reference_increment_index": 48,
+          "source_column": "factor:aaa_oas",
+          "source_index": 34,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:bbb_oas",
+          "reference_increment_column": "factor:bbb_oas_diff",
+          "reference_increment_index": 49,
+          "source_column": "factor:bbb_oas",
+          "source_index": 35,
+          "transform": "diff_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:nikkei",
+          "reference_increment_column": "factor:nikkei_logret",
+          "reference_increment_index": 50,
+          "source_column": "factor:nikkei",
+          "source_index": 36,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:gold",
+          "reference_increment_column": "factor:gold_logret",
+          "reference_increment_index": 51,
+          "source_column": "factor:gold",
+          "source_index": 37,
+          "transform": "log_level",
+          "upper_bound": null
+        },
+        {
+          "lower_bound": null,
+          "name": "factor:vix",
+          "reference_increment_column": "factor:vix_logret",
+          "reference_increment_index": 52,
+          "source_column": "factor:vix",
+          "source_index": 38,
+          "transform": "log_level",
+          "upper_bound": null
+        }
+      ],
+      "name": "result/manifest state specifications",
+      "passed": true
+    },
+    {
+      "actual": 53,
+      "expected": 53,
+      "name": "manifest source column count",
+      "passed": true
+    },
+    {
+      "actual": 1.0,
+      "expected": 1.0,
+      "name": "joint finite rate",
+      "passed": true
+    },
+    {
+      "actual": 441,
+      "expected": 441,
+      "name": "joint windows",
+      "passed": true
+    },
+    {
+      "actual": 64,
+      "expected": 64,
+      "name": "joint deck size",
+      "passed": true
+    },
+    {
+      "actual": 30,
+      "expected": 30,
+      "name": "forecast horizon",
+      "passed": true
+    },
+    {
+      "actual": 14,
+      "expected": 14,
+      "name": "factor count",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "training index start",
+      "passed": true
+    },
+    {
+      "actual": 4009,
+      "expected": 4009,
+      "name": "training index end",
+      "passed": true
+    },
+    {
+      "actual": 4010,
+      "expected": 4010,
+      "name": "validation index start",
+      "passed": true
+    },
+    {
+      "actual": 4450,
+      "expected": 4450,
+      "name": "validation index end",
+      "passed": true
+    },
+    {
+      "actual": "bounded_logit",
+      "expected": "bounded_logit",
+      "name": "IV transform",
+      "passed": true
+    },
+    {
+      "actual": "reference_based",
+      "expected": "reference_based",
+      "name": "positive-level policy",
+      "passed": true
+    },
+    {
+      "actual": 0.0001,
+      "expected": 0.0001,
+      "name": "IV lower bound",
+      "passed": true
+    },
+    {
+      "actual": 1.0,
+      "expected": 1.0,
+      "name": "IV upper bound",
+      "passed": true
+    }
+  ]
+}

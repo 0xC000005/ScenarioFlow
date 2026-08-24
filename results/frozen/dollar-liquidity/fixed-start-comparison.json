@@ -1,0 +1,2526 @@
+{
+  "artifact_paths": {
+    "factor_fans": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fixed_start_rollout_factor_fans.png",
+    "json": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fixed_start_rollout_policy_comparison.json",
+    "markdown": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fixed_start_rollout_policy_comparison.md",
+    "portfolio_tail": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fixed_start_rollout_portfolio_tail.png"
+  },
+  "cases": [
+    "fragile_risk_on",
+    "defensive_risk_off",
+    "commodity_inflation",
+    "dollar_liquidity",
+    "rates_selloff",
+    "safe_haven_gold"
+  ],
+  "output_root": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400",
+  "policies": [
+    {
+      "case_count": 6,
+      "cases": [
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fragile_risk_on/cohesive_support_gap30/prefix_latent_story_smoke_arrays.npz",
+          "case": "fragile_risk_on",
+          "case_label": "Fragile risk-on",
+          "direction_status": "pass",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "cohesive_support_gap30",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 4.530054870342222,
+            "terminal_p10": -0.6975654735448421,
+            "terminal_p50": 6.425939940170917,
+            "terminal_p90": 12.146051388084661,
+            "terminal_std": 4.997975063123692,
+            "terminal_var95_loss": 2.707284430171551
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fragile_risk_on/cohesive_support_gap30/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-04-01",
+              "memory_cosine": 0.9711052179336548,
+              "rank": 1,
+              "start_distance_z": 6.566686630249023,
+              "weight": 0.14099344611167908,
+              "window_id": "joint39_train_3551",
+              "window_index": 3551
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2013-10-11",
+              "memory_cosine": 0.9355029463768005,
+              "rank": 2,
+              "start_distance_z": 6.214605808258057,
+              "weight": 0.11800205707550049,
+              "window_id": "joint39_train_3434",
+              "window_index": 3434
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-02-20",
+              "memory_cosine": 0.9668964743614197,
+              "rank": 3,
+              "start_distance_z": 5.444248676300049,
+              "weight": 0.1380574256181717,
+              "window_id": "joint39_train_3775",
+              "window_index": 3775
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2013-05-02",
+              "memory_cosine": 0.9691891074180603,
+              "rank": 4,
+              "start_distance_z": 4.792051315307617,
+              "weight": 0.13964910805225372,
+              "window_id": "joint39_train_3321",
+              "window_index": 3321
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2005-07-19",
+              "memory_cosine": 0.9080409407615662,
+              "rank": 5,
+              "start_distance_z": 6.861364364624023,
+              "weight": 0.1028623878955841,
+              "window_id": "joint39_train_1361",
+              "window_index": 1361
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-06-03",
+              "memory_cosine": 0.9182040095329285,
+              "rank": 6,
+              "start_distance_z": 4.984015941619873,
+              "weight": 0.10822445899248123,
+              "window_id": "joint39_train_3594",
+              "window_index": 3594
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-11-03",
+              "memory_cosine": 0.9612264633178711,
+              "rank": 7,
+              "start_distance_z": 3.2681641578674316,
+              "weight": 0.13419844210147858,
+              "window_id": "joint39_train_3953",
+              "window_index": 3953
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-04-28",
+              "memory_cosine": 0.9355209469795227,
+              "rank": 8,
+              "start_distance_z": 2.189868927001953,
+              "weight": 0.1180126816034317,
+              "window_id": "joint39_train_3821",
+              "window_index": 3821
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.3202758536984525,
+              "p10": 2.2676156759262085,
+              "p50": 2.3216817378997803,
+              "p90": 2.3678527593612673,
+              "std": 0.0382916405238184
+            },
+            "Crude": {
+              "mean": 39.96686779459318,
+              "p10": 36.44552841186523,
+              "p50": 39.87668037414551,
+              "p90": 43.51524200439453,
+              "std": 2.804749315555405
+            },
+            "Gold": {
+              "mean": 1219.1678380966187,
+              "p10": 1190.879833984375,
+              "p50": 1217.314453125,
+              "p90": 1247.3454711914062,
+              "std": 23.043081837083474
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17105396406259388,
+              "p10": 0.16510961651802064,
+              "p50": 0.17038150876760483,
+              "p90": 0.17811669409275055,
+              "std": 0.005223781466509676
+            },
+            "SPX": {
+              "mean": 2042.93971602122,
+              "p10": 2014.9913208007813,
+              "p50": 2044.764892578125,
+              "p90": 2072.810302734375,
+              "std": 23.008029976983966
+            },
+            "US10Y": {
+              "mean": 1.8374084715421002,
+              "p10": 1.7298533201217652,
+              "p50": 1.8348802328109741,
+              "p90": 1.9501818895339966,
+              "std": 0.08948028688560952
+            },
+            "VIX": {
+              "mean": 13.997539207339287,
+              "p10": 12.753648471832275,
+              "p50": 13.849720001220703,
+              "p90": 15.320233154296874,
+              "std": 0.9989809445681085
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/defensive_risk_off/cohesive_support_gap30/prefix_latent_story_smoke_arrays.npz",
+          "case": "defensive_risk_off",
+          "case_label": "Defensive risk-off",
+          "direction_status": "pass",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "cohesive_support_gap30",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 7.877816536469112,
+            "terminal_p10": -2.7990740965586873,
+            "terminal_p50": 6.090320474134336,
+            "terminal_p90": 13.147405418680822,
+            "terminal_std": 6.079326111225211,
+            "terminal_var95_loss": 4.826905433034466
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/defensive_risk_off/cohesive_support_gap30/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-01-07",
+              "memory_cosine": 0.9765034914016724,
+              "rank": 1,
+              "start_distance_z": 3.4028379917144775,
+              "weight": 0.16066133975982666,
+              "window_id": "joint39_train_3745",
+              "window_index": 3745
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-10-21",
+              "memory_cosine": 0.9524797201156616,
+              "rank": 2,
+              "start_distance_z": 2.7520933151245117,
+              "weight": 0.142476886510849,
+              "window_id": "joint39_train_3692",
+              "window_index": 3692
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2016-01-22",
+              "memory_cosine": 0.9244551658630371,
+              "rank": 3,
+              "start_distance_z": 4.281842231750488,
+              "weight": 0.12384825199842453,
+              "window_id": "joint39_train_4007",
+              "window_index": 4007
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2004-03-30",
+              "memory_cosine": 0.9548766613006592,
+              "rank": 4,
+              "start_distance_z": 5.112200736999512,
+              "weight": 0.14419470727443695,
+              "window_id": "joint39_train_1033",
+              "window_index": 1033
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-02-11",
+              "memory_cosine": 0.9254236817359924,
+              "rank": 5,
+              "start_distance_z": 6.503922939300537,
+              "weight": 0.12444945424795151,
+              "window_id": "joint39_train_3517",
+              "window_index": 3517
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2011-06-09",
+              "memory_cosine": 0.8790562152862549,
+              "rank": 6,
+              "start_distance_z": 6.477066516876221,
+              "weight": 0.09869776666164398,
+              "window_id": "joint39_train_2845",
+              "window_index": 2845
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2002-02-07",
+              "memory_cosine": 0.898156464099884,
+              "rank": 7,
+              "start_distance_z": 8.066563606262207,
+              "weight": 0.10858828574419022,
+              "window_id": "joint39_train_0494",
+              "window_index": 494
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2006-08-11",
+              "memory_cosine": 0.87575763463974,
+              "rank": 8,
+              "start_distance_z": 5.892035484313965,
+              "weight": 0.09708330035209656,
+              "window_id": "joint39_train_1630",
+              "window_index": 1630
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.3212823855380216,
+              "p10": 2.2534291982650756,
+              "p50": 2.3233898878097534,
+              "p90": 2.385269832611084,
+              "std": 0.05071529259809277
+            },
+            "Crude": {
+              "mean": 40.14700023829937,
+              "p10": 36.64124069213867,
+              "p50": 40.0050048828125,
+              "p90": 43.89295959472656,
+              "std": 2.9607769217317474
+            },
+            "Gold": {
+              "mean": 1221.9568223953247,
+              "p10": 1193.7916625976563,
+              "p50": 1221.1530151367188,
+              "p90": 1250.2785888671874,
+              "std": 22.818556993381357
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17296200998437902,
+              "p10": 0.1655152127146721,
+              "p50": 0.1727321296930313,
+              "p90": 0.1813660591840744,
+              "std": 0.00595302756955096
+            },
+            "SPX": {
+              "mean": 2042.5399382909138,
+              "p10": 2005.5908447265624,
+              "p50": 2041.9276733398438,
+              "p90": 2081.41181640625,
+              "std": 30.618239185207212
+            },
+            "US10Y": {
+              "mean": 1.8205791115760803,
+              "p10": 1.7064347982406616,
+              "p50": 1.8155143857002258,
+              "p90": 1.9462417006492614,
+              "std": 0.09596121169105289
+            },
+            "VIX": {
+              "mean": 14.249418586492538,
+              "p10": 12.84208402633667,
+              "p50": 14.127205848693848,
+              "p90": 15.729019832611083,
+              "std": 1.1524241145527645
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/commodity_inflation/cohesive_support_gap30/prefix_latent_story_smoke_arrays.npz",
+          "case": "commodity_inflation",
+          "case_label": "Commodity inflation",
+          "direction_status": "pass",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "cohesive_support_gap30",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 4.404686825064657,
+            "terminal_p10": -1.2018336797992641,
+            "terminal_p50": 6.371341968763952,
+            "terminal_p90": 12.453053092191055,
+            "terminal_std": 5.02284118743768,
+            "terminal_var95_loss": 2.864226444073799
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/commodity_inflation/cohesive_support_gap30/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2004-04-12",
+              "memory_cosine": 0.936872124671936,
+              "rank": 1,
+              "start_distance_z": 5.156230926513672,
+              "weight": 0.16427315771579742,
+              "window_id": "joint39_train_1041",
+              "window_index": 1041
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2006-07-17",
+              "memory_cosine": 0.9217708706855774,
+              "rank": 2,
+              "start_distance_z": 5.990900039672852,
+              "weight": 0.15232621133327484,
+              "window_id": "joint39_train_1611",
+              "window_index": 1611
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2003-08-05",
+              "memory_cosine": 0.877273678779602,
+              "rank": 3,
+              "start_distance_z": 7.25039529800415,
+              "weight": 0.12194113433361053,
+              "window_id": "joint39_train_0869",
+              "window_index": 869
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2013-09-05",
+              "memory_cosine": 0.8665577173233032,
+              "rank": 4,
+              "start_distance_z": 5.959931373596191,
+              "weight": 0.1155795007944107,
+              "window_id": "joint39_train_3408",
+              "window_index": 3408
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2006-04-12",
+              "memory_cosine": 0.9218582510948181,
+              "rank": 5,
+              "start_distance_z": 6.55489444732666,
+              "weight": 0.15239278972148895,
+              "window_id": "joint39_train_1546",
+              "window_index": 1546
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2005-03-28",
+              "memory_cosine": 0.9318686723709106,
+              "rank": 6,
+              "start_distance_z": 6.489415645599365,
+              "weight": 0.16021448373794556,
+              "window_id": "joint39_train_1282",
+              "window_index": 1282
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2000-09-25",
+              "memory_cosine": 0.7933440804481506,
+              "rank": 7,
+              "start_distance_z": 9.113061904907227,
+              "weight": 0.08014924079179764,
+              "window_id": "joint39_train_0153",
+              "window_index": 153
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2009-11-03",
+              "memory_cosine": 0.7110897898674011,
+              "rank": 8,
+              "start_distance_z": 10.2810697555542,
+              "weight": 0.05312347784638405,
+              "window_id": "joint39_train_2443",
+              "window_index": 2443
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.310760471969843,
+              "p10": 2.2318104028701784,
+              "p50": 2.323925495147705,
+              "p90": 2.3697654247283935,
+              "std": 0.053721714133715036
+            },
+            "Crude": {
+              "mean": 40.03962844610214,
+              "p10": 36.703861236572266,
+              "p50": 40.09543228149414,
+              "p90": 43.66795959472656,
+              "std": 2.7927781058346013
+            },
+            "Gold": {
+              "mean": 1216.630090713501,
+              "p10": 1188.1063598632813,
+              "p50": 1214.7764282226562,
+              "p90": 1245.892138671875,
+              "std": 23.43805587827271
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17065332053850094,
+              "p10": 0.1640898510813713,
+              "p50": 0.17042190581560135,
+              "p90": 0.17805057466030122,
+              "std": 0.0052907831067028266
+            },
+            "SPX": {
+              "mean": 2045.9438002904255,
+              "p10": 2012.2660034179687,
+              "p50": 2047.2748413085938,
+              "p90": 2078.596044921875,
+              "std": 26.19026584665473
+            },
+            "US10Y": {
+              "mean": 1.846144903761645,
+              "p10": 1.7252089500427246,
+              "p50": 1.8407441973686218,
+              "p90": 1.9714949131011963,
+              "std": 0.0987655519665756
+            },
+            "VIX": {
+              "mean": 14.028474214176336,
+              "p10": 12.8328125,
+              "p50": 14.008017539978027,
+              "p90": 15.30545539855957,
+              "std": 0.9585991447144369
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/dollar_liquidity/cohesive_support_gap30/prefix_latent_story_smoke_arrays.npz",
+          "case": "dollar_liquidity",
+          "case_label": "Dollar liquidity",
+          "direction_status": "pass",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "cohesive_support_gap30",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.408046582745302,
+            "terminal_p10": -0.6215110883528513,
+            "terminal_p50": 7.11245846668648,
+            "terminal_p90": 13.345985347322475,
+            "terminal_std": 5.668185123987683,
+            "terminal_var95_loss": 3.3186445515746366
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/dollar_liquidity/cohesive_support_gap30/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-10-27",
+              "memory_cosine": 0.9755560159683228,
+              "rank": 1,
+              "start_distance_z": 4.196811676025391,
+              "weight": 0.13848161697387695,
+              "window_id": "joint39_train_3696",
+              "window_index": 3696
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-08-12",
+              "memory_cosine": 0.9724892973899841,
+              "rank": 2,
+              "start_distance_z": 3.3703250885009766,
+              "weight": 0.13637439906597137,
+              "window_id": "joint39_train_3643",
+              "window_index": 3643
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-01-09",
+              "memory_cosine": 0.93996262550354,
+              "rank": 3,
+              "start_distance_z": 5.545993328094482,
+              "weight": 0.11590497195720673,
+              "window_id": "joint39_train_3747",
+              "window_index": 3747
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-12-10",
+              "memory_cosine": 0.9541735053062439,
+              "rank": 4,
+              "start_distance_z": 3.742144823074341,
+              "weight": 0.12444017082452774,
+              "window_id": "joint39_train_3979",
+              "window_index": 3979
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-08-04",
+              "memory_cosine": 0.9511579275131226,
+              "rank": 5,
+              "start_distance_z": 2.6785404682159424,
+              "weight": 0.12257795035839081,
+              "window_id": "joint39_train_3889",
+              "window_index": 3889
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2006-06-19",
+              "memory_cosine": 0.9454044103622437,
+              "rank": 6,
+              "start_distance_z": 6.454598903656006,
+              "weight": 0.11910191178321838,
+              "window_id": "joint39_train_1592",
+              "window_index": 1592
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2005-09-26",
+              "memory_cosine": 0.9556505084037781,
+              "rank": 7,
+              "start_distance_z": 5.708217144012451,
+              "weight": 0.1253625601530075,
+              "window_id": "joint39_train_1409",
+              "window_index": 1409
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 0,
+              "history_end_date": "2005-05-03",
+              "memory_cosine": 0.9431321620941162,
+              "rank": 8,
+              "start_distance_z": 5.513707637786865,
+              "weight": 0.1177564263343811,
+              "window_id": "joint39_train_1308",
+              "window_index": 1308
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.343743079031507,
+              "p10": 2.298989772796631,
+              "p50": 2.3450403213500977,
+              "p90": 2.384513020515442,
+              "std": 0.03300540355557838
+            },
+            "Crude": {
+              "mean": 40.57987364629904,
+              "p10": 36.56044425964355,
+              "p50": 40.531333923339844,
+              "p90": 44.889993286132814,
+              "std": 3.4093889666757984
+            },
+            "Gold": {
+              "mean": 1222.3151359558105,
+              "p10": 1193.9822143554688,
+              "p50": 1220.46044921875,
+              "p90": 1253.80419921875,
+              "std": 24.881443396440353
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17007025723190358,
+              "p10": 0.16316111981868744,
+              "p50": 0.1700134500861168,
+              "p90": 0.17782298028469085,
+              "std": 0.005499508578515605
+            },
+            "SPX": {
+              "mean": 2051.6055676142373,
+              "p10": 2017.3679565429688,
+              "p50": 2053.78369140625,
+              "p90": 2082.1573974609373,
+              "std": 27.46703364221899
+            },
+            "US10Y": {
+              "mean": 1.836141007952392,
+              "p10": 1.7301518440246582,
+              "p50": 1.8326312899589539,
+              "p90": 1.9529598832130433,
+              "std": 0.08902724569152098
+            },
+            "VIX": {
+              "mean": 13.919530036548773,
+              "p10": 12.65078067779541,
+              "p50": 13.861111640930176,
+              "p90": 15.276662635803223,
+              "std": 1.081131847589483
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/rates_selloff/cohesive_support_gap30/prefix_latent_story_smoke_arrays.npz",
+          "case": "rates_selloff",
+          "case_label": "Rates selloff",
+          "direction_status": "pass",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "cohesive_support_gap30",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 4.891715179415549,
+            "terminal_p10": 0.011642750811202161,
+            "terminal_p50": 7.163276320728539,
+            "terminal_p90": 13.504384603131689,
+            "terminal_std": 5.329212092081525,
+            "terminal_var95_loss": 2.1202755505950073
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/rates_selloff/cohesive_support_gap30/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-07-01",
+              "memory_cosine": 0.9662586450576782,
+              "rank": 1,
+              "start_distance_z": 2.46077823638916,
+              "weight": 0.14822395145893097,
+              "window_id": "joint39_train_3866",
+              "window_index": 3866
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2004-05-18",
+              "memory_cosine": 0.9388746023178101,
+              "rank": 2,
+              "start_distance_z": 5.883070468902588,
+              "weight": 0.1292571872472763,
+              "window_id": "joint39_train_1067",
+              "window_index": 1067
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-12-15",
+              "memory_cosine": 0.9469383358955383,
+              "rank": 3,
+              "start_distance_z": 3.4680445194244385,
+              "weight": 0.13457514345645905,
+              "window_id": "joint39_train_3982",
+              "window_index": 3982
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2013-09-03",
+              "memory_cosine": 0.9064869284629822,
+              "rank": 4,
+              "start_distance_z": 5.713425159454346,
+              "weight": 0.10993241518735886,
+              "window_id": "joint39_train_3406",
+              "window_index": 3406
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2005-01-25",
+              "memory_cosine": 0.9308711290359497,
+              "rank": 5,
+              "start_distance_z": 6.481319427490234,
+              "weight": 0.12418678402900696,
+              "window_id": "joint39_train_1240",
+              "window_index": 1240
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-10-03",
+              "memory_cosine": 0.9117842316627502,
+              "rank": 6,
+              "start_distance_z": 3.791106700897217,
+              "weight": 0.11288303881883621,
+              "window_id": "joint39_train_3680",
+              "window_index": 3680
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2006-07-18",
+              "memory_cosine": 0.915709912776947,
+              "rank": 7,
+              "start_distance_z": 9.542766571044922,
+              "weight": 0.11512064188718796,
+              "window_id": "joint39_train_1612",
+              "window_index": 1612
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 0,
+              "history_end_date": "2005-04-07",
+              "memory_cosine": 0.9334855675697327,
+              "rank": 8,
+              "start_distance_z": 5.867701053619385,
+              "weight": 0.1258208304643631,
+              "window_id": "joint39_train_1290",
+              "window_index": 1290
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.3320379462093115,
+              "p10": 2.284054493904114,
+              "p50": 2.333789110183716,
+              "p90": 2.377077555656433,
+              "std": 0.04145407878017799
+            },
+            "Crude": {
+              "mean": 40.02016739547253,
+              "p10": 36.476873779296874,
+              "p50": 39.914066314697266,
+              "p90": 43.83232192993164,
+              "std": 2.9054219278415836
+            },
+            "Gold": {
+              "mean": 1219.8695863087971,
+              "p10": 1195.595458984375,
+              "p50": 1219.062744140625,
+              "p90": 1244.1329223632813,
+              "std": 18.599845118585776
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.16977228651133677,
+              "p10": 0.1635763466358185,
+              "p50": 0.16946298629045486,
+              "p90": 0.17640846967697144,
+              "std": 0.005051573245854269
+            },
+            "SPX": {
+              "mean": 2052.143215815226,
+              "p10": 2017.22421875,
+              "p50": 2054.5682373046875,
+              "p90": 2085.3989990234377,
+              "std": 27.10898177441818
+            },
+            "US10Y": {
+              "mean": 1.83537607640028,
+              "p10": 1.713747501373291,
+              "p50": 1.8302335143089294,
+              "p90": 1.9575255393981934,
+              "std": 0.09454427415943409
+            },
+            "VIX": {
+              "mean": 13.853699532647928,
+              "p10": 12.623439407348632,
+              "p50": 13.741718292236328,
+              "p90": 15.113023567199708,
+              "std": 1.0067220830159476
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/safe_haven_gold/cohesive_support_gap30/prefix_latent_story_smoke_arrays.npz",
+          "case": "safe_haven_gold",
+          "case_label": "Safe-haven gold",
+          "direction_status": "pass",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "cohesive_support_gap30",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 8.587856179236494,
+            "terminal_p10": -3.109236566449717,
+            "terminal_p50": 5.5739972462152645,
+            "terminal_p90": 12.552410108156208,
+            "terminal_std": 6.073186202912789,
+            "terminal_var95_loss": 5.726781203341565
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/safe_haven_gold/cohesive_support_gap30/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-01-07",
+              "memory_cosine": 0.9791483879089355,
+              "rank": 1,
+              "start_distance_z": 3.4028379917144775,
+              "weight": 0.1466747224330902,
+              "window_id": "joint39_train_3745",
+              "window_index": 3745
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-10-21",
+              "memory_cosine": 0.9500383734703064,
+              "rank": 2,
+              "start_distance_z": 2.7520933151245117,
+              "weight": 0.12680712342262268,
+              "window_id": "joint39_train_3692",
+              "window_index": 3692
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-09-21",
+              "memory_cosine": 0.9460561871528625,
+              "rank": 3,
+              "start_distance_z": 3.737480878829956,
+              "weight": 0.12430725246667862,
+              "window_id": "joint39_train_3922",
+              "window_index": 3922
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-04-08",
+              "memory_cosine": 0.9523032307624817,
+              "rank": 4,
+              "start_distance_z": 1.7078872919082642,
+              "weight": 0.12825128436088562,
+              "window_id": "joint39_train_3807",
+              "window_index": 3807
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2016-01-22",
+              "memory_cosine": 0.9145457148551941,
+              "rank": 5,
+              "start_distance_z": 4.281842231750488,
+              "weight": 0.10618723928928375,
+              "window_id": "joint39_train_4007",
+              "window_index": 4007
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2004-03-30",
+              "memory_cosine": 0.9532867670059204,
+              "rank": 6,
+              "start_distance_z": 5.112200736999512,
+              "weight": 0.12888354063034058,
+              "window_id": "joint39_train_1033",
+              "window_index": 1033
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2014-02-11",
+              "memory_cosine": 0.9365532994270325,
+              "rank": 7,
+              "start_distance_z": 6.503922939300537,
+              "weight": 0.1185389831662178,
+              "window_id": "joint39_train_3517",
+              "window_index": 3517
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2004-07-22",
+              "memory_cosine": 0.9395855069160461,
+              "rank": 8,
+              "start_distance_z": 6.021438121795654,
+              "weight": 0.12034984678030014,
+              "window_id": "joint39_train_1111",
+              "window_index": 1111
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.323717732603351,
+              "p10": 2.2610994577407837,
+              "p50": 2.3234505653381348,
+              "p90": 2.3848356008529663,
+              "std": 0.0470077847376641
+            },
+            "Crude": {
+              "mean": 40.23525612552961,
+              "p10": 36.60890617370605,
+              "p50": 40.183563232421875,
+              "p90": 44.03203887939453,
+              "std": 2.9711483717166147
+            },
+            "Gold": {
+              "mean": 1222.1149940490723,
+              "p10": 1198.1138916015625,
+              "p50": 1220.947998046875,
+              "p90": 1246.1194213867188,
+              "std": 18.96617767607218
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17358116844358543,
+              "p10": 0.165449059009552,
+              "p50": 0.1730702742934227,
+              "p90": 0.18176355510950087,
+              "std": 0.006734925559752122
+            },
+            "SPX": {
+              "mean": 2041.6734841664631,
+              "p10": 2003.56455078125,
+              "p50": 2045.4398803710938,
+              "p90": 2077.0422607421874,
+              "std": 30.98178298493956
+            },
+            "US10Y": {
+              "mean": 1.8198848345006506,
+              "p10": 1.6978306889533996,
+              "p50": 1.8183407187461853,
+              "p90": 1.944831955432892,
+              "std": 0.09607189447328852
+            },
+            "VIX": {
+              "mean": 14.302332853277525,
+              "p10": 12.84904842376709,
+              "p50": 14.212622165679932,
+              "p90": 15.850452613830566,
+              "std": 1.1862481055660767
+            }
+          }
+        }
+      ],
+      "description": "Support-coherence selector: starts from the top direction-safe narrative hit and fills the support set with nearest latent-family members, preserving non-overlap.",
+      "direction_status_counts": {
+        "pass": 6
+      },
+      "max_abs_start_difference": 0.0,
+      "pairwise": {
+        "mean_factor_terminal_ks": 0.11130952380952382,
+        "mean_portfolio_terminal_ks": 0.08645833333333335,
+        "mean_support_jaccard": 0.0303030303030303,
+        "pair_count": 15,
+        "rows": [
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0859375,
+              "Crude": 0.03645833333333337,
+              "Gold": 0.1015625,
+              "IV_ATM_1Y": 0.18489583333333337,
+              "SPX": 0.10416666666666667,
+              "US10Y": 0.11979166666666669,
+              "VIX": 0.11197916666666669
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.10639880952380955,
+            "portfolio_terminal_ks": 0.078125,
+            "right": "defensive_risk_off",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.15104166666666666,
+              "Crude": 0.0390625,
+              "Gold": 0.0859375,
+              "IV_ATM_1Y": 0.07552083333333334,
+              "SPX": 0.0859375,
+              "US10Y": 0.0703125,
+              "VIX": 0.0625
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.08147321428571429,
+            "portfolio_terminal_ks": 0.03125,
+            "right": "commodity_inflation",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.2994791666666667,
+              "Crude": 0.109375,
+              "Gold": 0.07291666666666674,
+              "IV_ATM_1Y": 0.12500000000000003,
+              "SPX": 0.18489583333333337,
+              "US10Y": 0.04427083333333334,
+              "VIX": 0.06770833333333334
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.12909226190476192,
+            "portfolio_terminal_ks": 0.09375,
+            "right": "dollar_liquidity",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.16927083333333331,
+              "Crude": 0.03385416666666663,
+              "Gold": 0.0859375,
+              "IV_ATM_1Y": 0.11458333333333334,
+              "SPX": 0.171875,
+              "US10Y": 0.057291666666666685,
+              "VIX": 0.07552083333333337
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.10119047619047619,
+            "portfolio_terminal_ks": 0.09375,
+            "right": "rates_selloff",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.08072916666666674,
+              "Crude": 0.046875,
+              "Gold": 0.11458333333333334,
+              "IV_ATM_1Y": 0.23697916666666663,
+              "SPX": 0.10156250000000001,
+              "US10Y": 0.109375,
+              "VIX": 0.13020833333333331
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.1171875,
+            "portfolio_terminal_ks": 0.0859375,
+            "right": "safe_haven_gold",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0859375,
+              "Crude": 0.03385416666666674,
+              "Gold": 0.17708333333333337,
+              "IV_ATM_1Y": 0.18229166666666663,
+              "SPX": 0.08854166666666669,
+              "US10Y": 0.13541666666666669,
+              "VIX": 0.1015625
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.11495535714285716,
+            "portfolio_terminal_ks": 0.0859375,
+            "right": "commodity_inflation",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.265625,
+              "Crude": 0.08854166666666663,
+              "Gold": 0.07552083333333331,
+              "IV_ATM_1Y": 0.20833333333333331,
+              "SPX": 0.14583333333333331,
+              "US10Y": 0.10677083333333331,
+              "VIX": 0.13541666666666666
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.14657738095238093,
+            "portfolio_terminal_ks": 0.1171875,
+            "right": "dollar_liquidity",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.14583333333333337,
+              "Crude": 0.036458333333333315,
+              "Gold": 0.06770833333333337,
+              "IV_ATM_1Y": 0.23177083333333331,
+              "SPX": 0.15364583333333331,
+              "US10Y": 0.0859375,
+              "VIX": 0.14843749999999994
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.1242559523809524,
+            "portfolio_terminal_ks": 0.11197916666666669,
+            "right": "rates_selloff",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0390625,
+              "Crude": 0.04166666666666663,
+              "Gold": 0.04427083333333334,
+              "IV_ATM_1Y": 0.08072916666666674,
+              "SPX": 0.039062500000000056,
+              "US10Y": 0.026041666666666685,
+              "VIX": 0.04166666666666663
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.04464285714285716,
+            "portfolio_terminal_ks": 0.046875,
+            "right": "safe_haven_gold",
+            "support_jaccard": 0.45454545454545453
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.25781249999999994,
+              "Crude": 0.10416666666666674,
+              "Gold": 0.11197916666666669,
+              "IV_ATM_1Y": 0.06770833333333337,
+              "SPX": 0.12760416666666674,
+              "US10Y": 0.05989583333333326,
+              "VIX": 0.09635416666666666
+            },
+            "left": "commodity_inflation",
+            "mean_factor_terminal_ks": 0.11793154761904763,
+            "portfolio_terminal_ks": 0.08854166666666674,
+            "right": "dollar_liquidity",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.17708333333333337,
+              "Crude": 0.03645833333333326,
+              "Gold": 0.140625,
+              "IV_ATM_1Y": 0.09375,
+              "SPX": 0.11458333333333337,
+              "US10Y": 0.05989583333333337,
+              "VIX": 0.10156250000000006
+            },
+            "left": "commodity_inflation",
+            "mean_factor_terminal_ks": 0.10342261904761907,
+            "portfolio_terminal_ks": 0.08072916666666674,
+            "right": "rates_selloff",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.11458333333333334,
+              "Crude": 0.04427083333333326,
+              "Gold": 0.19010416666666669,
+              "IV_ATM_1Y": 0.21354166666666674,
+              "SPX": 0.0859375,
+              "US10Y": 0.11979166666666663,
+              "VIX": 0.11979166666666663
+            },
+            "left": "commodity_inflation",
+            "mean_factor_terminal_ks": 0.12686011904761904,
+            "portfolio_terminal_ks": 0.09635416666666669,
+            "right": "safe_haven_gold",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.13802083333333337,
+              "Crude": 0.09635416666666663,
+              "Gold": 0.10416666666666663,
+              "IV_ATM_1Y": 0.0546875,
+              "SPX": 0.03645833333333337,
+              "US10Y": 0.03385416666666667,
+              "VIX": 0.04427083333333337
+            },
+            "left": "dollar_liquidity",
+            "mean_factor_terminal_ks": 0.07254464285714286,
+            "portfolio_terminal_ks": 0.03645833333333334,
+            "right": "rates_selloff",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.26041666666666663,
+              "Crude": 0.0859375,
+              "Gold": 0.09635416666666669,
+              "IV_ATM_1Y": 0.24739583333333326,
+              "SPX": 0.13541666666666669,
+              "US10Y": 0.09114583333333334,
+              "VIX": 0.14322916666666669
+            },
+            "left": "dollar_liquidity",
+            "mean_factor_terminal_ks": 0.15141369047619047,
+            "portfolio_terminal_ks": 0.13020833333333337,
+            "right": "safe_haven_gold",
+            "support_jaccard": 0.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.14322916666666669,
+              "Crude": 0.04166666666666663,
+              "Gold": 0.06770833333333337,
+              "IV_ATM_1Y": 0.27864583333333326,
+              "SPX": 0.1484375,
+              "US10Y": 0.078125,
+              "VIX": 0.1640625
+            },
+            "left": "rates_selloff",
+            "mean_factor_terminal_ks": 0.13169642857142855,
+            "portfolio_terminal_ks": 0.11979166666666669,
+            "right": "safe_haven_gold",
+            "support_jaccard": 0.0
+          }
+        ]
+      },
+      "policy": "cohesive_support_gap30",
+      "portfolio_es95_loss_range": 4.183169354171837,
+      "portfolio_var95_loss_range": 3.6065056527465575,
+      "support_count_max": 8,
+      "support_count_mean": 8.0,
+      "support_count_min": 8
+    },
+    {
+      "case_count": 6,
+      "cases": [
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fragile_risk_on/start_only_topk/prefix_latent_story_smoke_arrays.npz",
+          "case": "fragile_risk_on",
+          "case_label": "Fragile risk-on",
+          "direction_status": "reject",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "start_only_topk",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.899629473487414,
+            "terminal_p10": -2.726178952288346,
+            "terminal_p50": 5.074034052419924,
+            "terminal_p90": 12.133288358722803,
+            "terminal_std": 5.579161073873971,
+            "terminal_var95_loss": 4.879125805580065
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/fragile_risk_on/start_only_topk/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 1,
+              "history_end_date": "2015-10-19",
+              "memory_cosine": 0.948226273059845,
+              "rank": 1,
+              "start_distance_z": 0.8681854605674744,
+              "weight": 0.6890555620193481,
+              "window_id": "joint39_train_3942",
+              "window_index": 3942
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-04-01",
+              "memory_cosine": 0.7770131230354309,
+              "rank": 2,
+              "start_distance_z": 1.2903685569763184,
+              "weight": 0.08346325159072876,
+              "window_id": "joint39_train_3803",
+              "window_index": 3803
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-12-24",
+              "memory_cosine": 0.9348169565200806,
+              "rank": 3,
+              "start_distance_z": 1.369991421699524,
+              "weight": 0.056052688509225845,
+              "window_id": "joint39_train_3989",
+              "window_index": 3989
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-11-02",
+              "memory_cosine": 0.8387584686279297,
+              "rank": 4,
+              "start_distance_z": 1.414520263671875,
+              "weight": 0.04486454650759697,
+              "window_id": "joint39_train_3952",
+              "window_index": 3952
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-03-26",
+              "memory_cosine": 0.8702085614204407,
+              "rank": 5,
+              "start_distance_z": 1.417911171913147,
+              "weight": 0.04411030188202858,
+              "window_id": "joint39_train_3799",
+              "window_index": 3799
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-03-06",
+              "memory_cosine": 0.7875605225563049,
+              "rank": 6,
+              "start_distance_z": 1.459128737449646,
+              "weight": 0.035895269364118576,
+              "window_id": "joint39_train_3785",
+              "window_index": 3785
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-04-07",
+              "memory_cosine": 0.9346035718917847,
+              "rank": 7,
+              "start_distance_z": 1.5390783548355103,
+              "weight": 0.024067381396889687,
+              "window_id": "joint39_train_3806",
+              "window_index": 3806
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-03-30",
+              "memory_cosine": 0.9137221574783325,
+              "rank": 8,
+              "start_distance_z": 1.5526267290115356,
+              "weight": 0.022491008043289185,
+              "window_id": "joint39_train_3801",
+              "window_index": 3801
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.299657008921107,
+              "p10": 2.245375418663025,
+              "p50": 2.301176071166992,
+              "p90": 2.351488471031189,
+              "std": 0.042072526257626176
+            },
+            "Crude": {
+              "mean": 40.200743635495506,
+              "p10": 36.96660804748535,
+              "p50": 40.25490760803223,
+              "p90": 43.45522766113281,
+              "std": 2.653194557192922
+            },
+            "Gold": {
+              "mean": 1220.6641114552815,
+              "p10": 1199.7490356445312,
+              "p50": 1219.5691528320312,
+              "p90": 1242.1161254882813,
+              "std": 16.798743863241317
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17419803992379457,
+              "p10": 0.16711717545986177,
+              "p50": 0.17360566556453705,
+              "p90": 0.18205146938562394,
+              "std": 0.005947167371726505
+            },
+            "SPX": {
+              "mean": 2033.8680378595989,
+              "p10": 1995.1972045898438,
+              "p50": 2034.8587646484375,
+              "p90": 2070.7203857421873,
+              "std": 29.393482968415313
+            },
+            "US10Y": {
+              "mean": 1.8239993021513026,
+              "p10": 1.7164981842041016,
+              "p50": 1.8217424154281616,
+              "p90": 1.9428060531616211,
+              "std": 0.09206745068331186
+            },
+            "VIX": {
+              "mean": 14.410485329727331,
+              "p10": 13.029696941375732,
+              "p50": 14.287565231323242,
+              "p90": 15.839402675628662,
+              "std": 1.088197740129437
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/defensive_risk_off/start_only_topk/prefix_latent_story_smoke_arrays.npz",
+          "case": "defensive_risk_off",
+          "case_label": "Defensive risk-off",
+          "direction_status": "reject",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "start_only_topk",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.899629473487414,
+            "terminal_p10": -2.726178952288346,
+            "terminal_p50": 5.074034052419924,
+            "terminal_p90": 12.133288358722803,
+            "terminal_std": 5.579161073873971,
+            "terminal_var95_loss": 4.879125805580065
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/defensive_risk_off/start_only_topk/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-10-19",
+              "memory_cosine": 0.9413436055183411,
+              "rank": 1,
+              "start_distance_z": 0.8681854605674744,
+              "weight": 0.6890555620193481,
+              "window_id": "joint39_train_3942",
+              "window_index": 3942
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-04-01",
+              "memory_cosine": 0.8366087675094604,
+              "rank": 2,
+              "start_distance_z": 1.2903685569763184,
+              "weight": 0.08346325159072876,
+              "window_id": "joint39_train_3803",
+              "window_index": 3803
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-12-24",
+              "memory_cosine": 0.921462893486023,
+              "rank": 3,
+              "start_distance_z": 1.369991421699524,
+              "weight": 0.056052688509225845,
+              "window_id": "joint39_train_3989",
+              "window_index": 3989
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-11-02",
+              "memory_cosine": 0.9005243182182312,
+              "rank": 4,
+              "start_distance_z": 1.414520263671875,
+              "weight": 0.04486454650759697,
+              "window_id": "joint39_train_3952",
+              "window_index": 3952
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-03-26",
+              "memory_cosine": 0.8969927430152893,
+              "rank": 5,
+              "start_distance_z": 1.417911171913147,
+              "weight": 0.04411030188202858,
+              "window_id": "joint39_train_3799",
+              "window_index": 3799
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 5,
+              "history_end_date": "2015-03-06",
+              "memory_cosine": 0.795842170715332,
+              "rank": 6,
+              "start_distance_z": 1.459128737449646,
+              "weight": 0.035895269364118576,
+              "window_id": "joint39_train_3785",
+              "window_index": 3785
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 1,
+              "history_end_date": "2015-04-07",
+              "memory_cosine": 0.9016172289848328,
+              "rank": 7,
+              "start_distance_z": 1.5390783548355103,
+              "weight": 0.024067381396889687,
+              "window_id": "joint39_train_3806",
+              "window_index": 3806
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-03-30",
+              "memory_cosine": 0.9296220541000366,
+              "rank": 8,
+              "start_distance_z": 1.5526267290115356,
+              "weight": 0.022491008043289185,
+              "window_id": "joint39_train_3801",
+              "window_index": 3801
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.299657008921107,
+              "p10": 2.245375418663025,
+              "p50": 2.301176071166992,
+              "p90": 2.351488471031189,
+              "std": 0.042072526257626176
+            },
+            "Crude": {
+              "mean": 40.200743635495506,
+              "p10": 36.96660804748535,
+              "p50": 40.25490760803223,
+              "p90": 43.45522766113281,
+              "std": 2.653194557192922
+            },
+            "Gold": {
+              "mean": 1220.6641114552815,
+              "p10": 1199.7490356445312,
+              "p50": 1219.5691528320312,
+              "p90": 1242.1161254882813,
+              "std": 16.798743863241317
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17419803992379457,
+              "p10": 0.16711717545986177,
+              "p50": 0.17360566556453705,
+              "p90": 0.18205146938562394,
+              "std": 0.005947167371726505
+            },
+            "SPX": {
+              "mean": 2033.8680378595989,
+              "p10": 1995.1972045898438,
+              "p50": 2034.8587646484375,
+              "p90": 2070.7203857421873,
+              "std": 29.393482968415313
+            },
+            "US10Y": {
+              "mean": 1.8239993021513026,
+              "p10": 1.7164981842041016,
+              "p50": 1.8217424154281616,
+              "p90": 1.9428060531616211,
+              "std": 0.09206745068331186
+            },
+            "VIX": {
+              "mean": 14.410485329727331,
+              "p10": 13.029696941375732,
+              "p50": 14.287565231323242,
+              "p90": 15.839402675628662,
+              "std": 1.088197740129437
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/commodity_inflation/start_only_topk/prefix_latent_story_smoke_arrays.npz",
+          "case": "commodity_inflation",
+          "case_label": "Commodity inflation",
+          "direction_status": "reject",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "start_only_topk",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.899629473487414,
+            "terminal_p10": -2.726178952288346,
+            "terminal_p50": 5.074034052419924,
+            "terminal_p90": 12.133288358722803,
+            "terminal_std": 5.579161073873971,
+            "terminal_var95_loss": 4.879125805580065
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/commodity_inflation/start_only_topk/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 5,
+              "history_end_date": "2015-10-19",
+              "memory_cosine": 0.8816443085670471,
+              "rank": 1,
+              "start_distance_z": 0.8681854605674744,
+              "weight": 0.6890555620193481,
+              "window_id": "joint39_train_3942",
+              "window_index": 3942
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-04-01",
+              "memory_cosine": 0.8600101470947266,
+              "rank": 2,
+              "start_distance_z": 1.2903685569763184,
+              "weight": 0.08346325159072876,
+              "window_id": "joint39_train_3803",
+              "window_index": 3803
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 6,
+              "history_end_date": "2015-12-24",
+              "memory_cosine": 0.8806762099266052,
+              "rank": 3,
+              "start_distance_z": 1.369991421699524,
+              "weight": 0.056052688509225845,
+              "window_id": "joint39_train_3989",
+              "window_index": 3989
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-11-02",
+              "memory_cosine": 0.8340162634849548,
+              "rank": 4,
+              "start_distance_z": 1.414520263671875,
+              "weight": 0.04486454650759697,
+              "window_id": "joint39_train_3952",
+              "window_index": 3952
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 1,
+              "history_end_date": "2015-03-26",
+              "memory_cosine": 0.9019814133644104,
+              "rank": 5,
+              "start_distance_z": 1.417911171913147,
+              "weight": 0.04411030188202858,
+              "window_id": "joint39_train_3799",
+              "window_index": 3799
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-03-06",
+              "memory_cosine": 0.8228409290313721,
+              "rank": 6,
+              "start_distance_z": 1.459128737449646,
+              "weight": 0.035895269364118576,
+              "window_id": "joint39_train_3785",
+              "window_index": 3785
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 1,
+              "history_end_date": "2015-04-07",
+              "memory_cosine": 0.8781791925430298,
+              "rank": 7,
+              "start_distance_z": 1.5390783548355103,
+              "weight": 0.024067381396889687,
+              "window_id": "joint39_train_3806",
+              "window_index": 3806
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-03-30",
+              "memory_cosine": 0.9088356494903564,
+              "rank": 8,
+              "start_distance_z": 1.5526267290115356,
+              "weight": 0.022491008043289185,
+              "window_id": "joint39_train_3801",
+              "window_index": 3801
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.299657008921107,
+              "p10": 2.245375418663025,
+              "p50": 2.301176071166992,
+              "p90": 2.351488471031189,
+              "std": 0.042072526257626176
+            },
+            "Crude": {
+              "mean": 40.200743635495506,
+              "p10": 36.96660804748535,
+              "p50": 40.25490760803223,
+              "p90": 43.45522766113281,
+              "std": 2.653194557192922
+            },
+            "Gold": {
+              "mean": 1220.6641114552815,
+              "p10": 1199.7490356445312,
+              "p50": 1219.5691528320312,
+              "p90": 1242.1161254882813,
+              "std": 16.798743863241317
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17419803992379457,
+              "p10": 0.16711717545986177,
+              "p50": 0.17360566556453705,
+              "p90": 0.18205146938562394,
+              "std": 0.005947167371726505
+            },
+            "SPX": {
+              "mean": 2033.8680378595989,
+              "p10": 1995.1972045898438,
+              "p50": 2034.8587646484375,
+              "p90": 2070.7203857421873,
+              "std": 29.393482968415313
+            },
+            "US10Y": {
+              "mean": 1.8239993021513026,
+              "p10": 1.7164981842041016,
+              "p50": 1.8217424154281616,
+              "p90": 1.9428060531616211,
+              "std": 0.09206745068331186
+            },
+            "VIX": {
+              "mean": 14.410485329727331,
+              "p10": 13.029696941375732,
+              "p50": 14.287565231323242,
+              "p90": 15.839402675628662,
+              "std": 1.088197740129437
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/dollar_liquidity/start_only_topk/prefix_latent_story_smoke_arrays.npz",
+          "case": "dollar_liquidity",
+          "case_label": "Dollar liquidity",
+          "direction_status": "reject",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "start_only_topk",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.899629473487414,
+            "terminal_p10": -2.726178952288346,
+            "terminal_p50": 5.074034052419924,
+            "terminal_p90": 12.133288358722803,
+            "terminal_std": 5.579161073873971,
+            "terminal_var95_loss": 4.879125805580065
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/dollar_liquidity/start_only_topk/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-10-19",
+              "memory_cosine": 0.8894960284233093,
+              "rank": 1,
+              "start_distance_z": 0.8681854605674744,
+              "weight": 0.6890555620193481,
+              "window_id": "joint39_train_3942",
+              "window_index": 3942
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-04-01",
+              "memory_cosine": 0.6995742917060852,
+              "rank": 2,
+              "start_distance_z": 1.2903685569763184,
+              "weight": 0.08346325159072876,
+              "window_id": "joint39_train_3803",
+              "window_index": 3803
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-12-24",
+              "memory_cosine": 0.9553208947181702,
+              "rank": 3,
+              "start_distance_z": 1.369991421699524,
+              "weight": 0.056052688509225845,
+              "window_id": "joint39_train_3989",
+              "window_index": 3989
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-11-02",
+              "memory_cosine": 0.689298689365387,
+              "rank": 4,
+              "start_distance_z": 1.414520263671875,
+              "weight": 0.04486454650759697,
+              "window_id": "joint39_train_3952",
+              "window_index": 3952
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-03-26",
+              "memory_cosine": 0.9090739488601685,
+              "rank": 5,
+              "start_distance_z": 1.417911171913147,
+              "weight": 0.04411030188202858,
+              "window_id": "joint39_train_3799",
+              "window_index": 3799
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-03-06",
+              "memory_cosine": 0.707665741443634,
+              "rank": 6,
+              "start_distance_z": 1.459128737449646,
+              "weight": 0.035895269364118576,
+              "window_id": "joint39_train_3785",
+              "window_index": 3785
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-04-07",
+              "memory_cosine": 0.9183768033981323,
+              "rank": 7,
+              "start_distance_z": 1.5390783548355103,
+              "weight": 0.024067381396889687,
+              "window_id": "joint39_train_3806",
+              "window_index": 3806
+            },
+            {
+              "direction_checked": 6,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-03-30",
+              "memory_cosine": 0.8841633200645447,
+              "rank": 8,
+              "start_distance_z": 1.5526267290115356,
+              "weight": 0.022491008043289185,
+              "window_id": "joint39_train_3801",
+              "window_index": 3801
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.299657008921107,
+              "p10": 2.245375418663025,
+              "p50": 2.301176071166992,
+              "p90": 2.351488471031189,
+              "std": 0.042072526257626176
+            },
+            "Crude": {
+              "mean": 40.200743635495506,
+              "p10": 36.96660804748535,
+              "p50": 40.25490760803223,
+              "p90": 43.45522766113281,
+              "std": 2.653194557192922
+            },
+            "Gold": {
+              "mean": 1220.6641114552815,
+              "p10": 1199.7490356445312,
+              "p50": 1219.5691528320312,
+              "p90": 1242.1161254882813,
+              "std": 16.798743863241317
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17419803992379457,
+              "p10": 0.16711717545986177,
+              "p50": 0.17360566556453705,
+              "p90": 0.18205146938562394,
+              "std": 0.005947167371726505
+            },
+            "SPX": {
+              "mean": 2033.8680378595989,
+              "p10": 1995.1972045898438,
+              "p50": 2034.8587646484375,
+              "p90": 2070.7203857421873,
+              "std": 29.393482968415313
+            },
+            "US10Y": {
+              "mean": 1.8239993021513026,
+              "p10": 1.7164981842041016,
+              "p50": 1.8217424154281616,
+              "p90": 1.9428060531616211,
+              "std": 0.09206745068331186
+            },
+            "VIX": {
+              "mean": 14.410485329727331,
+              "p10": 13.029696941375732,
+              "p50": 14.287565231323242,
+              "p90": 15.839402675628662,
+              "std": 1.088197740129437
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/rates_selloff/start_only_topk/prefix_latent_story_smoke_arrays.npz",
+          "case": "rates_selloff",
+          "case_label": "Rates selloff",
+          "direction_status": "reject",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "start_only_topk",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.899629473487414,
+            "terminal_p10": -2.726178952288346,
+            "terminal_p50": 5.074034052419924,
+            "terminal_p90": 12.133288358722803,
+            "terminal_std": 5.579161073873971,
+            "terminal_var95_loss": 4.879125805580065
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/rates_selloff/start_only_topk/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-10-19",
+              "memory_cosine": 0.8799969553947449,
+              "rank": 1,
+              "start_distance_z": 0.8681854605674744,
+              "weight": 0.6890555620193481,
+              "window_id": "joint39_train_3942",
+              "window_index": 3942
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-04-01",
+              "memory_cosine": 0.8642396330833435,
+              "rank": 2,
+              "start_distance_z": 1.2903685569763184,
+              "weight": 0.08346325159072876,
+              "window_id": "joint39_train_3803",
+              "window_index": 3803
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-12-24",
+              "memory_cosine": 0.8547253608703613,
+              "rank": 3,
+              "start_distance_z": 1.369991421699524,
+              "weight": 0.056052688509225845,
+              "window_id": "joint39_train_3989",
+              "window_index": 3989
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-11-02",
+              "memory_cosine": 0.890990138053894,
+              "rank": 4,
+              "start_distance_z": 1.414520263671875,
+              "weight": 0.04486454650759697,
+              "window_id": "joint39_train_3952",
+              "window_index": 3952
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 1,
+              "history_end_date": "2015-03-26",
+              "memory_cosine": 0.8985028862953186,
+              "rank": 5,
+              "start_distance_z": 1.417911171913147,
+              "weight": 0.04411030188202858,
+              "window_id": "joint39_train_3799",
+              "window_index": 3799
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-03-06",
+              "memory_cosine": 0.7963802814483643,
+              "rank": 6,
+              "start_distance_z": 1.459128737449646,
+              "weight": 0.035895269364118576,
+              "window_id": "joint39_train_3785",
+              "window_index": 3785
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-04-07",
+              "memory_cosine": 0.8852450251579285,
+              "rank": 7,
+              "start_distance_z": 1.5390783548355103,
+              "weight": 0.024067381396889687,
+              "window_id": "joint39_train_3806",
+              "window_index": 3806
+            },
+            {
+              "direction_checked": 5,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-03-30",
+              "memory_cosine": 0.9504814147949219,
+              "rank": 8,
+              "start_distance_z": 1.5526267290115356,
+              "weight": 0.022491008043289185,
+              "window_id": "joint39_train_3801",
+              "window_index": 3801
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.299657008921107,
+              "p10": 2.245375418663025,
+              "p50": 2.301176071166992,
+              "p90": 2.351488471031189,
+              "std": 0.042072526257626176
+            },
+            "Crude": {
+              "mean": 40.200743635495506,
+              "p10": 36.96660804748535,
+              "p50": 40.25490760803223,
+              "p90": 43.45522766113281,
+              "std": 2.653194557192922
+            },
+            "Gold": {
+              "mean": 1220.6641114552815,
+              "p10": 1199.7490356445312,
+              "p50": 1219.5691528320312,
+              "p90": 1242.1161254882813,
+              "std": 16.798743863241317
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17419803992379457,
+              "p10": 0.16711717545986177,
+              "p50": 0.17360566556453705,
+              "p90": 0.18205146938562394,
+              "std": 0.005947167371726505
+            },
+            "SPX": {
+              "mean": 2033.8680378595989,
+              "p10": 1995.1972045898438,
+              "p50": 2034.8587646484375,
+              "p90": 2070.7203857421873,
+              "std": 29.393482968415313
+            },
+            "US10Y": {
+              "mean": 1.8239993021513026,
+              "p10": 1.7164981842041016,
+              "p50": 1.8217424154281616,
+              "p90": 1.9428060531616211,
+              "std": 0.09206745068331186
+            },
+            "VIX": {
+              "mean": 14.410485329727331,
+              "p10": 13.029696941375732,
+              "p50": 14.287565231323242,
+              "p90": 15.839402675628662,
+              "std": 1.088197740129437
+            }
+          }
+        },
+        {
+          "arrays_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/safe_haven_gold/start_only_topk/prefix_latent_story_smoke_arrays.npz",
+          "case": "safe_haven_gold",
+          "case_label": "Safe-haven gold",
+          "direction_status": "reject",
+          "generated_shape": [
+            384,
+            30,
+            39
+          ],
+          "policy": "start_only_topk",
+          "portfolio_stats": {
+            "terminal_expected_shortfall95_loss": 6.899629473487414,
+            "terminal_p10": -2.726178952288346,
+            "terminal_p50": 5.074034052419924,
+            "terminal_p90": 12.133288358722803,
+            "terminal_std": 5.579161073873971,
+            "terminal_var95_loss": 4.879125805580065
+          },
+          "report_path": "experiments/backfill/block_ar/nl_scenario_demo_outputs/posterior_ensemble_candidate_966c_professional_start40_s384_d400/safe_haven_gold/start_only_topk/prefix_latent_story_smoke_report.json",
+          "support": [
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-10-19",
+              "memory_cosine": 0.9528986215591431,
+              "rank": 1,
+              "start_distance_z": 0.8681854605674744,
+              "weight": 0.6890555620193481,
+              "window_id": "joint39_train_3942",
+              "window_index": 3942
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 1,
+              "history_end_date": "2015-04-01",
+              "memory_cosine": 0.8344762325286865,
+              "rank": 2,
+              "start_distance_z": 1.2903685569763184,
+              "weight": 0.08346325159072876,
+              "window_id": "joint39_train_3803",
+              "window_index": 3803
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-12-24",
+              "memory_cosine": 0.929388701915741,
+              "rank": 3,
+              "start_distance_z": 1.369991421699524,
+              "weight": 0.056052688509225845,
+              "window_id": "joint39_train_3989",
+              "window_index": 3989
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 3,
+              "history_end_date": "2015-11-02",
+              "memory_cosine": 0.9020497798919678,
+              "rank": 4,
+              "start_distance_z": 1.414520263671875,
+              "weight": 0.04486454650759697,
+              "window_id": "joint39_train_3952",
+              "window_index": 3952
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-03-26",
+              "memory_cosine": 0.900838315486908,
+              "rank": 5,
+              "start_distance_z": 1.417911171913147,
+              "weight": 0.04411030188202858,
+              "window_id": "joint39_train_3799",
+              "window_index": 3799
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 4,
+              "history_end_date": "2015-03-06",
+              "memory_cosine": 0.8106918334960938,
+              "rank": 6,
+              "start_distance_z": 1.459128737449646,
+              "weight": 0.035895269364118576,
+              "window_id": "joint39_train_3785",
+              "window_index": 3785
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 0,
+              "history_end_date": "2015-04-07",
+              "memory_cosine": 0.9123339056968689,
+              "rank": 7,
+              "start_distance_z": 1.5390783548355103,
+              "weight": 0.024067381396889687,
+              "window_id": "joint39_train_3806",
+              "window_index": 3806
+            },
+            {
+              "direction_checked": 4,
+              "direction_mismatches": 2,
+              "history_end_date": "2015-03-30",
+              "memory_cosine": 0.9304638504981995,
+              "rank": 8,
+              "start_distance_z": 1.5526267290115356,
+              "weight": 0.022491008043289185,
+              "window_id": "joint39_train_3801",
+              "window_index": 3801
+            }
+          ],
+          "support_count": 8,
+          "terminal_raw_levels": {
+            "BBB_OAS": {
+              "mean": 2.299657008921107,
+              "p10": 2.245375418663025,
+              "p50": 2.301176071166992,
+              "p90": 2.351488471031189,
+              "std": 0.042072526257626176
+            },
+            "Crude": {
+              "mean": 40.200743635495506,
+              "p10": 36.96660804748535,
+              "p50": 40.25490760803223,
+              "p90": 43.45522766113281,
+              "std": 2.653194557192922
+            },
+            "Gold": {
+              "mean": 1220.6641114552815,
+              "p10": 1199.7490356445312,
+              "p50": 1219.5691528320312,
+              "p90": 1242.1161254882813,
+              "std": 16.798743863241317
+            },
+            "IV_ATM_1Y": {
+              "mean": 0.17419803992379457,
+              "p10": 0.16711717545986177,
+              "p50": 0.17360566556453705,
+              "p90": 0.18205146938562394,
+              "std": 0.005947167371726505
+            },
+            "SPX": {
+              "mean": 2033.8680378595989,
+              "p10": 1995.1972045898438,
+              "p50": 2034.8587646484375,
+              "p90": 2070.7203857421873,
+              "std": 29.393482968415313
+            },
+            "US10Y": {
+              "mean": 1.8239993021513026,
+              "p10": 1.7164981842041016,
+              "p50": 1.8217424154281616,
+              "p90": 1.9428060531616211,
+              "std": 0.09206745068331186
+            },
+            "VIX": {
+              "mean": 14.410485329727331,
+              "p10": 13.029696941375732,
+              "p50": 14.287565231323242,
+              "p90": 15.839402675628662,
+              "std": 1.088197740129437
+            }
+          }
+        }
+      ],
+      "description": "Start-only null: support selected from starting-level similarity, with no narrative ranking contribution.",
+      "direction_status_counts": {
+        "reject": 6
+      },
+      "max_abs_start_difference": 0.0,
+      "pairwise": {
+        "mean_factor_terminal_ks": 0.0,
+        "mean_portfolio_terminal_ks": 0.0,
+        "mean_support_jaccard": 1.0,
+        "pair_count": 15,
+        "rows": [
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "defensive_risk_off",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "commodity_inflation",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "dollar_liquidity",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "rates_selloff",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "fragile_risk_on",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "safe_haven_gold",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "commodity_inflation",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "dollar_liquidity",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "rates_selloff",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "defensive_risk_off",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "safe_haven_gold",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "commodity_inflation",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "dollar_liquidity",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "commodity_inflation",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "rates_selloff",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "commodity_inflation",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "safe_haven_gold",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "dollar_liquidity",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "rates_selloff",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "dollar_liquidity",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "safe_haven_gold",
+            "support_jaccard": 1.0
+          },
+          {
+            "factor_terminal_ks": {
+              "BBB_OAS": 0.0,
+              "Crude": 0.0,
+              "Gold": 0.0,
+              "IV_ATM_1Y": 0.0,
+              "SPX": 0.0,
+              "US10Y": 0.0,
+              "VIX": 0.0
+            },
+            "left": "rates_selloff",
+            "mean_factor_terminal_ks": 0.0,
+            "portfolio_terminal_ks": 0.0,
+            "right": "safe_haven_gold",
+            "support_jaccard": 1.0
+          }
+        ]
+      },
+      "policy": "start_only_topk",
+      "portfolio_es95_loss_range": 0.0,
+      "portfolio_var95_loss_range": 0.0,
+      "support_count_max": 8,
+      "support_count_mean": 8.0,
+      "support_count_min": 8
+    }
+  ],
+  "run_config": {
+    "bridge_arrays": "experiments/backfill/block_ar/nl_scenario_demo_outputs/manifest_bridge_eval_full_906b_all_windows/bridge_eval_arrays.npz",
+    "bridge_report": "experiments/backfill/block_ar/nl_scenario_demo_outputs/manifest_bridge_eval_full_906b_all_windows/bridge_eval_report.json",
+    "condition_root": "experiments/backfill/block_ar/nl_scenario_demo_outputs/professional_story_condition_reports_966a",
+    "decoder_steps": 400,
+    "embedding_model": "text-embedding-3-small",
+    "grounding_model": "gpt-5.4-mini",
+    "quality_guard_max_candidate_entropy_quantile": -1.0,
+    "quality_guard_min_support_weight_max_quantile": 0.25,
+    "quality_guard_probability_temperature": -1.0,
+    "response_preview_alpha": 0.75,
+    "response_preview_blend": 1.0,
+    "response_preview_samples_per_component": 8,
+    "response_preview_temperature": 1.0,
+    "samples": 384,
+    "seed": 966,
+    "start_window_index": 40,
+    "support_bank_arrays": "experiments/backfill/block_ar/nl_scenario_demo_outputs/prefix_latent_support_bank_train_all_939a/support_bank_arrays.npz",
+    "support_bank_report": "experiments/backfill/block_ar/nl_scenario_demo_outputs/prefix_latent_support_bank_train_all_939a/support_bank_report.json",
+    "use_professional_story_deck": false
+  },
+  "scope_note": "Fixed-start rollout-level comparison. All policies use the same full 906b support bank, same fixed start, and component-preserving SNI rollout.",
+  "status": "ok"
+}

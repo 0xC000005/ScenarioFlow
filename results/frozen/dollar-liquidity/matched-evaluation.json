@@ -1,0 +1,4561 @@
+{
+  "allow_duplicate_query_windows": true,
+  "artifact_paths": {
+    "arrays": "experiments/backfill/block_ar/nl_scenario_demo_outputs/stride5_14x14_matched_scenario_eval_clean_20260617/scenario_level_eval_arrays.npz",
+    "report": "experiments/backfill/block_ar/nl_scenario_demo_outputs/stride5_14x14_matched_scenario_eval_clean_20260617/scenario_level_eval_report.json"
+  },
+  "bridge_report": "experiments/backfill/block_ar/nl_scenario_demo_outputs/stride5_14x14_support_audit_clean_20260617/matched_top3_90_bridge_report.json",
+  "checkpoint": "models/backfill/734a_joint39_realvix_channel_level_alltrain_w005_e3_s7345/best_model.pt",
+  "common_random_numbers": {
+    "base_seed": 8128,
+    "enabled": true,
+    "method": "When enabled, duplicate candidate rows with the same query window receive the same deterministic RNG seed before generator rollout. This makes within-query candidate labels closer to common-random-number comparisons."
+  },
+  "direct_memory": {
+    "bridge_arrays": null,
+    "enabled": false,
+    "method": "For narrative_direct_memory, the held-out window's own current history/normalization state is used, while the frozen generator memory state is replaced by the text-predicted bridge condition vector. When oracle output is enabled, oracle_direct_memory_true_history uses the true encoded memory target for the same window."
+  },
+  "heldout_window_count": 39,
+  "memory_residual": {
+    "alphas": [],
+    "enabled": false,
+    "method": "For residual methods, the generator keeps re-encoding its evolving market prefix. Text conditioning enters only as alpha * (text_predicted_memory - base_history_memory). narrative_residual_memory uses the held-out window history; narrative_residual_topk applies the same text target as a residual over each retrieved analogue history.",
+    "topk_enabled": false
+  },
+  "merge_note": "Core-3 clean matched-eval (stride5_14x14_matched_scenario_eval_clean_20260617) + T7 beta=0 identity (stride5_14x14_t7_beta0_eval_clean_20260618). T7 beta=0 is exact identity to raw_openai base (GPU-verified bit-identical). All scored with identical args: 734a, top-k 3, samples 4, seed 776, base_seed 8128, CRN-by-query, eval_split train, field_weight, n_steps 30, query_role anchor.",
+  "n_steps": 30,
+  "query_role": "anchor",
+  "samples": 4,
+  "scope_note": "Scenario-level held-out evaluation. Scores standardized future delta paths, so methods are compared on scenario movement shape rather than absolute level matching. No OpenAI API calls are made.",
+  "seed": 776,
+  "status": "ok",
+  "summary": {
+    "historical_replay_topk": {
+      "coverage_80_mean": 0.452005259698,
+      "energy_score_z_improvement_vs_persistence": -0.017767872451,
+      "energy_score_z_mean": 0.933075784009,
+      "ensemble_crps_z_improvement_vs_persistence": -0.049028892845,
+      "ensemble_crps_z_mean": 0.709086123567,
+      "mean_path_mae_z_improvement_vs_persistence": -0.270839145774,
+      "mean_path_mae_z_mean": 0.859017716004,
+      "mean_path_rmse_z_improvement_vs_persistence": -0.233528393101,
+      "mean_path_rmse_z_mean": 1.130882088955,
+      "terminal_mae_z_improvement_vs_persistence": -0.23411480401,
+      "terminal_mae_z_mean": 0.9272071872,
+      "window_count": 39
+    },
+    "narrative_generator_topk": {
+      "coverage_80_mean": 0.57479728249,
+      "energy_score_z_improvement_vs_persistence": 0.142831902471,
+      "energy_score_z_mean": 0.785840088175,
+      "ensemble_crps_z_improvement_vs_persistence": 0.106627630603,
+      "ensemble_crps_z_mean": 0.603870832003,
+      "mean_path_mae_z_improvement_vs_persistence": -0.187262879939,
+      "mean_path_mae_z_mean": 0.802524734002,
+      "mean_path_rmse_z_improvement_vs_persistence": -0.161072536273,
+      "mean_path_rmse_z_mean": 1.064455542809,
+      "terminal_mae_z_improvement_vs_persistence": -0.188193615322,
+      "terminal_mae_z_mean": 0.892705975435,
+      "window_count": 39
+    },
+    "persistence": {
+      "energy_score_z_mean": 0.916786439487,
+      "ensemble_crps_z_mean": 0.675945275105,
+      "mean_path_mae_z_mean": 0.675945275105,
+      "mean_path_rmse_z_mean": 0.916786427681,
+      "terminal_mae_z_mean": 0.751313560284,
+      "window_count": 39
+    },
+    "train_median_delta": {
+      "energy_score_z_improvement_vs_persistence": -0.019478499617,
+      "energy_score_z_mean": 0.934644063798,
+      "ensemble_crps_z_improvement_vs_persistence": -0.02537828095,
+      "ensemble_crps_z_mean": 0.693099604203,
+      "mean_path_mae_z_improvement_vs_persistence": -0.02537828095,
+      "mean_path_mae_z_mean": 0.693099604203,
+      "mean_path_rmse_z_improvement_vs_persistence": -0.019478505549,
+      "mean_path_rmse_z_mean": 0.934644057201,
+      "terminal_mae_z_improvement_vs_persistence": -0.030917176594,
+      "terminal_mae_z_mean": 0.774542054305,
+      "window_count": 39
+    }
+  },
+  "support_sampling_mode": "field_weight",
+  "support_weight_temperature": 1.0,
+  "top_k": 3,
+  "window_scores": [
+    {
+      "block_window_index": 3945,
+      "common_random_seed": 1721772860,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.439316239316,
+          "energy_score_z": 0.711178234071,
+          "ensemble_crps_z": 0.499940171838,
+          "mean_path_mae_z": 0.614822506905,
+          "mean_path_rmse_z": 0.870131075382,
+          "sample_count": 12,
+          "terminal_mae_z": 0.562217354774
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.666666666667,
+          "energy_score_z": 0.609373941282,
+          "ensemble_crps_z": 0.453104645014,
+          "mean_path_mae_z": 0.588220715523,
+          "mean_path_rmse_z": 0.829364836216,
+          "sample_count": 12,
+          "terminal_mae_z": 0.519077420235
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.845559545907,
+          "ensemble_crps_z": 0.560646891594,
+          "mean_path_mae_z": 0.560646891594,
+          "mean_path_rmse_z": 0.845559537411,
+          "sample_count": 1,
+          "terminal_mae_z": 0.462683320045
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.855138929388,
+          "ensemble_crps_z": 0.578003168106,
+          "mean_path_mae_z": 0.578003168106,
+          "mean_path_rmse_z": 0.8551389575,
+          "sample_count": 1,
+          "terminal_mae_z": 0.458212673664
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0000_3945",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 0,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3839105727814371,
+          0.31300383847599106,
+          0.3030855887425719
+        ]
+      },
+      "top_train_cosines": [
+        0.4874331057071686,
+        0.47722339630126953,
+        0.47561338543891907
+      ],
+      "top_train_indices": [
+        1216,
+        1216,
+        1216,
+        1216,
+        974,
+        974,
+        974,
+        974,
+        2523,
+        2523,
+        2523,
+        2523
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1216",
+        "joint39_train_0974",
+        "joint39_train_2523"
+      ],
+      "window_id": "joint39_train_3945",
+      "window_index": 3945
+    },
+    {
+      "block_window_index": 3950,
+      "common_random_seed": 1721818740,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.339316239316,
+          "energy_score_z": 0.855227925296,
+          "ensemble_crps_z": 0.66698269546,
+          "mean_path_mae_z": 0.751513123512,
+          "mean_path_rmse_z": 1.007796287537,
+          "sample_count": 12,
+          "terminal_mae_z": 0.670584857464
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.512820512821,
+          "energy_score_z": 0.641171716396,
+          "ensemble_crps_z": 0.483581244946,
+          "mean_path_mae_z": 0.660301864147,
+          "mean_path_rmse_z": 0.862225413322,
+          "sample_count": 12,
+          "terminal_mae_z": 1.003718018532
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.748719507321,
+          "ensemble_crps_z": 0.520073235035,
+          "mean_path_mae_z": 0.520073235035,
+          "mean_path_rmse_z": 0.748719513416,
+          "sample_count": 1,
+          "terminal_mae_z": 0.732016384602
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.772574704334,
+          "ensemble_crps_z": 0.550172567368,
+          "mean_path_mae_z": 0.550172567368,
+          "mean_path_rmse_z": 0.772574722767,
+          "sample_count": 1,
+          "terminal_mae_z": 0.791029930115
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0001_3950",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 1,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          7,
+          3,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.5388518027634579,
+          0.26611575913169355,
+          0.1950324381048486
+        ]
+      },
+      "top_train_cosines": [
+        0.5562090873718262,
+        0.5209336280822754,
+        0.5053953528404236
+      ],
+      "top_train_indices": [
+        2540,
+        2540,
+        2540,
+        2540,
+        2540,
+        2540,
+        2540,
+        2739,
+        2739,
+        2739,
+        808,
+        808
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2540",
+        "joint39_train_2739",
+        "joint39_train_0808"
+      ],
+      "window_id": "joint39_train_3950",
+      "window_index": 3950
+    },
+    {
+      "block_window_index": 3955,
+      "common_random_seed": 1721864620,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.552991452991,
+          "energy_score_z": 0.89326620389,
+          "ensemble_crps_z": 0.720261096954,
+          "mean_path_mae_z": 0.789208352566,
+          "mean_path_rmse_z": 1.05564391613,
+          "sample_count": 12,
+          "terminal_mae_z": 1.058448076248
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.709401709402,
+          "energy_score_z": 0.665011551021,
+          "ensemble_crps_z": 0.452004432678,
+          "mean_path_mae_z": 0.630770087242,
+          "mean_path_rmse_z": 0.907999634743,
+          "sample_count": 12,
+          "terminal_mae_z": 0.807129859924
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.749684577609,
+          "ensemble_crps_z": 0.530158936977,
+          "mean_path_mae_z": 0.530158936977,
+          "mean_path_rmse_z": 0.74968457222,
+          "sample_count": 1,
+          "terminal_mae_z": 0.597409963608
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.776000767984,
+          "ensemble_crps_z": 0.560363948345,
+          "mean_path_mae_z": 0.560363948345,
+          "mean_path_rmse_z": 0.776000797749,
+          "sample_count": 1,
+          "terminal_mae_z": 0.656524837017
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0002_3955",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 2,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.35123454316751157,
+          0.3328966521421981,
+          0.31586880469029033
+        ]
+      },
+      "top_train_cosines": [
+        0.4863429069519043,
+        0.48366180062294006,
+        0.48103654384613037
+      ],
+      "top_train_indices": [
+        2915,
+        2915,
+        2915,
+        2915,
+        2996,
+        2996,
+        2996,
+        2996,
+        3098,
+        3098,
+        3098,
+        3098
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2915",
+        "joint39_train_2996",
+        "joint39_train_3098"
+      ],
+      "window_id": "joint39_train_3955",
+      "window_index": 3955
+    },
+    {
+      "block_window_index": 3960,
+      "common_random_seed": 1721910500,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.57094017094,
+          "energy_score_z": 0.624394844616,
+          "ensemble_crps_z": 0.425515189767,
+          "mean_path_mae_z": 0.519352018833,
+          "mean_path_rmse_z": 0.760150790215,
+          "sample_count": 12,
+          "terminal_mae_z": 0.437005072832
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.582905982906,
+          "energy_score_z": 0.645344403298,
+          "ensemble_crps_z": 0.483325272799,
+          "mean_path_mae_z": 0.643600463867,
+          "mean_path_rmse_z": 0.87233710289,
+          "sample_count": 12,
+          "terminal_mae_z": 0.756960213184
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.645618640063,
+          "ensemble_crps_z": 0.413986831903,
+          "mean_path_mae_z": 0.413986831903,
+          "mean_path_rmse_z": 0.645618677139,
+          "sample_count": 1,
+          "terminal_mae_z": 0.495169460773
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.647824522973,
+          "ensemble_crps_z": 0.408972591162,
+          "mean_path_mae_z": 0.408972591162,
+          "mean_path_rmse_z": 0.647824466228,
+          "sample_count": 1,
+          "terminal_mae_z": 0.456385195255
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0003_3960",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 3,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.36832057685463593,
+          0.3463323222238585,
+          0.2853471009215056
+        ]
+      },
+      "top_train_cosines": [
+        0.5244309902191162,
+        0.5213532447814941,
+        0.5116686224937439
+      ],
+      "top_train_indices": [
+        452,
+        452,
+        452,
+        452,
+        756,
+        756,
+        756,
+        756,
+        684,
+        684,
+        684,
+        684
+      ],
+      "top_train_window_ids": [
+        "joint39_train_0452",
+        "joint39_train_0756",
+        "joint39_train_0684"
+      ],
+      "window_id": "joint39_train_3960",
+      "window_index": 3960
+    },
+    {
+      "block_window_index": 3965,
+      "common_random_seed": 1721956380,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.657264957265,
+          "energy_score_z": 0.783442744103,
+          "ensemble_crps_z": 0.508225679398,
+          "mean_path_mae_z": 0.639330148697,
+          "mean_path_rmse_z": 0.941167712212,
+          "sample_count": 12,
+          "terminal_mae_z": 0.754634737968
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.753846153846,
+          "energy_score_z": 0.589982981989,
+          "ensemble_crps_z": 0.391342133284,
+          "mean_path_mae_z": 0.49007037282,
+          "mean_path_rmse_z": 0.796976268291,
+          "sample_count": 12,
+          "terminal_mae_z": 0.521996498108
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.731120120414,
+          "ensemble_crps_z": 0.448010265827,
+          "mean_path_mae_z": 0.448010265827,
+          "mean_path_rmse_z": 0.731120109558,
+          "sample_count": 1,
+          "terminal_mae_z": 0.391654640436
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.744482945223,
+          "ensemble_crps_z": 0.456147223711,
+          "mean_path_mae_z": 0.456147223711,
+          "mean_path_rmse_z": 0.744482934475,
+          "sample_count": 1,
+          "terminal_mae_z": 0.434903413057
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0004_3965",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 4,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          6,
+          3,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4784477692588966,
+          0.302090433617988,
+          0.21946179712311548
+        ]
+      },
+      "top_train_cosines": [
+        0.513565182685852,
+        0.4905741512775421,
+        0.4745967388153076
+      ],
+      "top_train_indices": [
+        3055,
+        3055,
+        3055,
+        3055,
+        3055,
+        3055,
+        3115,
+        3115,
+        3115,
+        2866,
+        2866,
+        2866
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3055",
+        "joint39_train_3115",
+        "joint39_train_2866"
+      ],
+      "window_id": "joint39_train_3965",
+      "window_index": 3965
+    },
+    {
+      "block_window_index": 3970,
+      "common_random_seed": 1722002260,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.561538461538,
+          "energy_score_z": 0.866774112768,
+          "ensemble_crps_z": 0.572011113167,
+          "mean_path_mae_z": 0.67004185915,
+          "mean_path_rmse_z": 1.022228479385,
+          "sample_count": 12,
+          "terminal_mae_z": 0.806315839291
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.464102564103,
+          "energy_score_z": 0.795990274945,
+          "ensemble_crps_z": 0.592742115259,
+          "mean_path_mae_z": 0.752151966095,
+          "mean_path_rmse_z": 1.050401449203,
+          "sample_count": 12,
+          "terminal_mae_z": 1.016278862953
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.937506426645,
+          "ensemble_crps_z": 0.631678462029,
+          "mean_path_mae_z": 0.631678462029,
+          "mean_path_rmse_z": 0.937506377697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.848948955536
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.961204207964,
+          "ensemble_crps_z": 0.656298220158,
+          "mean_path_mae_z": 0.656298220158,
+          "mean_path_rmse_z": 0.961204171181,
+          "sample_count": 1,
+          "terminal_mae_z": 0.905709981918
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0005_3970",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 5,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          7,
+          3,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.556712870443834,
+          0.22212715215126055,
+          0.22115997740490545
+        ]
+      },
+      "top_train_cosines": [
+        0.4536447823047638,
+        0.40770480036735535,
+        0.40748661756515503
+      ],
+      "top_train_indices": [
+        3671,
+        3671,
+        3671,
+        3671,
+        3671,
+        3671,
+        3671,
+        3055,
+        3055,
+        3055,
+        3826,
+        3826
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3671",
+        "joint39_train_3055",
+        "joint39_train_3826"
+      ],
+      "window_id": "joint39_train_3970",
+      "window_index": 3970
+    },
+    {
+      "block_window_index": 3975,
+      "common_random_seed": 1722048140,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.417948717949,
+          "energy_score_z": 0.882929881215,
+          "ensemble_crps_z": 0.635647192597,
+          "mean_path_mae_z": 0.749900281429,
+          "mean_path_rmse_z": 1.059941530228,
+          "sample_count": 12,
+          "terminal_mae_z": 1.300870299339
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.568376068376,
+          "energy_score_z": 0.976017956036,
+          "ensemble_crps_z": 0.66881275177,
+          "mean_path_mae_z": 0.873952627182,
+          "mean_path_rmse_z": 1.337208628654,
+          "sample_count": 12,
+          "terminal_mae_z": 1.338655233383
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.069431596401,
+          "ensemble_crps_z": 0.811402976513,
+          "mean_path_mae_z": 0.811402976513,
+          "mean_path_rmse_z": 1.06943154335,
+          "sample_count": 1,
+          "terminal_mae_z": 1.504561781883
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.110809340496,
+          "ensemble_crps_z": 0.849281132221,
+          "mean_path_mae_z": 0.849281132221,
+          "mean_path_rmse_z": 1.110809326172,
+          "sample_count": 1,
+          "terminal_mae_z": 1.560442566872
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0006_3975",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 6,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3499157729699701,
+          0.3297047327320728,
+          0.32037949429795715
+        ]
+      },
+      "top_train_cosines": [
+        0.6381056308746338,
+        0.6351308822631836,
+        0.6336963176727295
+      ],
+      "top_train_indices": [
+        1201,
+        1201,
+        1201,
+        1201,
+        1504,
+        1504,
+        1504,
+        1504,
+        1268,
+        1268,
+        1268,
+        1268
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1201",
+        "joint39_train_1504",
+        "joint39_train_1268"
+      ],
+      "window_id": "joint39_train_3975",
+      "window_index": 3975
+    },
+    {
+      "block_window_index": 3980,
+      "common_random_seed": 1722094020,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.422222222222,
+          "energy_score_z": 1.028820633466,
+          "ensemble_crps_z": 0.837012827396,
+          "mean_path_mae_z": 1.026933073997,
+          "mean_path_rmse_z": 1.281380295753,
+          "sample_count": 12,
+          "terminal_mae_z": 0.882408738136
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.67094017094,
+          "energy_score_z": 0.765565328626,
+          "ensemble_crps_z": 0.608773767948,
+          "mean_path_mae_z": 0.81226670742,
+          "mean_path_rmse_z": 1.08510351181,
+          "sample_count": 12,
+          "terminal_mae_z": 1.082673430443
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.850308670904,
+          "ensemble_crps_z": 0.642345249653,
+          "mean_path_mae_z": 0.642345249653,
+          "mean_path_rmse_z": 0.850308656693,
+          "sample_count": 1,
+          "terminal_mae_z": 0.474674850702
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.865369945815,
+          "ensemble_crps_z": 0.657538235188,
+          "mean_path_mae_z": 0.657538235188,
+          "mean_path_rmse_z": 0.865369975567,
+          "sample_count": 1,
+          "terminal_mae_z": 0.512649834156
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0007_3980",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 7,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.44462547928354945,
+          0.3185310258900129,
+          0.23684349482643768
+        ]
+      },
+      "top_train_cosines": [
+        0.4271692931652069,
+        0.4104936718940735,
+        0.3956776559352875
+      ],
+      "top_train_indices": [
+        2886,
+        2886,
+        2886,
+        2886,
+        2886,
+        3090,
+        3090,
+        3090,
+        3090,
+        2579,
+        2579,
+        2579
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2886",
+        "joint39_train_3090",
+        "joint39_train_2579"
+      ],
+      "window_id": "joint39_train_3980",
+      "window_index": 3980
+    },
+    {
+      "block_window_index": 3985,
+      "common_random_seed": 1722139900,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.396581196581,
+          "energy_score_z": 0.860475895777,
+          "ensemble_crps_z": 0.666261479259,
+          "mean_path_mae_z": 0.808258295059,
+          "mean_path_rmse_z": 1.050072550774,
+          "sample_count": 12,
+          "terminal_mae_z": 0.562768578529
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.459829059829,
+          "energy_score_z": 0.717176480205,
+          "ensemble_crps_z": 0.576137632132,
+          "mean_path_mae_z": 0.751046895981,
+          "mean_path_rmse_z": 0.965148389339,
+          "sample_count": 12,
+          "terminal_mae_z": 0.603637814522
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.834031731964,
+          "ensemble_crps_z": 0.630078732967,
+          "mean_path_mae_z": 0.630078732967,
+          "mean_path_rmse_z": 0.834031701088,
+          "sample_count": 1,
+          "terminal_mae_z": 0.475345999002
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.856720000802,
+          "ensemble_crps_z": 0.649653375149,
+          "mean_path_mae_z": 0.649653375149,
+          "mean_path_rmse_z": 0.856720030308,
+          "sample_count": 1,
+          "terminal_mae_z": 0.510303378105
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0008_3985",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 8,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.43864511733011186,
+          0.32175623615157445,
+          0.2395986465183138
+        ]
+      },
+      "top_train_cosines": [
+        0.3036041855812073,
+        0.28810936212539673,
+        0.27336791157722473
+      ],
+      "top_train_indices": [
+        3090,
+        3090,
+        3090,
+        3090,
+        3090,
+        2839,
+        2839,
+        2839,
+        2839,
+        3308,
+        3308,
+        3308
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3090",
+        "joint39_train_2839",
+        "joint39_train_3308"
+      ],
+      "window_id": "joint39_train_3985",
+      "window_index": 3985
+    },
+    {
+      "block_window_index": 3990,
+      "common_random_seed": 1722185780,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.251282051282,
+          "energy_score_z": 1.184123009681,
+          "ensemble_crps_z": 0.999321460724,
+          "mean_path_mae_z": 1.154369473457,
+          "mean_path_rmse_z": 1.406880021095,
+          "sample_count": 12,
+          "terminal_mae_z": 1.344059109688
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.317948717949,
+          "energy_score_z": 1.166755145963,
+          "ensemble_crps_z": 1.004703789949,
+          "mean_path_mae_z": 1.229003310204,
+          "mean_path_rmse_z": 1.495725870132,
+          "sample_count": 12,
+          "terminal_mae_z": 1.459870457649
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.30540179301,
+          "ensemble_crps_z": 1.063012957573,
+          "mean_path_mae_z": 1.063012957573,
+          "mean_path_rmse_z": 1.305401682854,
+          "sample_count": 1,
+          "terminal_mae_z": 1.322246909142
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.345204041876,
+          "ensemble_crps_z": 1.096604347229,
+          "mean_path_mae_z": 1.096604347229,
+          "mean_path_rmse_z": 1.345203995705,
+          "sample_count": 1,
+          "terminal_mae_z": 1.378605723381
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0009_3990",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 9,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.40118711330659496,
+          0.3056523560619749,
+          0.2931605306314302
+        ]
+      },
+      "top_train_cosines": [
+        0.40584248304367065,
+        0.39224350452423096,
+        0.3901571035385132
+      ],
+      "top_train_indices": [
+        968,
+        968,
+        968,
+        968,
+        968,
+        1107,
+        1107,
+        1107,
+        1107,
+        1342,
+        1342,
+        1342
+      ],
+      "top_train_window_ids": [
+        "joint39_train_0968",
+        "joint39_train_1107",
+        "joint39_train_1342"
+      ],
+      "window_id": "joint39_train_3990",
+      "window_index": 3990
+    },
+    {
+      "block_window_index": 3995,
+      "common_random_seed": 1722231660,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.320512820513,
+          "energy_score_z": 1.468634061506,
+          "ensemble_crps_z": 1.272551089525,
+          "mean_path_mae_z": 1.451784729958,
+          "mean_path_rmse_z": 1.768847346306,
+          "sample_count": 12,
+          "terminal_mae_z": 1.244663953781
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.376068376068,
+          "energy_score_z": 1.152541506891,
+          "ensemble_crps_z": 1.011768519878,
+          "mean_path_mae_z": 1.29528093338,
+          "mean_path_rmse_z": 1.555459022522,
+          "sample_count": 12,
+          "terminal_mae_z": 1.074254751205
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.19752358526,
+          "ensemble_crps_z": 0.979367733002,
+          "mean_path_mae_z": 0.979367733002,
+          "mean_path_rmse_z": 1.197523593903,
+          "sample_count": 1,
+          "terminal_mae_z": 0.750118672848
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.232643846394,
+          "ensemble_crps_z": 1.011408805847,
+          "mean_path_mae_z": 1.011408805847,
+          "mean_path_rmse_z": 1.232643842697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.801767170429
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0010_3995",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 10,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.34010636942544464,
+          0.3396768761504992,
+          0.3202167544240563
+        ]
+      },
+      "top_train_cosines": [
+        0.5699864625930786,
+        0.5699232816696167,
+        0.5669734477996826
+      ],
+      "top_train_indices": [
+        1883,
+        1883,
+        1883,
+        1883,
+        3870,
+        3870,
+        3870,
+        3870,
+        1769,
+        1769,
+        1769,
+        1769
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1883",
+        "joint39_train_3870",
+        "joint39_train_1769"
+      ],
+      "window_id": "joint39_train_3995",
+      "window_index": 3995
+    },
+    {
+      "block_window_index": 4000,
+      "common_random_seed": 1722277540,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.348717948718,
+          "energy_score_z": 1.272025427885,
+          "ensemble_crps_z": 1.034447163343,
+          "mean_path_mae_z": 1.20379960537,
+          "mean_path_rmse_z": 1.463706970215,
+          "sample_count": 12,
+          "terminal_mae_z": 1.095672130585
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.588888888889,
+          "energy_score_z": 0.998273791749,
+          "ensemble_crps_z": 0.827299416065,
+          "mean_path_mae_z": 1.148167014122,
+          "mean_path_rmse_z": 1.385035514832,
+          "sample_count": 12,
+          "terminal_mae_z": 0.81290692091
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.83914431268,
+          "ensemble_crps_z": 0.629227519035,
+          "mean_path_mae_z": 0.629227519035,
+          "mean_path_rmse_z": 0.839144349098,
+          "sample_count": 1,
+          "terminal_mae_z": 0.513434529305
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.851454075006,
+          "ensemble_crps_z": 0.64203196764,
+          "mean_path_mae_z": 0.64203196764,
+          "mean_path_rmse_z": 0.851454079151,
+          "sample_count": 1,
+          "terminal_mae_z": 0.469822525978
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0011_4000",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 11,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          8,
+          2,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.70024283917178,
+          0.1510478125464963,
+          0.14870934828172372
+        ]
+      },
+      "top_train_cosines": [
+        0.5649167895317078,
+        0.4882252514362335,
+        0.4874451160430908
+      ],
+      "top_train_indices": [
+        1883,
+        1883,
+        1883,
+        1883,
+        1883,
+        1883,
+        1883,
+        1883,
+        3903,
+        3903,
+        1950,
+        1950
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1883",
+        "joint39_train_3903",
+        "joint39_train_1950"
+      ],
+      "window_id": "joint39_train_4000",
+      "window_index": 4000
+    },
+    {
+      "block_window_index": 4005,
+      "common_random_seed": 1722323420,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.322222222222,
+          "energy_score_z": 1.156496889874,
+          "ensemble_crps_z": 0.832279324532,
+          "mean_path_mae_z": 1.041265487671,
+          "mean_path_rmse_z": 1.397650837898,
+          "sample_count": 12,
+          "terminal_mae_z": 1.072747588158
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.52905982906,
+          "energy_score_z": 0.846667143477,
+          "ensemble_crps_z": 0.632432579994,
+          "mean_path_mae_z": 0.930621266365,
+          "mean_path_rmse_z": 1.229420185089,
+          "sample_count": 12,
+          "terminal_mae_z": 1.230342030525
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.164173205155,
+          "ensemble_crps_z": 0.927298784256,
+          "mean_path_mae_z": 0.927298784256,
+          "mean_path_rmse_z": 1.16417324543,
+          "sample_count": 1,
+          "terminal_mae_z": 1.198810815811
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.130945501114,
+          "ensemble_crps_z": 0.893819272518,
+          "mean_path_mae_z": 0.893819272518,
+          "mean_path_rmse_z": 1.130945444107,
+          "sample_count": 1,
+          "terminal_mae_z": 1.132689476013
+        }
+      },
+      "query_id": "projected_memory_14x14_top3_90_0012_4005",
+      "query_kind": "projected_memory_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 12,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3367170147259758,
+          0.3334240971989857,
+          0.3298588880750386
+        ]
+      },
+      "top_train_cosines": [
+        0.5636553764343262,
+        0.5631639957427979,
+        0.5626264810562134
+      ],
+      "top_train_indices": [
+        3864,
+        3864,
+        3864,
+        3864,
+        1765,
+        1765,
+        1765,
+        1765,
+        3727,
+        3727,
+        3727,
+        3727
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3864",
+        "joint39_train_1765",
+        "joint39_train_3727"
+      ],
+      "window_id": "joint39_train_4005",
+      "window_index": 4005
+    },
+    {
+      "block_window_index": 3945,
+      "common_random_seed": 1721772860,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.420512820513,
+          "energy_score_z": 0.796380440589,
+          "ensemble_crps_z": 0.555932849646,
+          "mean_path_mae_z": 0.705669283867,
+          "mean_path_rmse_z": 0.98772841692,
+          "sample_count": 12,
+          "terminal_mae_z": 0.515704751015
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.644444444444,
+          "energy_score_z": 0.691910118127,
+          "ensemble_crps_z": 0.496739834547,
+          "mean_path_mae_z": 0.664106428623,
+          "mean_path_rmse_z": 0.933161795139,
+          "sample_count": 12,
+          "terminal_mae_z": 0.577858150005
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.845559545907,
+          "ensemble_crps_z": 0.560646891594,
+          "mean_path_mae_z": 0.560646891594,
+          "mean_path_rmse_z": 0.845559537411,
+          "sample_count": 1,
+          "terminal_mae_z": 0.462683320045
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.855138929388,
+          "ensemble_crps_z": 0.578003168106,
+          "mean_path_mae_z": 0.578003168106,
+          "mean_path_rmse_z": 0.8551389575,
+          "sample_count": 1,
+          "terminal_mae_z": 0.458212673664
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0000_3945",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 13,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3784321039111041,
+          0.325234966126006,
+          0.29633292996288996
+        ]
+      },
+      "top_train_cosines": [
+        0.9084293246269226,
+        0.9008548855781555,
+        0.8962016701698303
+      ],
+      "top_train_indices": [
+        1625,
+        1625,
+        1625,
+        1625,
+        1198,
+        1198,
+        1198,
+        1198,
+        1722,
+        1722,
+        1722,
+        1722
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1625",
+        "joint39_train_1198",
+        "joint39_train_1722"
+      ],
+      "window_id": "joint39_train_3945",
+      "window_index": 3945
+    },
+    {
+      "block_window_index": 3950,
+      "common_random_seed": 1721818740,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.561538461538,
+          "energy_score_z": 0.663122479044,
+          "ensemble_crps_z": 0.480089917779,
+          "mean_path_mae_z": 0.575142741203,
+          "mean_path_rmse_z": 0.812267422676,
+          "sample_count": 12,
+          "terminal_mae_z": 0.865132749081
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.705982905983,
+          "energy_score_z": 0.610513044295,
+          "ensemble_crps_z": 0.453367143869,
+          "mean_path_mae_z": 0.626483142376,
+          "mean_path_rmse_z": 0.827555596828,
+          "sample_count": 12,
+          "terminal_mae_z": 0.966668367386
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.748719507321,
+          "ensemble_crps_z": 0.520073235035,
+          "mean_path_mae_z": 0.520073235035,
+          "mean_path_rmse_z": 0.748719513416,
+          "sample_count": 1,
+          "terminal_mae_z": 0.732016384602
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.772574704334,
+          "ensemble_crps_z": 0.550172567368,
+          "mean_path_mae_z": 0.550172567368,
+          "mean_path_rmse_z": 0.772574722767,
+          "sample_count": 1,
+          "terminal_mae_z": 0.791029930115
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0001_3950",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 14,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3665260819768657,
+          0.34073385125057637,
+          0.29274006677255787
+        ]
+      },
+      "top_train_cosines": [
+        0.9007662534713745,
+        0.8971178531646729,
+        0.8895270228385925
+      ],
+      "top_train_indices": [
+        2380,
+        2380,
+        2380,
+        2380,
+        1829,
+        1829,
+        1829,
+        1829,
+        514,
+        514,
+        514,
+        514
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2380",
+        "joint39_train_1829",
+        "joint39_train_0514"
+      ],
+      "window_id": "joint39_train_3950",
+      "window_index": 3950
+    },
+    {
+      "block_window_index": 3955,
+      "common_random_seed": 1721864620,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.473504273504,
+          "energy_score_z": 0.687287070666,
+          "ensemble_crps_z": 0.51048257947,
+          "mean_path_mae_z": 0.607290804386,
+          "mean_path_rmse_z": 0.841236829758,
+          "sample_count": 12,
+          "terminal_mae_z": 0.672978043556
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.635897435897,
+          "energy_score_z": 0.583803900184,
+          "ensemble_crps_z": 0.43367767334,
+          "mean_path_mae_z": 0.566381394863,
+          "mean_path_rmse_z": 0.793845653534,
+          "sample_count": 12,
+          "terminal_mae_z": 0.656431615353
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.749684577609,
+          "ensemble_crps_z": 0.530158936977,
+          "mean_path_mae_z": 0.530158936977,
+          "mean_path_rmse_z": 0.74968457222,
+          "sample_count": 1,
+          "terminal_mae_z": 0.597409963608
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.776000767984,
+          "ensemble_crps_z": 0.560363948345,
+          "mean_path_mae_z": 0.560363948345,
+          "mean_path_rmse_z": 0.776000797749,
+          "sample_count": 1,
+          "terminal_mae_z": 0.656524837017
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0002_3955",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 15,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.36698339334712704,
+          0.3318466492967186,
+          0.30116995735615437
+        ]
+      },
+      "top_train_cosines": [
+        0.9486407041549683,
+        0.9436085224151611,
+        0.9387586116790771
+      ],
+      "top_train_indices": [
+        3545,
+        3545,
+        3545,
+        3545,
+        451,
+        451,
+        451,
+        451,
+        853,
+        853,
+        853,
+        853
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3545",
+        "joint39_train_0451",
+        "joint39_train_0853"
+      ],
+      "window_id": "joint39_train_3955",
+      "window_index": 3955
+    },
+    {
+      "block_window_index": 3960,
+      "common_random_seed": 1721910500,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.552136752137,
+          "energy_score_z": 0.612040612217,
+          "ensemble_crps_z": 0.406835243106,
+          "mean_path_mae_z": 0.511161446571,
+          "mean_path_rmse_z": 0.744421184063,
+          "sample_count": 12,
+          "terminal_mae_z": 0.579404175282
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.692307692308,
+          "energy_score_z": 0.525750854513,
+          "ensemble_crps_z": 0.362961828709,
+          "mean_path_mae_z": 0.515294373035,
+          "mean_path_rmse_z": 0.707774221897,
+          "sample_count": 12,
+          "terminal_mae_z": 0.659914731979
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.645618640063,
+          "ensemble_crps_z": 0.413986831903,
+          "mean_path_mae_z": 0.413986831903,
+          "mean_path_rmse_z": 0.645618677139,
+          "sample_count": 1,
+          "terminal_mae_z": 0.495169460773
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.647824522973,
+          "ensemble_crps_z": 0.408972591162,
+          "mean_path_mae_z": 0.408972591162,
+          "mean_path_rmse_z": 0.647824466228,
+          "sample_count": 1,
+          "terminal_mae_z": 0.456385195255
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0003_3960",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 16,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3781608675313727,
+          0.31570273329102216,
+          0.3061363991776052
+        ]
+      },
+      "top_train_cosines": [
+        0.8832000494003296,
+        0.8741741180419922,
+        0.8726356029510498
+      ],
+      "top_train_indices": [
+        3775,
+        3775,
+        3775,
+        3775,
+        3130,
+        3130,
+        3130,
+        3130,
+        1530,
+        1530,
+        1530,
+        1530
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3775",
+        "joint39_train_3130",
+        "joint39_train_1530"
+      ],
+      "window_id": "joint39_train_3960",
+      "window_index": 3960
+    },
+    {
+      "block_window_index": 3965,
+      "common_random_seed": 1721956380,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.511965811966,
+          "energy_score_z": 0.732611721944,
+          "ensemble_crps_z": 0.486941367388,
+          "mean_path_mae_z": 0.60050958395,
+          "mean_path_rmse_z": 0.890917241573,
+          "sample_count": 12,
+          "terminal_mae_z": 0.638234615326
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.682905982906,
+          "energy_score_z": 0.629638521435,
+          "ensemble_crps_z": 0.404770225286,
+          "mean_path_mae_z": 0.532376110554,
+          "mean_path_rmse_z": 0.854452371597,
+          "sample_count": 12,
+          "terminal_mae_z": 0.619725227356
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.731120120414,
+          "ensemble_crps_z": 0.448010265827,
+          "mean_path_mae_z": 0.448010265827,
+          "mean_path_rmse_z": 0.731120109558,
+          "sample_count": 1,
+          "terminal_mae_z": 0.391654640436
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.744482945223,
+          "ensemble_crps_z": 0.456147223711,
+          "mean_path_mae_z": 0.456147223711,
+          "mean_path_rmse_z": 0.744482934475,
+          "sample_count": 1,
+          "terminal_mae_z": 0.434903413057
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0004_3965",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 17,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4082627677105068,
+          0.29621814453157563,
+          0.2955190877579175
+        ]
+      },
+      "top_train_cosines": [
+        0.9105178117752075,
+        0.8944770693778992,
+        0.8943589329719543
+      ],
+      "top_train_indices": [
+        2385,
+        2385,
+        2385,
+        2385,
+        2385,
+        2995,
+        2995,
+        2995,
+        2995,
+        3795,
+        3795,
+        3795
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2385",
+        "joint39_train_2995",
+        "joint39_train_3795"
+      ],
+      "window_id": "joint39_train_3965",
+      "window_index": 3965
+    },
+    {
+      "block_window_index": 3970,
+      "common_random_seed": 1722002260,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.547008547009,
+          "energy_score_z": 0.798152022353,
+          "ensemble_crps_z": 0.54036834836,
+          "mean_path_mae_z": 0.651967823505,
+          "mean_path_rmse_z": 0.976685404778,
+          "sample_count": 12,
+          "terminal_mae_z": 0.798040807247
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.561538461538,
+          "energy_score_z": 0.80262281209,
+          "ensemble_crps_z": 0.574113488197,
+          "mean_path_mae_z": 0.745419800282,
+          "mean_path_rmse_z": 1.069209694862,
+          "sample_count": 12,
+          "terminal_mae_z": 1.006071448326
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.937506426645,
+          "ensemble_crps_z": 0.631678462029,
+          "mean_path_mae_z": 0.631678462029,
+          "mean_path_rmse_z": 0.937506377697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.848948955536
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.961204207964,
+          "ensemble_crps_z": 0.656298220158,
+          "mean_path_mae_z": 0.656298220158,
+          "mean_path_rmse_z": 0.961204171181,
+          "sample_count": 1,
+          "terminal_mae_z": 0.905709981918
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0005_3970",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 18,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4274257557700188,
+          0.2943262673437429,
+          0.2782479768862383
+        ]
+      },
+      "top_train_cosines": [
+        0.9136068820953369,
+        0.8949522972106934,
+        0.8921434879302979
+      ],
+      "top_train_indices": [
+        2635,
+        2635,
+        2635,
+        2635,
+        2635,
+        3330,
+        3330,
+        3330,
+        3330,
+        3285,
+        3285,
+        3285
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2635",
+        "joint39_train_3330",
+        "joint39_train_3285"
+      ],
+      "window_id": "joint39_train_3970",
+      "window_index": 3970
+    },
+    {
+      "block_window_index": 3975,
+      "common_random_seed": 1722048140,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.311965811966,
+          "energy_score_z": 1.051021934093,
+          "ensemble_crps_z": 0.830718129873,
+          "mean_path_mae_z": 1.017654657364,
+          "mean_path_rmse_z": 1.29459130764,
+          "sample_count": 12,
+          "terminal_mae_z": 1.572973251343
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.391452991453,
+          "energy_score_z": 0.931271582994,
+          "ensemble_crps_z": 0.753142774105,
+          "mean_path_mae_z": 0.981435716152,
+          "mean_path_rmse_z": 1.264449357986,
+          "sample_count": 12,
+          "terminal_mae_z": 1.573593974113
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.069431596401,
+          "ensemble_crps_z": 0.811402976513,
+          "mean_path_mae_z": 0.811402976513,
+          "mean_path_rmse_z": 1.06943154335,
+          "sample_count": 1,
+          "terminal_mae_z": 1.504561781883
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.110809340496,
+          "ensemble_crps_z": 0.849281132221,
+          "mean_path_mae_z": 0.849281132221,
+          "mean_path_rmse_z": 1.110809326172,
+          "sample_count": 1,
+          "terminal_mae_z": 1.560442566872
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0006_3975",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 19,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4337788932141613,
+          0.2944651850530485,
+          0.2717559217327903
+        ]
+      },
+      "top_train_cosines": [
+        0.9120684862136841,
+        0.8926997780799866,
+        0.8886869549751282
+      ],
+      "top_train_indices": [
+        1837,
+        1837,
+        1837,
+        1837,
+        1837,
+        3468,
+        3468,
+        3468,
+        3468,
+        1521,
+        1521,
+        1521
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1837",
+        "joint39_train_3468",
+        "joint39_train_1521"
+      ],
+      "window_id": "joint39_train_3975",
+      "window_index": 3975
+    },
+    {
+      "block_window_index": 3980,
+      "common_random_seed": 1722094020,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.639316239316,
+          "energy_score_z": 0.722901047194,
+          "ensemble_crps_z": 0.529385834932,
+          "mean_path_mae_z": 0.667213439941,
+          "mean_path_rmse_z": 0.869597196579,
+          "sample_count": 12,
+          "terminal_mae_z": 0.505247354507
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.642735042735,
+          "energy_score_z": 0.661897474906,
+          "ensemble_crps_z": 0.504869371653,
+          "mean_path_mae_z": 0.693326711655,
+          "mean_path_rmse_z": 0.897906184196,
+          "sample_count": 12,
+          "terminal_mae_z": 0.557680010796
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.850308670904,
+          "ensemble_crps_z": 0.642345249653,
+          "mean_path_mae_z": 0.642345249653,
+          "mean_path_rmse_z": 0.850308656693,
+          "sample_count": 1,
+          "terminal_mae_z": 0.474674850702
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.865369945815,
+          "ensemble_crps_z": 0.657538235188,
+          "mean_path_mae_z": 0.657538235188,
+          "mean_path_rmse_z": 0.865369975567,
+          "sample_count": 1,
+          "terminal_mae_z": 0.512649834156
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0007_3980",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 20,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.34214184971596767,
+          0.33594606701214375,
+          0.32191208327188864
+        ]
+      },
+      "top_train_cosines": [
+        0.8557177782058716,
+        0.8548040390014648,
+        0.852670431137085
+      ],
+      "top_train_indices": [
+        1288,
+        1288,
+        1288,
+        1288,
+        2506,
+        2506,
+        2506,
+        2506,
+        2129,
+        2129,
+        2129,
+        2129
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1288",
+        "joint39_train_2506",
+        "joint39_train_2129"
+      ],
+      "window_id": "joint39_train_3980",
+      "window_index": 3980
+    },
+    {
+      "block_window_index": 3985,
+      "common_random_seed": 1722139900,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.45641025641,
+          "energy_score_z": 0.819351784444,
+          "ensemble_crps_z": 0.633281901479,
+          "mean_path_mae_z": 0.753346264362,
+          "mean_path_rmse_z": 0.984987676144,
+          "sample_count": 12,
+          "terminal_mae_z": 0.644489943981
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.548717948718,
+          "energy_score_z": 0.735092705928,
+          "ensemble_crps_z": 0.570028841496,
+          "mean_path_mae_z": 0.773729324341,
+          "mean_path_rmse_z": 0.999346792698,
+          "sample_count": 12,
+          "terminal_mae_z": 0.698349535465
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.834031731964,
+          "ensemble_crps_z": 0.630078732967,
+          "mean_path_mae_z": 0.630078732967,
+          "mean_path_rmse_z": 0.834031701088,
+          "sample_count": 1,
+          "terminal_mae_z": 0.475345999002
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.856720000802,
+          "ensemble_crps_z": 0.649653375149,
+          "mean_path_mae_z": 0.649653375149,
+          "mean_path_rmse_z": 0.856720030308,
+          "sample_count": 1,
+          "terminal_mae_z": 0.510303378105
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0008_3985",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 21,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          6,
+          3,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4732356550513627,
+          0.2798763256705797,
+          0.24688801927805765
+        ]
+      },
+      "top_train_cosines": [
+        0.8752810955047607,
+        0.8490188121795654,
+        0.8427481651306152
+      ],
+      "top_train_indices": [
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        743,
+        743,
+        743,
+        2124,
+        2124,
+        2124
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2496",
+        "joint39_train_0743",
+        "joint39_train_2124"
+      ],
+      "window_id": "joint39_train_3985",
+      "window_index": 3985
+    },
+    {
+      "block_window_index": 3990,
+      "common_random_seed": 1722185780,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.297435897436,
+          "energy_score_z": 1.124144535309,
+          "ensemble_crps_z": 0.946957737207,
+          "mean_path_mae_z": 1.154755353928,
+          "mean_path_rmse_z": 1.406097531319,
+          "sample_count": 12,
+          "terminal_mae_z": 1.44993185997
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.313675213675,
+          "energy_score_z": 1.057188190673,
+          "ensemble_crps_z": 0.930035769939,
+          "mean_path_mae_z": 1.13359439373,
+          "mean_path_rmse_z": 1.403552532196,
+          "sample_count": 12,
+          "terminal_mae_z": 1.361394882202
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.30540179301,
+          "ensemble_crps_z": 1.063012957573,
+          "mean_path_mae_z": 1.063012957573,
+          "mean_path_rmse_z": 1.305401682854,
+          "sample_count": 1,
+          "terminal_mae_z": 1.322246909142
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.345204041876,
+          "ensemble_crps_z": 1.096604347229,
+          "mean_path_mae_z": 1.096604347229,
+          "mean_path_rmse_z": 1.345203995705,
+          "sample_count": 1,
+          "terminal_mae_z": 1.378605723381
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0009_3990",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 22,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.34990010584220643,
+          0.34411964280065,
+          0.30598025135714363
+        ]
+      },
+      "top_train_cosines": [
+        0.9150897264480591,
+        0.9142568111419678,
+        0.9083833694458008
+      ],
+      "top_train_indices": [
+        3500,
+        3500,
+        3500,
+        3500,
+        795,
+        795,
+        795,
+        795,
+        1660,
+        1660,
+        1660,
+        1660
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3500",
+        "joint39_train_0795",
+        "joint39_train_1660"
+      ],
+      "window_id": "joint39_train_3990",
+      "window_index": 3990
+    },
+    {
+      "block_window_index": 3995,
+      "common_random_seed": 1722231660,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.266666666667,
+          "energy_score_z": 1.150657592885,
+          "ensemble_crps_z": 0.965911835432,
+          "mean_path_mae_z": 1.182678699493,
+          "mean_path_rmse_z": 1.408495903015,
+          "sample_count": 12,
+          "terminal_mae_z": 1.350614190102
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.377777777778,
+          "energy_score_z": 1.048716795094,
+          "ensemble_crps_z": 0.885819673538,
+          "mean_path_mae_z": 1.171776533127,
+          "mean_path_rmse_z": 1.41640818119,
+          "sample_count": 12,
+          "terminal_mae_z": 0.96125382185
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.19752358526,
+          "ensemble_crps_z": 0.979367733002,
+          "mean_path_mae_z": 0.979367733002,
+          "mean_path_rmse_z": 1.197523593903,
+          "sample_count": 1,
+          "terminal_mae_z": 0.750118672848
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.232643846394,
+          "ensemble_crps_z": 1.011408805847,
+          "mean_path_mae_z": 1.011408805847,
+          "mean_path_rmse_z": 1.232643842697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.801767170429
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0010_3995",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 23,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3674971034828303,
+          0.32500845278932194,
+          0.3074944437278478
+        ]
+      },
+      "top_train_cosines": [
+        0.9140709638595581,
+        0.9079277515411377,
+        0.9051580429077148
+      ],
+      "top_train_indices": [
+        3920,
+        3920,
+        3920,
+        3920,
+        745,
+        745,
+        745,
+        745,
+        2040,
+        2040,
+        2040,
+        2040
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3920",
+        "joint39_train_0745",
+        "joint39_train_2040"
+      ],
+      "window_id": "joint39_train_3995",
+      "window_index": 3995
+    },
+    {
+      "block_window_index": 4000,
+      "common_random_seed": 1722277540,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.322222222222,
+          "energy_score_z": 1.170207919538,
+          "ensemble_crps_z": 0.951740294695,
+          "mean_path_mae_z": 1.179295420647,
+          "mean_path_rmse_z": 1.426010727882,
+          "sample_count": 12,
+          "terminal_mae_z": 0.691453099251
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.724786324786,
+          "energy_score_z": 0.843033143899,
+          "ensemble_crps_z": 0.650109112263,
+          "mean_path_mae_z": 0.960134625435,
+          "mean_path_rmse_z": 1.17930495739,
+          "sample_count": 12,
+          "terminal_mae_z": 0.615550637245
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.83914431268,
+          "ensemble_crps_z": 0.629227519035,
+          "mean_path_mae_z": 0.629227519035,
+          "mean_path_rmse_z": 0.839144349098,
+          "sample_count": 1,
+          "terminal_mae_z": 0.513434529305
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.851454075006,
+          "ensemble_crps_z": 0.64203196764,
+          "mean_path_mae_z": 0.64203196764,
+          "mean_path_rmse_z": 0.851454079151,
+          "sample_count": 1,
+          "terminal_mae_z": 0.469822525978
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0011_4000",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 24,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4160271648670601,
+          0.34329493685757445,
+          0.24067789827536543
+        ]
+      },
+      "top_train_cosines": [
+        0.9389570951461792,
+        0.9293490648269653,
+        0.9115925431251526
+      ],
+      "top_train_indices": [
+        1955,
+        1955,
+        1955,
+        1955,
+        1955,
+        1995,
+        1995,
+        1995,
+        1995,
+        395,
+        395,
+        395
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1955",
+        "joint39_train_1995",
+        "joint39_train_0395"
+      ],
+      "window_id": "joint39_train_4000",
+      "window_index": 4000
+    },
+    {
+      "block_window_index": 4005,
+      "common_random_seed": 1722323420,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.492307692308,
+          "energy_score_z": 0.939150508946,
+          "ensemble_crps_z": 0.66845458746,
+          "mean_path_mae_z": 0.846120476723,
+          "mean_path_rmse_z": 1.161811709404,
+          "sample_count": 12,
+          "terminal_mae_z": 0.956465482712
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.707692307692,
+          "energy_score_z": 0.86086751123,
+          "ensemble_crps_z": 0.622957706451,
+          "mean_path_mae_z": 0.86016535759,
+          "mean_path_rmse_z": 1.188417077065,
+          "sample_count": 12,
+          "terminal_mae_z": 1.121943116188
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.164173205155,
+          "ensemble_crps_z": 0.927298784256,
+          "mean_path_mae_z": 0.927298784256,
+          "mean_path_rmse_z": 1.16417324543,
+          "sample_count": 1,
+          "terminal_mae_z": 1.198810815811
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.130945501114,
+          "ensemble_crps_z": 0.893819272518,
+          "mean_path_mae_z": 0.893819272518,
+          "mean_path_rmse_z": 1.130945444107,
+          "sample_count": 1,
+          "terminal_mae_z": 1.132689476013
+        }
+      },
+      "query_id": "raw_openai_14x14_top3_90_0012_4005",
+      "query_kind": "raw_openai_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 25,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3928456895665911,
+          0.32811624293245795,
+          0.27903806750095095
+        ]
+      },
+      "top_train_cosines": [
+        0.9020546674728394,
+        0.8930522203445435,
+        0.8849512338638306
+      ],
+      "top_train_indices": [
+        1950,
+        1950,
+        1950,
+        1950,
+        1950,
+        2655,
+        2655,
+        2655,
+        2655,
+        1875,
+        1875,
+        1875
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1950",
+        "joint39_train_2655",
+        "joint39_train_1875"
+      ],
+      "window_id": "joint39_train_4005",
+      "window_index": 4005
+    },
+    {
+      "block_window_index": 3945,
+      "common_random_seed": 1721772860,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.5,
+          "energy_score_z": 0.999081474224,
+          "ensemble_crps_z": 0.713411122561,
+          "mean_path_mae_z": 0.844114840031,
+          "mean_path_rmse_z": 1.168911933899,
+          "sample_count": 12,
+          "terminal_mae_z": 0.719027340412
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.651282051282,
+          "energy_score_z": 0.800105722311,
+          "ensemble_crps_z": 0.61547100544,
+          "mean_path_mae_z": 0.852913439274,
+          "mean_path_rmse_z": 1.093863368034,
+          "sample_count": 12,
+          "terminal_mae_z": 0.857617020607
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.845559545907,
+          "ensemble_crps_z": 0.560646891594,
+          "mean_path_mae_z": 0.560646891594,
+          "mean_path_rmse_z": 0.845559537411,
+          "sample_count": 1,
+          "terminal_mae_z": 0.462683320045
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.855138929388,
+          "ensemble_crps_z": 0.578003168106,
+          "mean_path_mae_z": 0.578003168106,
+          "mean_path_rmse_z": 0.8551389575,
+          "sample_count": 1,
+          "terminal_mae_z": 0.458212673664
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0000_3945",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 26,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          8,
+          2,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.6349968901857955,
+          0.21459496886999022,
+          0.1504081409442143
+        ]
+      },
+      "top_train_cosines": [
+        0.9027896523475647,
+        0.8485462665557861,
+        0.8307762742042542
+      ],
+      "top_train_indices": [
+        2235,
+        2235,
+        2235,
+        2235,
+        2235,
+        2235,
+        2235,
+        2235,
+        825,
+        825,
+        1625,
+        1625
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2235",
+        "joint39_train_0825",
+        "joint39_train_1625"
+      ],
+      "window_id": "joint39_train_3945",
+      "window_index": 3945
+    },
+    {
+      "block_window_index": 3950,
+      "common_random_seed": 1721818740,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.353846153846,
+          "energy_score_z": 0.657354389934,
+          "ensemble_crps_z": 0.475787222385,
+          "mean_path_mae_z": 0.573030948639,
+          "mean_path_rmse_z": 0.761298656464,
+          "sample_count": 12,
+          "terminal_mae_z": 0.90897321701
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.620512820513,
+          "energy_score_z": 0.5567134008,
+          "ensemble_crps_z": 0.426976501942,
+          "mean_path_mae_z": 0.571479380131,
+          "mean_path_rmse_z": 0.749699175358,
+          "sample_count": 12,
+          "terminal_mae_z": 0.841225326061
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.748719507321,
+          "ensemble_crps_z": 0.520073235035,
+          "mean_path_mae_z": 0.520073235035,
+          "mean_path_rmse_z": 0.748719513416,
+          "sample_count": 1,
+          "terminal_mae_z": 0.732016384602
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.772574704334,
+          "ensemble_crps_z": 0.550172567368,
+          "mean_path_mae_z": 0.550172567368,
+          "mean_path_rmse_z": 0.772574722767,
+          "sample_count": 1,
+          "terminal_mae_z": 0.791029930115
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0001_3950",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 27,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          7,
+          4,
+          1
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.5396343265036879,
+          0.350612608474815,
+          0.10975306502149713
+        ]
+      },
+      "top_train_cosines": [
+        0.9128119349479675,
+        0.8912514448165894,
+        0.8331789970397949
+      ],
+      "top_train_indices": [
+        3780,
+        3780,
+        3780,
+        3780,
+        3780,
+        3780,
+        3780,
+        2731,
+        2731,
+        2731,
+        2731,
+        3835
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3780",
+        "joint39_train_2731",
+        "joint39_train_3835"
+      ],
+      "window_id": "joint39_train_3950",
+      "window_index": 3950
+    },
+    {
+      "block_window_index": 3955,
+      "common_random_seed": 1721864620,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.57264957265,
+          "energy_score_z": 0.802723796795,
+          "ensemble_crps_z": 0.592503875494,
+          "mean_path_mae_z": 0.699973583221,
+          "mean_path_rmse_z": 0.961619973183,
+          "sample_count": 12,
+          "terminal_mae_z": 0.519578516483
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.753846153846,
+          "energy_score_z": 0.560053814253,
+          "ensemble_crps_z": 0.408554345369,
+          "mean_path_mae_z": 0.534613311291,
+          "mean_path_rmse_z": 0.747664690018,
+          "sample_count": 12,
+          "terminal_mae_z": 0.592047989368
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.749684577609,
+          "ensemble_crps_z": 0.530158936977,
+          "mean_path_mae_z": 0.530158936977,
+          "mean_path_rmse_z": 0.74968457222,
+          "sample_count": 1,
+          "terminal_mae_z": 0.597409963608
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.776000767984,
+          "ensemble_crps_z": 0.560363948345,
+          "mean_path_mae_z": 0.560363948345,
+          "mean_path_rmse_z": 0.776000797749,
+          "sample_count": 1,
+          "terminal_mae_z": 0.656524837017
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0002_3955",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 28,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          6,
+          4,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4970186205655362,
+          0.3102242484650503,
+          0.19275713096941346
+        ]
+      },
+      "top_train_cosines": [
+        0.9208755493164062,
+        0.8973089456558228,
+        0.8735157251358032
+      ],
+      "top_train_indices": [
+        2940,
+        2940,
+        2940,
+        2940,
+        2940,
+        2940,
+        2763,
+        2763,
+        2763,
+        2763,
+        853,
+        853
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2940",
+        "joint39_train_2763",
+        "joint39_train_0853"
+      ],
+      "window_id": "joint39_train_3955",
+      "window_index": 3955
+    },
+    {
+      "block_window_index": 3960,
+      "common_random_seed": 1721910500,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.558974358974,
+          "energy_score_z": 0.613250532776,
+          "ensemble_crps_z": 0.428054630756,
+          "mean_path_mae_z": 0.514020442963,
+          "mean_path_rmse_z": 0.747497975826,
+          "sample_count": 12,
+          "terminal_mae_z": 0.422568798065
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.589743589744,
+          "energy_score_z": 0.583100576006,
+          "ensemble_crps_z": 0.43966910243,
+          "mean_path_mae_z": 0.592160403728,
+          "mean_path_rmse_z": 0.796219587326,
+          "sample_count": 12,
+          "terminal_mae_z": 0.767219185829
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.645618640063,
+          "ensemble_crps_z": 0.413986831903,
+          "mean_path_mae_z": 0.413986831903,
+          "mean_path_rmse_z": 0.645618677139,
+          "sample_count": 1,
+          "terminal_mae_z": 0.495169460773
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.647824522973,
+          "ensemble_crps_z": 0.408972591162,
+          "mean_path_mae_z": 0.408972591162,
+          "mean_path_rmse_z": 0.647824466228,
+          "sample_count": 1,
+          "terminal_mae_z": 0.456385195255
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0003_3960",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 29,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.37316523702313054,
+          0.363754191621967,
+          0.26308057135490254
+        ]
+      },
+      "top_train_cosines": [
+        0.9275195598602295,
+        0.9262424111366272,
+        0.9100415110588074
+      ],
+      "top_train_indices": [
+        1222,
+        1222,
+        1222,
+        1222,
+        1222,
+        445,
+        445,
+        445,
+        445,
+        1050,
+        1050,
+        1050
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1222",
+        "joint39_train_0445",
+        "joint39_train_1050"
+      ],
+      "window_id": "joint39_train_3960",
+      "window_index": 3960
+    },
+    {
+      "block_window_index": 3965,
+      "common_random_seed": 1721956380,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.509401709402,
+          "energy_score_z": 1.222881787101,
+          "ensemble_crps_z": 0.948440611362,
+          "mean_path_mae_z": 1.31881737709,
+          "mean_path_rmse_z": 1.602758407593,
+          "sample_count": 12,
+          "terminal_mae_z": 2.252788543701
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.718803418803,
+          "energy_score_z": 0.683959761248,
+          "ensemble_crps_z": 0.404764682055,
+          "mean_path_mae_z": 0.558101177216,
+          "mean_path_rmse_z": 0.934623241425,
+          "sample_count": 12,
+          "terminal_mae_z": 0.506398141384
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.731120120414,
+          "ensemble_crps_z": 0.448010265827,
+          "mean_path_mae_z": 0.448010265827,
+          "mean_path_rmse_z": 0.731120109558,
+          "sample_count": 1,
+          "terminal_mae_z": 0.391654640436
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.744482945223,
+          "ensemble_crps_z": 0.456147223711,
+          "mean_path_mae_z": 0.456147223711,
+          "mean_path_rmse_z": 0.744482934475,
+          "sample_count": 1,
+          "terminal_mae_z": 0.434903413057
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0004_3965",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 30,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          6,
+          3,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.5010531469909798,
+          0.29033009704982427,
+          0.2086167559591959
+        ]
+      },
+      "top_train_cosines": [
+        0.8382639288902283,
+        0.8109792470932007,
+        0.7944532632827759
+      ],
+      "top_train_indices": [
+        2145,
+        2145,
+        2145,
+        2145,
+        2145,
+        2145,
+        3796,
+        3796,
+        3796,
+        3670,
+        3670,
+        3670
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2145",
+        "joint39_train_3796",
+        "joint39_train_3670"
+      ],
+      "window_id": "joint39_train_3965",
+      "window_index": 3965
+    },
+    {
+      "block_window_index": 3970,
+      "common_random_seed": 1722002260,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.564957264957,
+          "energy_score_z": 0.90464418575,
+          "ensemble_crps_z": 0.588136553764,
+          "mean_path_mae_z": 0.691693544388,
+          "mean_path_rmse_z": 1.106212735176,
+          "sample_count": 12,
+          "terminal_mae_z": 0.89955753088
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.584615384615,
+          "energy_score_z": 0.778975606767,
+          "ensemble_crps_z": 0.55331492424,
+          "mean_path_mae_z": 0.723720788956,
+          "mean_path_rmse_z": 1.048795461655,
+          "sample_count": 12,
+          "terminal_mae_z": 0.956017434597
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.937506426645,
+          "ensemble_crps_z": 0.631678462029,
+          "mean_path_mae_z": 0.631678462029,
+          "mean_path_rmse_z": 0.937506377697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.848948955536
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.961204207964,
+          "ensemble_crps_z": 0.656298220158,
+          "mean_path_mae_z": 0.656298220158,
+          "mean_path_rmse_z": 0.961204171181,
+          "sample_count": 1,
+          "terminal_mae_z": 0.905709981918
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0005_3970",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 31,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.41085480353378323,
+          0.3383005476120874,
+          0.2508446488541295
+        ]
+      },
+      "top_train_cosines": [
+        0.865882933139801,
+        0.8561676740646362,
+        0.8412126302719116
+      ],
+      "top_train_indices": [
+        3790,
+        3790,
+        3790,
+        3790,
+        3790,
+        3280,
+        3280,
+        3280,
+        3280,
+        3335,
+        3335,
+        3335
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3790",
+        "joint39_train_3280",
+        "joint39_train_3335"
+      ],
+      "window_id": "joint39_train_3970",
+      "window_index": 3970
+    },
+    {
+      "block_window_index": 3975,
+      "common_random_seed": 1722048140,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.218803418803,
+          "energy_score_z": 1.14662127158,
+          "ensemble_crps_z": 0.933924183249,
+          "mean_path_mae_z": 1.076823711395,
+          "mean_path_rmse_z": 1.354873657227,
+          "sample_count": 12,
+          "terminal_mae_z": 1.916697025299
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.501709401709,
+          "energy_score_z": 0.929573578987,
+          "ensemble_crps_z": 0.683170497417,
+          "mean_path_mae_z": 0.881551623344,
+          "mean_path_rmse_z": 1.251907467842,
+          "sample_count": 12,
+          "terminal_mae_z": 1.351914525032
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.069431596401,
+          "ensemble_crps_z": 0.811402976513,
+          "mean_path_mae_z": 0.811402976513,
+          "mean_path_rmse_z": 1.06943154335,
+          "sample_count": 1,
+          "terminal_mae_z": 1.504561781883
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.110809340496,
+          "ensemble_crps_z": 0.849281132221,
+          "mean_path_mae_z": 0.849281132221,
+          "mean_path_rmse_z": 1.110809326172,
+          "sample_count": 1,
+          "terminal_mae_z": 1.560442566872
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0006_3975",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 32,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.37939497670488487,
+          0.34620787451511514,
+          0.2743971487800001
+        ]
+      },
+      "top_train_cosines": [
+        0.9154455661773682,
+        0.9108686447143555,
+        0.8992455005645752
+      ],
+      "top_train_indices": [
+        1522,
+        1522,
+        1522,
+        1522,
+        1522,
+        1228,
+        1228,
+        1228,
+        1228,
+        1440,
+        1440,
+        1440
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1522",
+        "joint39_train_1228",
+        "joint39_train_1440"
+      ],
+      "window_id": "joint39_train_3975",
+      "window_index": 3975
+    },
+    {
+      "block_window_index": 3980,
+      "common_random_seed": 1722094020,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.55641025641,
+          "energy_score_z": 0.976912710635,
+          "ensemble_crps_z": 0.722561001778,
+          "mean_path_mae_z": 0.890296161175,
+          "mean_path_rmse_z": 1.167675971985,
+          "sample_count": 12,
+          "terminal_mae_z": 0.883369326591
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.625641025641,
+          "energy_score_z": 0.646273451433,
+          "ensemble_crps_z": 0.495562642813,
+          "mean_path_mae_z": 0.633541405201,
+          "mean_path_rmse_z": 0.835052132607,
+          "sample_count": 12,
+          "terminal_mae_z": 0.596269190311
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.850308670904,
+          "ensemble_crps_z": 0.642345249653,
+          "mean_path_mae_z": 0.642345249653,
+          "mean_path_rmse_z": 0.850308656693,
+          "sample_count": 1,
+          "terminal_mae_z": 0.474674850702
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.865369945815,
+          "ensemble_crps_z": 0.657538235188,
+          "mean_path_mae_z": 0.657538235188,
+          "mean_path_rmse_z": 0.865369975567,
+          "sample_count": 1,
+          "terminal_mae_z": 0.512649834156
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0007_3980",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 33,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          5,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.43150682105566296,
+          0.42472892097824083,
+          0.1437642579660962
+        ]
+      },
+      "top_train_cosines": [
+        0.8926863074302673,
+        0.8918946981430054,
+        0.837730884552002
+      ],
+      "top_train_indices": [
+        3090,
+        3090,
+        3090,
+        3090,
+        3090,
+        3685,
+        3685,
+        3685,
+        3685,
+        3685,
+        2195,
+        2195
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3090",
+        "joint39_train_3685",
+        "joint39_train_2195"
+      ],
+      "window_id": "joint39_train_3980",
+      "window_index": 3980
+    },
+    {
+      "block_window_index": 3985,
+      "common_random_seed": 1722139900,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.593162393162,
+          "energy_score_z": 0.926719799174,
+          "ensemble_crps_z": 0.624332726002,
+          "mean_path_mae_z": 0.83548527956,
+          "mean_path_rmse_z": 1.128217935562,
+          "sample_count": 12,
+          "terminal_mae_z": 0.466574341059
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.573504273504,
+          "energy_score_z": 0.668380403015,
+          "ensemble_crps_z": 0.524746537209,
+          "mean_path_mae_z": 0.703893125057,
+          "mean_path_rmse_z": 0.90596807003,
+          "sample_count": 12,
+          "terminal_mae_z": 0.592207074165
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.834031731964,
+          "ensemble_crps_z": 0.630078732967,
+          "mean_path_mae_z": 0.630078732967,
+          "mean_path_rmse_z": 0.834031701088,
+          "sample_count": 1,
+          "terminal_mae_z": 0.475345999002
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.856720000802,
+          "ensemble_crps_z": 0.649653375149,
+          "mean_path_mae_z": 0.649653375149,
+          "mean_path_rmse_z": 0.856720030308,
+          "sample_count": 1,
+          "terminal_mae_z": 0.510303378105
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0008_3985",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 34,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.41971680077293555,
+          0.3237482505161888,
+          0.25653494871087557
+        ]
+      },
+      "top_train_cosines": [
+        0.8612053394317627,
+        0.8482246398925781,
+        0.8365895748138428
+      ],
+      "top_train_indices": [
+        3901,
+        3901,
+        3901,
+        3901,
+        3901,
+        1660,
+        1660,
+        1660,
+        1660,
+        2127,
+        2127,
+        2127
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3901",
+        "joint39_train_1660",
+        "joint39_train_2127"
+      ],
+      "window_id": "joint39_train_3985",
+      "window_index": 3985
+    },
+    {
+      "block_window_index": 3990,
+      "common_random_seed": 1722185780,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.229914529915,
+          "energy_score_z": 0.9961277413,
+          "ensemble_crps_z": 0.851000934839,
+          "mean_path_mae_z": 1.010564565659,
+          "mean_path_rmse_z": 1.215319037437,
+          "sample_count": 12,
+          "terminal_mae_z": 1.357065677643
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.295726495726,
+          "energy_score_z": 1.099147642357,
+          "ensemble_crps_z": 0.940684616566,
+          "mean_path_mae_z": 1.169435024261,
+          "mean_path_rmse_z": 1.439143896103,
+          "sample_count": 12,
+          "terminal_mae_z": 1.430538415909
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.30540179301,
+          "ensemble_crps_z": 1.063012957573,
+          "mean_path_mae_z": 1.063012957573,
+          "mean_path_rmse_z": 1.305401682854,
+          "sample_count": 1,
+          "terminal_mae_z": 1.322246909142
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.345204041876,
+          "ensemble_crps_z": 1.096604347229,
+          "mean_path_mae_z": 1.096604347229,
+          "mean_path_rmse_z": 1.345203995705,
+          "sample_count": 1,
+          "terminal_mae_z": 1.378605723381
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0009_3990",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 35,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          7,
+          3,
+          2
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.5426985430928524,
+          0.27652572942939035,
+          0.18077572747775716
+        ]
+      },
+      "top_train_cosines": [
+        0.8468528985977173,
+        0.8131403923034668,
+        0.7918880581855774
+      ],
+      "top_train_indices": [
+        3500,
+        3500,
+        3500,
+        3500,
+        3500,
+        3500,
+        3500,
+        840,
+        840,
+        840,
+        450,
+        450
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3500",
+        "joint39_train_0840",
+        "joint39_train_0450"
+      ],
+      "window_id": "joint39_train_3990",
+      "window_index": 3990
+    },
+    {
+      "block_window_index": 3995,
+      "common_random_seed": 1722231660,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.277777777778,
+          "energy_score_z": 1.483439835634,
+          "ensemble_crps_z": 1.222211688757,
+          "mean_path_mae_z": 1.51150405407,
+          "mean_path_rmse_z": 1.808206439018,
+          "sample_count": 12,
+          "terminal_mae_z": 1.191067934036
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.37264957265,
+          "energy_score_z": 1.196071658285,
+          "ensemble_crps_z": 1.016232132912,
+          "mean_path_mae_z": 1.364483237267,
+          "mean_path_rmse_z": 1.616568207741,
+          "sample_count": 12,
+          "terminal_mae_z": 1.128701090813
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.19752358526,
+          "ensemble_crps_z": 0.979367733002,
+          "mean_path_mae_z": 0.979367733002,
+          "mean_path_rmse_z": 1.197523593903,
+          "sample_count": 1,
+          "terminal_mae_z": 0.750118672848
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.232643846394,
+          "ensemble_crps_z": 1.011408805847,
+          "mean_path_mae_z": 1.011408805847,
+          "mean_path_rmse_z": 1.232643842697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.801767170429
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0010_3995",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 36,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.38282017010571245,
+          0.3561482830191696,
+          0.2610315468751179
+        ]
+      },
+      "top_train_cosines": [
+        0.87799072265625,
+        0.8743798136711121,
+        0.858844518661499
+      ],
+      "top_train_indices": [
+        1875,
+        1875,
+        1875,
+        1875,
+        1875,
+        3927,
+        3927,
+        3927,
+        3927,
+        1955,
+        1955,
+        1955
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1875",
+        "joint39_train_3927",
+        "joint39_train_1955"
+      ],
+      "window_id": "joint39_train_3995",
+      "window_index": 3995
+    },
+    {
+      "block_window_index": 4000,
+      "common_random_seed": 1722277540,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.62905982906,
+          "energy_score_z": 0.867972964601,
+          "ensemble_crps_z": 0.696524322033,
+          "mean_path_mae_z": 0.821051418781,
+          "mean_path_rmse_z": 1.03528380394,
+          "sample_count": 12,
+          "terminal_mae_z": 0.749508321285
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.588888888889,
+          "energy_score_z": 0.814074957207,
+          "ensemble_crps_z": 0.668239116669,
+          "mean_path_mae_z": 0.91940677166,
+          "mean_path_rmse_z": 1.128630876541,
+          "sample_count": 12,
+          "terminal_mae_z": 0.615907967091
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.83914431268,
+          "ensemble_crps_z": 0.629227519035,
+          "mean_path_mae_z": 0.629227519035,
+          "mean_path_rmse_z": 0.839144349098,
+          "sample_count": 1,
+          "terminal_mae_z": 0.513434529305
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.851454075006,
+          "ensemble_crps_z": 0.64203196764,
+          "mean_path_mae_z": 0.64203196764,
+          "mean_path_rmse_z": 0.851454079151,
+          "sample_count": 1,
+          "terminal_mae_z": 0.469822525978
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0011_4000",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 37,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          6,
+          3,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.5072579555396249,
+          0.2561707813882753,
+          0.2365712630720999
+        ]
+      },
+      "top_train_cosines": [
+        0.9509576559066772,
+        0.9167988896369934,
+        0.9128191471099854
+      ],
+      "top_train_indices": [
+        3925,
+        3925,
+        3925,
+        3925,
+        3925,
+        3925,
+        2884,
+        2884,
+        2884,
+        2032,
+        2032,
+        2032
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3925",
+        "joint39_train_2884",
+        "joint39_train_2032"
+      ],
+      "window_id": "joint39_train_4000",
+      "window_index": 4000
+    },
+    {
+      "block_window_index": 4005,
+      "common_random_seed": 1722323420,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.609401709402,
+          "energy_score_z": 0.937405553464,
+          "ensemble_crps_z": 0.67991283536,
+          "mean_path_mae_z": 0.840930044651,
+          "mean_path_rmse_z": 1.156078577042,
+          "sample_count": 12,
+          "terminal_mae_z": 0.841237068176
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.709401709402,
+          "energy_score_z": 0.779153988916,
+          "ensemble_crps_z": 0.54495459795,
+          "mean_path_mae_z": 0.763486802578,
+          "mean_path_rmse_z": 1.057839751244,
+          "sample_count": 12,
+          "terminal_mae_z": 0.975532650948
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.164173205155,
+          "ensemble_crps_z": 0.927298784256,
+          "mean_path_mae_z": 0.927298784256,
+          "mean_path_rmse_z": 1.16417324543,
+          "sample_count": 1,
+          "terminal_mae_z": 1.198810815811
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.130945501114,
+          "ensemble_crps_z": 0.893819272518,
+          "mean_path_mae_z": 0.893819272518,
+          "mean_path_rmse_z": 1.130945444107,
+          "sample_count": 1,
+          "terminal_mae_z": 1.132689476013
+        }
+      },
+      "query_id": "text_space_contrastive_14x14_top3_90_0012_4005",
+      "query_kind": "text_space_contrastive_14x14_top3_90",
+      "query_role": "anchor",
+      "row_no": 38,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.37317083115384914,
+          0.34042954889899113,
+          0.28639961994715973
+        ]
+      },
+      "top_train_cosines": [
+        0.9387465119361877,
+        0.9341551065444946,
+        0.9255141019821167
+      ],
+      "top_train_indices": [
+        1990,
+        1990,
+        1990,
+        1990,
+        1990,
+        1880,
+        1880,
+        1880,
+        1880,
+        3925,
+        3925,
+        3925
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1990",
+        "joint39_train_1880",
+        "joint39_train_3925"
+      ],
+      "window_id": "joint39_train_4005",
+      "window_index": 4005
+    },
+    {
+      "block_window_index": 3945,
+      "common_random_seed": 1721772860,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.420512820513,
+          "energy_score_z": 0.796380440589,
+          "ensemble_crps_z": 0.555932849646,
+          "mean_path_mae_z": 0.705669283867,
+          "mean_path_rmse_z": 0.98772841692,
+          "sample_count": 12,
+          "terminal_mae_z": 0.515704751015
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.644444444444,
+          "energy_score_z": 0.691910118127,
+          "ensemble_crps_z": 0.496739834547,
+          "mean_path_mae_z": 0.664106428623,
+          "mean_path_rmse_z": 0.933161795139,
+          "sample_count": 12,
+          "terminal_mae_z": 0.577858150005
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.845559545907,
+          "ensemble_crps_z": 0.560646891594,
+          "mean_path_mae_z": 0.560646891594,
+          "mean_path_rmse_z": 0.845559537411,
+          "sample_count": 1,
+          "terminal_mae_z": 0.462683320045
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.855138929388,
+          "ensemble_crps_z": 0.578003168106,
+          "mean_path_mae_z": 0.578003168106,
+          "mean_path_rmse_z": 0.8551389575,
+          "sample_count": 1,
+          "terminal_mae_z": 0.458212673664
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0000_3945",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 0,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3784321039111041,
+          0.325234966126006,
+          0.29633292996288996
+        ]
+      },
+      "top_train_cosines": [
+        0.9084293246269226,
+        0.9008548855781555,
+        0.8962016701698303
+      ],
+      "top_train_indices": [
+        1625,
+        1625,
+        1625,
+        1625,
+        1198,
+        1198,
+        1198,
+        1198,
+        1722,
+        1722,
+        1722,
+        1722
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1625",
+        "joint39_train_1198",
+        "joint39_train_1722"
+      ],
+      "window_id": "joint39_train_3945",
+      "window_index": 3945
+    },
+    {
+      "block_window_index": 3950,
+      "common_random_seed": 1721818740,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.561538461538,
+          "energy_score_z": 0.663122479044,
+          "ensemble_crps_z": 0.480089917779,
+          "mean_path_mae_z": 0.575142741203,
+          "mean_path_rmse_z": 0.812267422676,
+          "sample_count": 12,
+          "terminal_mae_z": 0.865132749081
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.705982905983,
+          "energy_score_z": 0.610513044295,
+          "ensemble_crps_z": 0.453367143869,
+          "mean_path_mae_z": 0.626483142376,
+          "mean_path_rmse_z": 0.827555596828,
+          "sample_count": 12,
+          "terminal_mae_z": 0.966668367386
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.748719507321,
+          "ensemble_crps_z": 0.520073235035,
+          "mean_path_mae_z": 0.520073235035,
+          "mean_path_rmse_z": 0.748719513416,
+          "sample_count": 1,
+          "terminal_mae_z": 0.732016384602
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.772574704334,
+          "ensemble_crps_z": 0.550172567368,
+          "mean_path_mae_z": 0.550172567368,
+          "mean_path_rmse_z": 0.772574722767,
+          "sample_count": 1,
+          "terminal_mae_z": 0.791029930115
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0001_3950",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 1,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3665260819768657,
+          0.34073385125057637,
+          0.29274006677255787
+        ]
+      },
+      "top_train_cosines": [
+        0.9007662534713745,
+        0.8971178531646729,
+        0.8895270228385925
+      ],
+      "top_train_indices": [
+        2380,
+        2380,
+        2380,
+        2380,
+        1829,
+        1829,
+        1829,
+        1829,
+        514,
+        514,
+        514,
+        514
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2380",
+        "joint39_train_1829",
+        "joint39_train_0514"
+      ],
+      "window_id": "joint39_train_3950",
+      "window_index": 3950
+    },
+    {
+      "block_window_index": 3955,
+      "common_random_seed": 1721864620,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.473504273504,
+          "energy_score_z": 0.687287070666,
+          "ensemble_crps_z": 0.51048257947,
+          "mean_path_mae_z": 0.607290804386,
+          "mean_path_rmse_z": 0.841236829758,
+          "sample_count": 12,
+          "terminal_mae_z": 0.672978043556
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.635897435897,
+          "energy_score_z": 0.583803900184,
+          "ensemble_crps_z": 0.43367767334,
+          "mean_path_mae_z": 0.566381394863,
+          "mean_path_rmse_z": 0.793845653534,
+          "sample_count": 12,
+          "terminal_mae_z": 0.656431615353
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.749684577609,
+          "ensemble_crps_z": 0.530158936977,
+          "mean_path_mae_z": 0.530158936977,
+          "mean_path_rmse_z": 0.74968457222,
+          "sample_count": 1,
+          "terminal_mae_z": 0.597409963608
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.776000767984,
+          "ensemble_crps_z": 0.560363948345,
+          "mean_path_mae_z": 0.560363948345,
+          "mean_path_rmse_z": 0.776000797749,
+          "sample_count": 1,
+          "terminal_mae_z": 0.656524837017
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0002_3955",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 2,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.36698339334712704,
+          0.3318466492967186,
+          0.30116995735615437
+        ]
+      },
+      "top_train_cosines": [
+        0.9486407041549683,
+        0.9436085224151611,
+        0.9387586116790771
+      ],
+      "top_train_indices": [
+        3545,
+        3545,
+        3545,
+        3545,
+        451,
+        451,
+        451,
+        451,
+        853,
+        853,
+        853,
+        853
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3545",
+        "joint39_train_0451",
+        "joint39_train_0853"
+      ],
+      "window_id": "joint39_train_3955",
+      "window_index": 3955
+    },
+    {
+      "block_window_index": 3960,
+      "common_random_seed": 1721910500,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.552136752137,
+          "energy_score_z": 0.612040612217,
+          "ensemble_crps_z": 0.406835243106,
+          "mean_path_mae_z": 0.511161446571,
+          "mean_path_rmse_z": 0.744421184063,
+          "sample_count": 12,
+          "terminal_mae_z": 0.579404175282
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.692307692308,
+          "energy_score_z": 0.525750854513,
+          "ensemble_crps_z": 0.362961828709,
+          "mean_path_mae_z": 0.515294373035,
+          "mean_path_rmse_z": 0.707774221897,
+          "sample_count": 12,
+          "terminal_mae_z": 0.659914731979
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.645618640063,
+          "ensemble_crps_z": 0.413986831903,
+          "mean_path_mae_z": 0.413986831903,
+          "mean_path_rmse_z": 0.645618677139,
+          "sample_count": 1,
+          "terminal_mae_z": 0.495169460773
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.647824522973,
+          "ensemble_crps_z": 0.408972591162,
+          "mean_path_mae_z": 0.408972591162,
+          "mean_path_rmse_z": 0.647824466228,
+          "sample_count": 1,
+          "terminal_mae_z": 0.456385195255
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0003_3960",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 3,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3781608675313727,
+          0.31570273329102216,
+          0.3061363991776052
+        ]
+      },
+      "top_train_cosines": [
+        0.8832000494003296,
+        0.8741741180419922,
+        0.8726356029510498
+      ],
+      "top_train_indices": [
+        3775,
+        3775,
+        3775,
+        3775,
+        3130,
+        3130,
+        3130,
+        3130,
+        1530,
+        1530,
+        1530,
+        1530
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3775",
+        "joint39_train_3130",
+        "joint39_train_1530"
+      ],
+      "window_id": "joint39_train_3960",
+      "window_index": 3960
+    },
+    {
+      "block_window_index": 3965,
+      "common_random_seed": 1721956380,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.511965811966,
+          "energy_score_z": 0.732611721944,
+          "ensemble_crps_z": 0.486941367388,
+          "mean_path_mae_z": 0.60050958395,
+          "mean_path_rmse_z": 0.890917241573,
+          "sample_count": 12,
+          "terminal_mae_z": 0.638234615326
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.682905982906,
+          "energy_score_z": 0.629638521435,
+          "ensemble_crps_z": 0.404770225286,
+          "mean_path_mae_z": 0.532376110554,
+          "mean_path_rmse_z": 0.854452371597,
+          "sample_count": 12,
+          "terminal_mae_z": 0.619725227356
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.731120120414,
+          "ensemble_crps_z": 0.448010265827,
+          "mean_path_mae_z": 0.448010265827,
+          "mean_path_rmse_z": 0.731120109558,
+          "sample_count": 1,
+          "terminal_mae_z": 0.391654640436
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.744482945223,
+          "ensemble_crps_z": 0.456147223711,
+          "mean_path_mae_z": 0.456147223711,
+          "mean_path_rmse_z": 0.744482934475,
+          "sample_count": 1,
+          "terminal_mae_z": 0.434903413057
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0004_3965",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 4,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4082627677105068,
+          0.29621814453157563,
+          0.2955190877579175
+        ]
+      },
+      "top_train_cosines": [
+        0.9105178117752075,
+        0.8944770693778992,
+        0.8943589329719543
+      ],
+      "top_train_indices": [
+        2385,
+        2385,
+        2385,
+        2385,
+        2385,
+        2995,
+        2995,
+        2995,
+        2995,
+        3795,
+        3795,
+        3795
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2385",
+        "joint39_train_2995",
+        "joint39_train_3795"
+      ],
+      "window_id": "joint39_train_3965",
+      "window_index": 3965
+    },
+    {
+      "block_window_index": 3970,
+      "common_random_seed": 1722002260,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.547008547009,
+          "energy_score_z": 0.798152022353,
+          "ensemble_crps_z": 0.54036834836,
+          "mean_path_mae_z": 0.651967823505,
+          "mean_path_rmse_z": 0.976685404778,
+          "sample_count": 12,
+          "terminal_mae_z": 0.798040807247
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.561538461538,
+          "energy_score_z": 0.80262281209,
+          "ensemble_crps_z": 0.574113488197,
+          "mean_path_mae_z": 0.745419800282,
+          "mean_path_rmse_z": 1.069209694862,
+          "sample_count": 12,
+          "terminal_mae_z": 1.006071448326
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.937506426645,
+          "ensemble_crps_z": 0.631678462029,
+          "mean_path_mae_z": 0.631678462029,
+          "mean_path_rmse_z": 0.937506377697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.848948955536
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.961204207964,
+          "ensemble_crps_z": 0.656298220158,
+          "mean_path_mae_z": 0.656298220158,
+          "mean_path_rmse_z": 0.961204171181,
+          "sample_count": 1,
+          "terminal_mae_z": 0.905709981918
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0005_3970",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 5,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4274257557700188,
+          0.2943262673437429,
+          0.2782479768862383
+        ]
+      },
+      "top_train_cosines": [
+        0.9136068820953369,
+        0.8949522972106934,
+        0.8921434879302979
+      ],
+      "top_train_indices": [
+        2635,
+        2635,
+        2635,
+        2635,
+        2635,
+        3330,
+        3330,
+        3330,
+        3330,
+        3285,
+        3285,
+        3285
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2635",
+        "joint39_train_3330",
+        "joint39_train_3285"
+      ],
+      "window_id": "joint39_train_3970",
+      "window_index": 3970
+    },
+    {
+      "block_window_index": 3975,
+      "common_random_seed": 1722048140,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.311965811966,
+          "energy_score_z": 1.051021934093,
+          "ensemble_crps_z": 0.830718129873,
+          "mean_path_mae_z": 1.017654657364,
+          "mean_path_rmse_z": 1.29459130764,
+          "sample_count": 12,
+          "terminal_mae_z": 1.572973251343
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.391452991453,
+          "energy_score_z": 0.931271582994,
+          "ensemble_crps_z": 0.753142774105,
+          "mean_path_mae_z": 0.981435716152,
+          "mean_path_rmse_z": 1.264449357986,
+          "sample_count": 12,
+          "terminal_mae_z": 1.573593974113
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.069431596401,
+          "ensemble_crps_z": 0.811402976513,
+          "mean_path_mae_z": 0.811402976513,
+          "mean_path_rmse_z": 1.06943154335,
+          "sample_count": 1,
+          "terminal_mae_z": 1.504561781883
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.110809340496,
+          "ensemble_crps_z": 0.849281132221,
+          "mean_path_mae_z": 0.849281132221,
+          "mean_path_rmse_z": 1.110809326172,
+          "sample_count": 1,
+          "terminal_mae_z": 1.560442566872
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0006_3975",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 6,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4337788932141613,
+          0.2944651850530485,
+          0.2717559217327903
+        ]
+      },
+      "top_train_cosines": [
+        0.9120684862136841,
+        0.8926997780799866,
+        0.8886869549751282
+      ],
+      "top_train_indices": [
+        1837,
+        1837,
+        1837,
+        1837,
+        1837,
+        3468,
+        3468,
+        3468,
+        3468,
+        1521,
+        1521,
+        1521
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1837",
+        "joint39_train_3468",
+        "joint39_train_1521"
+      ],
+      "window_id": "joint39_train_3975",
+      "window_index": 3975
+    },
+    {
+      "block_window_index": 3980,
+      "common_random_seed": 1722094020,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.639316239316,
+          "energy_score_z": 0.722901047194,
+          "ensemble_crps_z": 0.529385834932,
+          "mean_path_mae_z": 0.667213439941,
+          "mean_path_rmse_z": 0.869597196579,
+          "sample_count": 12,
+          "terminal_mae_z": 0.505247354507
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.642735042735,
+          "energy_score_z": 0.661897474906,
+          "ensemble_crps_z": 0.504869371653,
+          "mean_path_mae_z": 0.693326711655,
+          "mean_path_rmse_z": 0.897906184196,
+          "sample_count": 12,
+          "terminal_mae_z": 0.557680010796
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.850308670904,
+          "ensemble_crps_z": 0.642345249653,
+          "mean_path_mae_z": 0.642345249653,
+          "mean_path_rmse_z": 0.850308656693,
+          "sample_count": 1,
+          "terminal_mae_z": 0.474674850702
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.865369945815,
+          "ensemble_crps_z": 0.657538235188,
+          "mean_path_mae_z": 0.657538235188,
+          "mean_path_rmse_z": 0.865369975567,
+          "sample_count": 1,
+          "terminal_mae_z": 0.512649834156
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0007_3980",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 7,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.34214184971596767,
+          0.33594606701214375,
+          0.32191208327188864
+        ]
+      },
+      "top_train_cosines": [
+        0.8557177782058716,
+        0.8548040390014648,
+        0.852670431137085
+      ],
+      "top_train_indices": [
+        1288,
+        1288,
+        1288,
+        1288,
+        2506,
+        2506,
+        2506,
+        2506,
+        2129,
+        2129,
+        2129,
+        2129
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1288",
+        "joint39_train_2506",
+        "joint39_train_2129"
+      ],
+      "window_id": "joint39_train_3980",
+      "window_index": 3980
+    },
+    {
+      "block_window_index": 3985,
+      "common_random_seed": 1722139900,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.45641025641,
+          "energy_score_z": 0.819351784444,
+          "ensemble_crps_z": 0.633281901479,
+          "mean_path_mae_z": 0.753346264362,
+          "mean_path_rmse_z": 0.984987676144,
+          "sample_count": 12,
+          "terminal_mae_z": 0.644489943981
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.548717948718,
+          "energy_score_z": 0.735092705928,
+          "ensemble_crps_z": 0.570028841496,
+          "mean_path_mae_z": 0.773729324341,
+          "mean_path_rmse_z": 0.999346792698,
+          "sample_count": 12,
+          "terminal_mae_z": 0.698349535465
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.834031731964,
+          "ensemble_crps_z": 0.630078732967,
+          "mean_path_mae_z": 0.630078732967,
+          "mean_path_rmse_z": 0.834031701088,
+          "sample_count": 1,
+          "terminal_mae_z": 0.475345999002
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.856720000802,
+          "ensemble_crps_z": 0.649653375149,
+          "mean_path_mae_z": 0.649653375149,
+          "mean_path_rmse_z": 0.856720030308,
+          "sample_count": 1,
+          "terminal_mae_z": 0.510303378105
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0008_3985",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 8,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          6,
+          3,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4732356550513627,
+          0.2798763256705797,
+          0.24688801927805765
+        ]
+      },
+      "top_train_cosines": [
+        0.8752810955047607,
+        0.8490188121795654,
+        0.8427481651306152
+      ],
+      "top_train_indices": [
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        2496,
+        743,
+        743,
+        743,
+        2124,
+        2124,
+        2124
+      ],
+      "top_train_window_ids": [
+        "joint39_train_2496",
+        "joint39_train_0743",
+        "joint39_train_2124"
+      ],
+      "window_id": "joint39_train_3985",
+      "window_index": 3985
+    },
+    {
+      "block_window_index": 3990,
+      "common_random_seed": 1722185780,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.297435897436,
+          "energy_score_z": 1.124144535309,
+          "ensemble_crps_z": 0.946957737207,
+          "mean_path_mae_z": 1.154755353928,
+          "mean_path_rmse_z": 1.406097531319,
+          "sample_count": 12,
+          "terminal_mae_z": 1.44993185997
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.313675213675,
+          "energy_score_z": 1.057188190673,
+          "ensemble_crps_z": 0.930035769939,
+          "mean_path_mae_z": 1.13359439373,
+          "mean_path_rmse_z": 1.403552532196,
+          "sample_count": 12,
+          "terminal_mae_z": 1.361394882202
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.30540179301,
+          "ensemble_crps_z": 1.063012957573,
+          "mean_path_mae_z": 1.063012957573,
+          "mean_path_rmse_z": 1.305401682854,
+          "sample_count": 1,
+          "terminal_mae_z": 1.322246909142
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.345204041876,
+          "ensemble_crps_z": 1.096604347229,
+          "mean_path_mae_z": 1.096604347229,
+          "mean_path_rmse_z": 1.345203995705,
+          "sample_count": 1,
+          "terminal_mae_z": 1.378605723381
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0009_3990",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 9,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.34990010584220643,
+          0.34411964280065,
+          0.30598025135714363
+        ]
+      },
+      "top_train_cosines": [
+        0.9150897264480591,
+        0.9142568111419678,
+        0.9083833694458008
+      ],
+      "top_train_indices": [
+        3500,
+        3500,
+        3500,
+        3500,
+        795,
+        795,
+        795,
+        795,
+        1660,
+        1660,
+        1660,
+        1660
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3500",
+        "joint39_train_0795",
+        "joint39_train_1660"
+      ],
+      "window_id": "joint39_train_3990",
+      "window_index": 3990
+    },
+    {
+      "block_window_index": 3995,
+      "common_random_seed": 1722231660,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.266666666667,
+          "energy_score_z": 1.150657592885,
+          "ensemble_crps_z": 0.965911835432,
+          "mean_path_mae_z": 1.182678699493,
+          "mean_path_rmse_z": 1.408495903015,
+          "sample_count": 12,
+          "terminal_mae_z": 1.350614190102
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.377777777778,
+          "energy_score_z": 1.048716795094,
+          "ensemble_crps_z": 0.885819673538,
+          "mean_path_mae_z": 1.171776533127,
+          "mean_path_rmse_z": 1.41640818119,
+          "sample_count": 12,
+          "terminal_mae_z": 0.96125382185
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.19752358526,
+          "ensemble_crps_z": 0.979367733002,
+          "mean_path_mae_z": 0.979367733002,
+          "mean_path_rmse_z": 1.197523593903,
+          "sample_count": 1,
+          "terminal_mae_z": 0.750118672848
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.232643846394,
+          "ensemble_crps_z": 1.011408805847,
+          "mean_path_mae_z": 1.011408805847,
+          "mean_path_rmse_z": 1.232643842697,
+          "sample_count": 1,
+          "terminal_mae_z": 0.801767170429
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0010_3995",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 10,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          4,
+          4,
+          4
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3674971034828303,
+          0.32500845278932194,
+          0.3074944437278478
+        ]
+      },
+      "top_train_cosines": [
+        0.9140709638595581,
+        0.9079277515411377,
+        0.9051580429077148
+      ],
+      "top_train_indices": [
+        3920,
+        3920,
+        3920,
+        3920,
+        745,
+        745,
+        745,
+        745,
+        2040,
+        2040,
+        2040,
+        2040
+      ],
+      "top_train_window_ids": [
+        "joint39_train_3920",
+        "joint39_train_0745",
+        "joint39_train_2040"
+      ],
+      "window_id": "joint39_train_3995",
+      "window_index": 3995
+    },
+    {
+      "block_window_index": 4000,
+      "common_random_seed": 1722277540,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.322222222222,
+          "energy_score_z": 1.170207919538,
+          "ensemble_crps_z": 0.951740294695,
+          "mean_path_mae_z": 1.179295420647,
+          "mean_path_rmse_z": 1.426010727882,
+          "sample_count": 12,
+          "terminal_mae_z": 0.691453099251
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.724786324786,
+          "energy_score_z": 0.843033143899,
+          "ensemble_crps_z": 0.650109112263,
+          "mean_path_mae_z": 0.960134625435,
+          "mean_path_rmse_z": 1.17930495739,
+          "sample_count": 12,
+          "terminal_mae_z": 0.615550637245
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 0.83914431268,
+          "ensemble_crps_z": 0.629227519035,
+          "mean_path_mae_z": 0.629227519035,
+          "mean_path_rmse_z": 0.839144349098,
+          "sample_count": 1,
+          "terminal_mae_z": 0.513434529305
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 0.851454075006,
+          "ensemble_crps_z": 0.64203196764,
+          "mean_path_mae_z": 0.64203196764,
+          "mean_path_rmse_z": 0.851454079151,
+          "sample_count": 1,
+          "terminal_mae_z": 0.469822525978
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0011_4000",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 11,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.4160271648670601,
+          0.34329493685757445,
+          0.24067789827536543
+        ]
+      },
+      "top_train_cosines": [
+        0.9389570951461792,
+        0.9293490648269653,
+        0.9115925431251526
+      ],
+      "top_train_indices": [
+        1955,
+        1955,
+        1955,
+        1955,
+        1955,
+        1995,
+        1995,
+        1995,
+        1995,
+        395,
+        395,
+        395
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1955",
+        "joint39_train_1995",
+        "joint39_train_0395"
+      ],
+      "window_id": "joint39_train_4000",
+      "window_index": 4000
+    },
+    {
+      "block_window_index": 4005,
+      "common_random_seed": 1722323420,
+      "methods": {
+        "historical_replay_topk": {
+          "coverage_80": 0.492307692308,
+          "energy_score_z": 0.939150508946,
+          "ensemble_crps_z": 0.66845458746,
+          "mean_path_mae_z": 0.846120476723,
+          "mean_path_rmse_z": 1.161811709404,
+          "sample_count": 12,
+          "terminal_mae_z": 0.956465482712
+        },
+        "narrative_generator_topk": {
+          "coverage_80": 0.707692307692,
+          "energy_score_z": 0.86086751123,
+          "ensemble_crps_z": 0.622957706451,
+          "mean_path_mae_z": 0.86016535759,
+          "mean_path_rmse_z": 1.188417077065,
+          "sample_count": 12,
+          "terminal_mae_z": 1.121943116188
+        },
+        "persistence": {
+          "coverage_80": null,
+          "energy_score_z": 1.164173205155,
+          "ensemble_crps_z": 0.927298784256,
+          "mean_path_mae_z": 0.927298784256,
+          "mean_path_rmse_z": 1.16417324543,
+          "sample_count": 1,
+          "terminal_mae_z": 1.198810815811
+        },
+        "train_median_delta": {
+          "coverage_80": null,
+          "energy_score_z": 1.130945501114,
+          "ensemble_crps_z": 0.893819272518,
+          "mean_path_mae_z": 0.893819272518,
+          "mean_path_rmse_z": 1.130945444107,
+          "sample_count": 1,
+          "terminal_mae_z": 1.132689476013
+        }
+      },
+      "query_id": "t7_beta_0_raw_openai_14x14_top3_90_0012_4005",
+      "query_kind": "t7_beta_0_identity",
+      "query_role": "anchor",
+      "row_no": 12,
+      "support_sampling": {
+        "mode": "field_weight",
+        "sample_counts": [
+          5,
+          4,
+          3
+        ],
+        "samples_per_row": 1,
+        "weights": [
+          0.3928456895665911,
+          0.32811624293245795,
+          0.27903806750095095
+        ]
+      },
+      "top_train_cosines": [
+        0.9020546674728394,
+        0.8930522203445435,
+        0.8849512338638306
+      ],
+      "top_train_indices": [
+        1950,
+        1950,
+        1950,
+        1950,
+        1950,
+        2655,
+        2655,
+        2655,
+        2655,
+        1875,
+        1875,
+        1875
+      ],
+      "top_train_window_ids": [
+        "joint39_train_1950",
+        "joint39_train_2655",
+        "joint39_train_1875"
+      ],
+      "window_id": "joint39_train_4005",
+      "window_index": 4005
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "scorecard_id": "712a_general_conditional_scenario_acceptance",
+  "overall_pass": false,
+  "gate_passes": {
+    "iv": false,
+    "anchor": false,
+    "joint": false,
+    "framework": true
+  },
+  "iv": {
+    "pass": false,
+    "original_n_pass": 7,
+    "n_total": 11,
+    "original_failed_suites": [
+      "coverage",
+      "conditionality",
+      "regime_coverage",
+      "distributional_fidelity"
+    ],
+    "effective_failed_suites": [
+      "coverage",
+      "regime_coverage",
+      "distributional_fidelity"
+    ],
+    "monitoring_only_suites": [],
+    "risk_state_allocation_pass": true,
+    "conditionality_pass": false,
+    "conditionality_policy": "risk_state_allocation_may_replace_old_conditionality_gate",
+    "cointegration_policy": "old_iv_ewma_cointegration_monitoring_only_separate_from_economic_link_gate",
+    "iv_ewma_economic_link_present": true,
+    "iv_ewma_economic_link_pass": true
+  },
+  "anchor": {
+    "pass": false,
+    "checks": {
+      "finite_rate": {
+        "pass": true,
+        "value": 1.0,
+        "target": ">=0.999"
+      },
+      "factor_delta_ks": {
+        "pass": false,
+        "value": {
+          "mean": 0.11699271474462802,
+          "pass_count": 12,
+          "n_factors": 14
+        },
+        "target": "mean<=0.20 and all factors pass"
+      },
+      "factor_tail_scale": {
+        "pass": true,
+        "value": {
+          "median": 0.9809059619122722,
+          "pass_count": 14,
+          "n_factors": 14
+        },
+        "target": "median in [0.5,2.0] and all factors pass"
+      },
+      "factor_factor_corr": {
+        "pass": true,
+        "value": {
+          "upper_corr": 0.9192016571772875,
+          "abs_corr_ratio": 0.6771022158676919
+        },
+        "target": "upper_corr>=0.50 and generated/GT mean abs corr>=0.35"
+      },
+      "conditional_panel": {
+        "pass": true,
+        "value": {
+          "median_mae_reduction_vs_rolled_pct": 4.851428965426384,
+          "history_activity_width_spearman": 0.9071185117403605
+        },
+        "target": "median_mae_reduction>=0 and history_activity_width_spearman>=0.10"
+      }
+    }
+  },
+  "joint": {
+    "pass": false,
+    "checks": {
+      "finite_rate": {
+        "pass": true,
+        "value": 1.0,
+        "target": ">=0.999"
+      },
+      "factor_delta_ks": {
+        "pass": false,
+        "value": {
+          "mean": 0.11522547511067918,
+          "pass_count": 12,
+          "n_factors": 14
+        },
+        "target": "mean<=0.20 and all factors pass"
+      },
+      "factor_tail_scale": {
+        "pass": true,
+        "value": {
+          "median": 1.0662242343052362,
+          "pass_count": 14,
+          "n_factors": 14
+        },
+        "target": "median in [0.5,2.0] and all factors pass"
+      },
+      "factor_factor_corr": {
+        "pass": true,
+        "value": {
+          "upper_corr": 0.8681779329056821,
+          "abs_corr_ratio": 0.553785291298922
+        },
+        "target": "upper_corr>=0.50 and generated/GT mean abs corr>=0.35"
+      },
+      "conditional_panel": {
+        "pass": true,
+        "value": {
+          "median_mae_reduction_vs_rolled_pct": 4.57790966638374,
+          "history_activity_width_spearman": 0.9447262821212401
+        },
+        "target": "median_mae_reduction>=0 and history_activity_width_spearman>=0.10"
+      },
+      "iv_factor_corr": {
+        "pass": true,
+        "value": {
+          "matrix_corr": 0.945636785929592,
+          "abs_corr_ratio": 0.7322826459895233
+        },
+        "target": "matrix_corr>=0.50 and generated/GT mean abs corr>=0.35"
+      }
+    }
+  },
+  "framework": {
+    "pass": true,
+    "framework_id": "768a_astgi_graph_k8_shortprefix_fm_state_aware_normalized_innovation",
+    "required_scopes": [
+      "iv_only",
+      "anchor_only",
+      "joint"
+    ],
+    "missing_scopes": [],
+    "allowed_scope_differences": [
+      "decoder_head",
+      "input_dim",
+      "input_head",
+      "output_dim",
+      "support_transform"
+    ],
+    "disallowed_scope_differences": [],
+    "missing_locked_fields": [],
+    "post_hoc_glued_decks": false,
+    "task_specific_loss_recipes": false
+  }
+}

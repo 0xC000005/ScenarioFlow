@@ -1,0 +1,42 @@
+{
+  "model_label": "734a739a_stress_ready",
+  "iv_checkpoint": "models/backfill/674a_iv_channel_level_alltrain_w005_e3_s6731/best_model.pt",
+  "anchor_checkpoint": "models/backfill/734a_anchor_realvix_channel_level_alltrain_w005_e3_s7344/best_model.pt",
+  "n_samples": 50,
+  "max_windows": 400,
+  "seed": 734,
+  "iv": {
+    "n_windows": 400,
+    "checkpoint_epoch": 2,
+    "checkpoint_best_val": 1.7551542903695787,
+    "reconstruction_error": {
+      "max_abs_error": 1.1920928955078125e-07,
+      "mean_abs_error": 1.1658823906302018e-09
+    }
+  },
+  "anchor": {
+    "n_windows": 400,
+    "checkpoint_epoch": 3,
+    "checkpoint_best_val": 1.7377975561789103,
+    "factors": [
+      "factor:spx",
+      "factor:usdcad",
+      "factor:usdjpy",
+      "factor:dxy",
+      "factor:copper",
+      "factor:wheat",
+      "factor:crude_oil",
+      "factor:us2y",
+      "factor:us10y",
+      "factor:aaa_oas",
+      "factor:bbb_oas",
+      "factor:nikkei",
+      "factor:gold",
+      "factor:vix"
+    ],
+    "reconstruction_error": {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0
+    }
+  }
+}

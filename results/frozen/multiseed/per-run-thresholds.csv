@@ -1,0 +1,1321 @@
+node_id,candidate,training_seed,rollout_seed,metric,value,rule_kind,lower,upper,signed_margin,status,run_breach_count,run_pass_all
+eval:bootstrap:rollout_2001,bootstrap,,2001,Cov90,0.9742161753590325,band,0.75,0.98,0.005783824640967494,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,CalErr,0.24908944318468126,upper,,0.2,-0.04908944318468125,fail,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Level KS,0.1941345427059713,upper,,0.2,0.005865457294028709,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Width rho,0.20881135671051637,lower,0.2,,0.00881135671051636,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,MR ratio,0.015859184176899202,band,0.25,1.75,-0.2341408158231008,fail,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Econ ratio,0.8266903340325965,band,0.75,1.3,0.07669033403259651,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Jump KS,0.32607709750566893,upper,,0.5,0.17392290249433107,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Kurtosis,0.9138706030347084,band,0.5,1.5,0.41387060303470835,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Corr score,0.610022652405009,lower,0.3,,0.310022652405009,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Factor KS,0.08033158203757695,upper,,0.15,0.06966841796242304,pass,3,False
+eval:bootstrap:rollout_2001,bootstrap,,2001,Tail q99,1.5384465798755778,band,0.5,1.5,-0.03844657987557776,fail,3,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Cov90,0.9733272864701437,band,0.75,0.98,0.006672713529856322,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,CalErr,0.24776316452506927,upper,,0.2,-0.04776316452506926,fail,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Level KS,0.19384731670445954,upper,,0.2,0.006152683295540473,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Width rho,0.19208886351743498,lower,0.2,,-0.007911136482565029,fail,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,MR ratio,0.015022380857598598,band,0.25,1.75,-0.2349776191424014,fail,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Econ ratio,0.8153945457479426,band,0.75,1.3,0.06539454574794257,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Jump KS,0.31927437641723355,upper,,0.5,0.18072562358276645,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Kurtosis,0.9061728656745213,band,0.5,1.5,0.40617286567452127,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Corr score,0.606884699451169,lower,0.3,,0.306884699451169,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Factor KS,0.08034853822481373,upper,,0.15,0.06965146177518626,pass,4,False
+eval:bootstrap:rollout_2002,bootstrap,,2002,Tail q99,1.5359243278505146,band,0.5,1.5,-0.03592432785051458,fail,4,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Cov90,0.9740710506424792,band,0.75,0.98,0.005928949357520752,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,CalErr,0.24931082556479384,upper,,0.2,-0.049310825564793825,fail,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Level KS,0.1989871504157218,upper,,0.2,0.0010128495842782193,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Width rho,0.21961441919425115,lower,0.2,,0.019614419194251137,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,MR ratio,0.007726043529279233,band,0.25,1.75,-0.24227395647072078,fail,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Econ ratio,0.8126512828788123,band,0.75,1.3,0.06265128287881228,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Jump KS,0.3231292517006803,upper,,0.5,0.1768707482993197,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Kurtosis,0.8984189938805384,band,0.5,1.5,0.39841899388053836,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Corr score,0.6054425033958213,lower,0.3,,0.3054425033958213,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Factor KS,0.08025549009286255,upper,,0.15,0.06974450990713744,pass,3,False
+eval:bootstrap:rollout_2003,bootstrap,,2003,Tail q99,1.5363721045115466,band,0.5,1.5,-0.0363721045115466,fail,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Cov90,0.9728798185941043,band,0.75,0.98,0.007120181405895654,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,CalErr,0.24568237171411772,upper,,0.2,-0.04568237171411771,fail,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Level KS,0.19470899470899472,upper,,0.2,0.005291005291005291,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Width rho,0.20006492107332444,lower,0.2,,6.492107332442543e-05,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,MR ratio,0.01360764684317608,band,0.25,1.75,-0.23639235315682391,fail,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Econ ratio,0.8216879135065355,band,0.75,1.3,0.07168791350653547,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Jump KS,0.3235827664399093,upper,,0.5,0.1764172335600907,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Kurtosis,0.902002481411419,band,0.5,1.5,0.40200248141141903,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Corr score,0.6069313988530021,lower,0.3,,0.3069313988530021,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Factor KS,0.08039156138645935,upper,,0.15,0.06960843861354064,pass,3,False
+eval:bootstrap:rollout_2004,bootstrap,,2004,Tail q99,1.5408954445340801,band,0.5,1.5,-0.040895444534080116,fail,3,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Cov90,0.9737535903250188,band,0.75,0.98,0.006246409674981135,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,CalErr,0.24787032837826484,upper,,0.2,-0.047870328378264826,fail,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Level KS,0.2047467876039304,upper,,0.2,-0.00474678760393038,fail,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Width rho,0.23042489723161994,lower,0.2,,0.030424897231619924,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,MR ratio,0.01113957056668129,band,0.25,1.75,-0.2388604294333187,fail,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Econ ratio,0.8234629659512668,band,0.75,1.3,0.07346296595126678,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Jump KS,0.3276643990929705,upper,,0.5,0.17233560090702948,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Kurtosis,0.9029754034179673,band,0.5,1.5,0.40297540341796734,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Corr score,0.6074992099177543,lower,0.3,,0.3074992099177543,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Factor KS,0.08040632423604363,upper,,0.15,0.06959367576395636,pass,4,False
+eval:bootstrap:rollout_2005,bootstrap,,2005,Tail q99,1.5361142065634978,band,0.5,1.5,-0.03611420656349784,fail,4,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Cov90,0.9660861678004535,band,0.75,0.98,0.01391383219954645,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,CalErr,0.16341244646006553,upper,,0.2,0.03658755353993448,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Level KS,0.18231292517006803,upper,,0.2,0.01768707482993198,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Width rho,0.3210149794183408,lower,0.2,,0.12101497941834077,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,MR ratio,0.12385700810360067,band,0.25,1.75,-0.12614299189639933,fail,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Econ ratio,0.8678392770695498,band,0.75,1.3,0.11783927706954977,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Jump KS,0.5412698412698412,upper,,0.5,-0.041269841269841234,fail,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Kurtosis,0.5994796697247509,band,0.5,1.5,0.09947966972475086,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Corr score,0.6568542432016269,lower,0.3,,0.3568542432016269,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Factor KS,0.1335534263308498,upper,,0.15,0.0164465736691502,pass,2,False
+eval:deepvar:train_1001:rollout_2001,deepvar,1001,2001,Tail q99,0.9266046466361573,band,0.5,1.5,0.42660464663615727,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Cov90,0.9655752078609221,band,0.75,0.98,0.01442479213907788,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,CalErr,0.1632915091962711,upper,,0.2,0.0367084908037289,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Level KS,0.17909297052154194,upper,,0.2,0.020907029478458072,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Width rho,0.3087952663582916,lower,0.2,,0.10879526635829156,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,MR ratio,0.13296102290269707,band,0.25,1.75,-0.11703897709730293,fail,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Econ ratio,0.8620300145231565,band,0.75,1.3,0.11203001452315653,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Jump KS,0.5419501133786848,upper,,0.5,-0.04195011337868482,fail,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Kurtosis,0.5912332295010969,band,0.5,1.5,0.09123322950109691,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Corr score,0.657759175165348,lower,0.3,,0.357759175165348,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Factor KS,0.13379292193067702,upper,,0.15,0.016207078069322978,pass,2,False
+eval:deepvar:train_1001:rollout_2002,deepvar,1001,2002,Tail q99,0.9290990206712442,band,0.5,1.5,0.42909902067124417,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Cov90,0.964713529856387,band,0.75,0.98,0.015286470143612951,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,CalErr,0.1633466028386663,upper,,0.2,0.0366533971613337,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Level KS,0.18015117157974303,upper,,0.2,0.01984882842025698,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Width rho,0.3051479332991938,lower,0.2,,0.10514793329919381,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,MR ratio,0.12381763243152524,band,0.25,1.75,-0.12618236756847476,fail,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Econ ratio,0.8757463288688074,band,0.75,1.3,0.12574632886880743,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Jump KS,0.5335600907029479,upper,,0.5,-0.03356009070294785,fail,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Kurtosis,0.5988680064803387,band,0.5,1.5,0.09886800648033867,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Corr score,0.6563506924674263,lower,0.3,,0.3563506924674263,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Factor KS,0.1333836113810604,upper,,0.15,0.016616388618939604,pass,2,False
+eval:deepvar:train_1001:rollout_2003,deepvar,1001,2003,Tail q99,0.9294741163035793,band,0.5,1.5,0.42947411630357935,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Cov90,0.9657989417989418,band,0.75,0.98,0.014201058201058214,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,CalErr,0.16397178130511464,upper,,0.2,0.03602821869488537,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Level KS,0.16891912320483748,upper,,0.2,0.031080876795162526,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Width rho,0.295236136412607,lower,0.2,,0.09523613641260698,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,MR ratio,0.12365166667047173,band,0.25,1.75,-0.12634833332952827,fail,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Econ ratio,0.8823624334355334,band,0.75,1.3,0.13236243343553344,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Jump KS,0.5528344671201814,upper,,0.5,-0.05283446712018136,fail,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Kurtosis,0.5913449145705769,band,0.5,1.5,0.09134491457057692,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Corr score,0.6586789769046351,lower,0.3,,0.35867897690463507,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Factor KS,0.13366494911456644,upper,,0.15,0.01633505088543355,pass,2,False
+eval:deepvar:train_1001:rollout_2004,deepvar,1001,2004,Tail q99,0.9284120659496133,band,0.5,1.5,0.42841206594961334,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Cov90,0.9661012849584278,band,0.75,0.98,0.01389871504157214,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,CalErr,0.1647914672041656,upper,,0.2,0.03520853279583441,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Level KS,0.18303854875283443,upper,,0.2,0.016961451247165582,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Width rho,0.32099371217018274,lower,0.2,,0.12099371217018273,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,MR ratio,0.12017854280745988,band,0.25,1.75,-0.12982145719254012,fail,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Econ ratio,0.8791350653542035,band,0.75,1.3,0.1291350653542035,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Jump KS,0.5421768707482993,upper,,0.5,-0.042176870748299344,fail,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Kurtosis,0.5958147872648664,band,0.5,1.5,0.09581478726486636,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Corr score,0.6568369700472225,lower,0.3,,0.35683697004722253,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Factor KS,0.13351563343591405,upper,,0.15,0.016484366564085945,pass,2,False
+eval:deepvar:train_1001:rollout_2005,deepvar,1001,2005,Tail q99,0.9264566963699277,band,0.5,1.5,0.42645669636992767,pass,2,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Cov90,0.9697989417989418,band,0.75,0.98,0.01020105820105821,pass,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,CalErr,0.1823122532963803,upper,,0.2,0.017687746703619722,pass,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Level KS,0.23188208616780046,upper,,0.2,-0.031882086167800444,fail,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Width rho,0.3451163682256119,lower,0.2,,0.1451163682256119,pass,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,MR ratio,0.12299059313964697,band,0.25,1.75,-0.12700940686035303,fail,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Econ ratio,0.8568662255930289,band,0.75,1.3,0.10686622559302894,pass,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Jump KS,0.5959183673469388,upper,,0.5,-0.09591836734693882,fail,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Kurtosis,0.48728101508300803,band,0.5,1.5,-0.012718984916991971,fail,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Corr score,0.660961169705603,lower,0.3,,0.36096116970560305,pass,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Factor KS,0.13927677221682325,upper,,0.15,0.010723227783176748,pass,4,False
+eval:deepvar:train_1002:rollout_2001,deepvar,1002,2001,Tail q99,0.9879047944181144,band,0.5,1.5,0.4879047944181144,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Cov90,0.9693212396069539,band,0.75,0.98,0.01067876039304605,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,CalErr,0.1835374149659864,upper,,0.2,0.0164625850340136,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Level KS,0.22822373393801962,upper,,0.2,-0.028223733938019607,fail,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Width rho,0.36002331002331,lower,0.2,,0.16002331002331,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,MR ratio,0.11210953559807897,band,0.25,1.75,-0.13789046440192104,fail,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Econ ratio,0.881232854607068,band,0.75,1.3,0.13123285460706802,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Jump KS,0.5965986394557823,upper,,0.5,-0.09659863945578229,fail,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Kurtosis,0.49452121190021253,band,0.5,1.5,-0.005478788099787468,fail,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Corr score,0.6609313326340865,lower,0.3,,0.36093133263408655,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Factor KS,0.1390743946388079,upper,,0.15,0.010925605361192081,pass,4,False
+eval:deepvar:train_1002:rollout_2002,deepvar,1002,2002,Tail q99,0.9898267422840541,band,0.5,1.5,0.4898267422840541,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Cov90,0.9706485260770975,band,0.75,0.98,0.009351473922902476,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,CalErr,0.183968085999832,upper,,0.2,0.016031914000168013,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Level KS,0.2363718820861678,upper,,0.2,-0.03637188208616779,fail,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Width rho,0.3730054259466024,lower,0.2,,0.1730054259466024,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,MR ratio,0.1106161548069861,band,0.25,1.75,-0.1393838451930139,fail,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Econ ratio,0.8917218008713894,band,0.75,1.3,0.14172180087138941,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Jump KS,0.600453514739229,upper,,0.5,-0.10045351473922903,fail,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Kurtosis,0.4833237620381416,band,0.5,1.5,-0.01667623796185841,fail,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Corr score,0.6612873672622833,lower,0.3,,0.36128736726228333,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Factor KS,0.13896067851743873,upper,,0.15,0.01103932148256126,pass,4,False
+eval:deepvar:train_1002:rollout_2003,deepvar,1002,2003,Tail q99,0.9875864009394524,band,0.5,1.5,0.4875864009394524,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Cov90,0.9710113378684807,band,0.75,0.98,0.008988662131519276,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,CalErr,0.18653430755018055,upper,,0.2,0.01346569244981946,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Level KS,0.2260468631897203,upper,,0.2,-0.0260468631897203,fail,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Width rho,0.3617312659329466,lower,0.2,,0.16173126593294657,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,MR ratio,0.10856676864880838,band,0.25,1.75,-0.14143323135119162,fail,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Econ ratio,0.8728416975956108,band,0.75,1.3,0.12284169759561081,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Jump KS,0.5995464852607709,upper,,0.5,-0.09954648526077092,fail,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Kurtosis,0.4865558929210078,band,0.5,1.5,-0.013444107078992185,fail,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Corr score,0.6610462213771345,lower,0.3,,0.36104622137713455,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Factor KS,0.13895468901846453,upper,,0.15,0.011045310981535467,pass,4,False
+eval:deepvar:train_1002:rollout_2004,deepvar,1002,2004,Tail q99,0.9852586186807579,band,0.5,1.5,0.4852586186807579,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Cov90,0.9695117157974301,band,0.75,0.98,0.010488284202569864,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,CalErr,0.184352733686067,upper,,0.2,0.01564726631393301,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Level KS,0.23077853363567646,upper,,0.2,-0.030778533635676453,fail,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Width rho,0.36683806389688745,lower,0.2,,0.16683806389688743,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,MR ratio,0.11787354979257143,band,0.25,1.75,-0.13212645020742858,fail,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Econ ratio,0.8984992738421818,band,0.75,1.3,0.14849927384218176,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Jump KS,0.5972789115646259,upper,,0.5,-0.09727891156462587,fail,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Kurtosis,0.48480705831676096,band,0.5,1.5,-0.015192941683239036,fail,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Corr score,0.6602610708681785,lower,0.3,,0.36026107086817855,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Factor KS,0.13865917894935753,upper,,0.15,0.011340821050642463,pass,4,False
+eval:deepvar:train_1002:rollout_2005,deepvar,1002,2005,Tail q99,0.9897175500606799,band,0.5,1.5,0.48971755006067985,pass,4,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Cov90,0.9684202569916855,band,0.75,0.98,0.011579743008314436,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,CalErr,0.18281279919375157,upper,,0.2,0.017187200806248443,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Level KS,0.17493575207860923,upper,,0.2,0.02506424792139078,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Width rho,0.31278623337446865,lower,0.2,,0.11278623337446864,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,MR ratio,0.14872345552030322,band,0.25,1.75,-0.10127654447969678,fail,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Econ ratio,0.9114087461675006,band,0.75,1.3,0.16140874616750056,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Jump KS,0.5659863945578232,upper,,0.5,-0.06598639455782318,fail,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Kurtosis,0.558172517910477,band,0.5,1.5,0.05817251791047695,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Corr score,0.6775516820987019,lower,0.3,,0.3775516820987019,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Factor KS,0.1305415519382356,upper,,0.15,0.01945844806176439,pass,2,False
+eval:deepvar:train_1003:rollout_2001,deepvar,1003,2001,Tail q99,0.9678639928388211,band,0.5,1.5,0.4678639928388211,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Cov90,0.9686167800453515,band,0.75,0.98,0.011383219954648527,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,CalErr,0.18222423784328548,upper,,0.2,0.01777576215671453,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Level KS,0.1702040816326531,upper,,0.2,0.029795918367346907,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Width rho,0.3074183519561671,lower,0.2,,0.10741835195616711,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,MR ratio,0.13950239041348494,band,0.25,1.75,-0.11049760958651506,fail,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Econ ratio,0.8996288526706472,band,0.75,1.3,0.14962885267064718,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Jump KS,0.5662131519274376,upper,,0.5,-0.0662131519274376,fail,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Kurtosis,0.5552867364841306,band,0.5,1.5,0.05528673648413063,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Corr score,0.6769993613052134,lower,0.3,,0.37699936130521344,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Factor KS,0.13048908055285607,upper,,0.15,0.01951091944714392,pass,2,False
+eval:deepvar:train_1003:rollout_2002,deepvar,1003,2002,Tail q99,0.9672914704887846,band,0.5,1.5,0.4672914704887846,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Cov90,0.9683779289493575,band,0.75,0.98,0.011622071050642502,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,CalErr,0.18215469891660366,upper,,0.2,0.017845301083396353,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Level KS,0.17221466364323512,upper,,0.2,0.02778533635676489,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Width rho,0.3197791004513693,lower,0.2,,0.1197791004513693,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,MR ratio,0.13756842221521484,band,0.25,1.75,-0.11243157778478516,fail,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Econ ratio,0.9065676940455059,band,0.75,1.3,0.15656769404550586,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Jump KS,0.573015873015873,upper,,0.5,-0.07301587301587298,fail,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Kurtosis,0.5597164618313692,band,0.5,1.5,0.05971646183136925,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Corr score,0.6778500819242795,lower,0.3,,0.37785008192427955,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Factor KS,0.13119693810063707,upper,,0.15,0.018803061899362927,pass,2,False
+eval:deepvar:train_1003:rollout_2003,deepvar,1003,2003,Tail q99,0.9674420773385255,band,0.5,1.5,0.4674420773385255,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Cov90,0.9682751322751323,band,0.75,0.98,0.011724867724867694,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,CalErr,0.18197094146300496,upper,,0.2,0.018029058536995046,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Level KS,0.1804686318972033,upper,,0.2,0.01953136810279671,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Width rho,0.32634984063555494,lower,0.2,,0.12634984063555493,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,MR ratio,0.143968738885173,band,0.25,1.75,-0.106031261114827,fail,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Econ ratio,0.9020493787316441,band,0.75,1.3,0.15204937873164415,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Jump KS,0.5682539682539682,upper,,0.5,-0.06825396825396823,fail,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Kurtosis,0.5513824743447675,band,0.5,1.5,0.051382474344767504,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Corr score,0.6768083584508804,lower,0.3,,0.3768083584508804,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Factor KS,0.13071010150091783,upper,,0.15,0.019289898499082164,pass,2,False
+eval:deepvar:train_1003:rollout_2004,deepvar,1003,2004,Tail q99,0.9658372108767896,band,0.5,1.5,0.46583721087678964,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Cov90,0.9686016628873771,band,0.75,0.98,0.011398337112622836,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,CalErr,0.18214092550600486,upper,,0.2,0.017859074493995153,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Level KS,0.1718216175359032,upper,,0.2,0.02817838246409682,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Width rho,0.3131549123145762,lower,0.2,,0.1131549123145762,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,MR ratio,0.13859062502309102,band,0.25,1.75,-0.11140937497690898,fail,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Econ ratio,0.9130224302081653,band,0.75,1.3,0.16302243020816531,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Jump KS,0.5678004535147392,upper,,0.5,-0.06780045351473918,fail,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Kurtosis,0.5525661699233321,band,0.5,1.5,0.05256616992333207,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Corr score,0.6780666503350128,lower,0.3,,0.3780666503350128,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Factor KS,0.1309285073156247,upper,,0.15,0.019071492684375302,pass,2,False
+eval:deepvar:train_1003:rollout_2005,deepvar,1003,2005,Tail q99,0.9682473578623214,band,0.5,1.5,0.4682473578623214,pass,2,False
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Cov90,0.9617263794406652,band,0.75,0.98,0.01827362055933479,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,CalErr,0.17150919627110106,upper,,0.2,0.02849080372889895,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Level KS,0.14441421012849587,upper,,0.2,0.05558578987150414,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Width rho,0.21968871464669784,lower,0.2,,0.01968871464669783,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,MR ratio,0.37148762531366314,band,0.25,1.75,0.12148762531366314,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Econ ratio,1.0167823140229144,band,0.75,1.3,0.2667823140229144,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Jump KS,0.21179138321995464,upper,,0.5,0.2882086167800454,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Kurtosis,0.8048319353015173,band,0.5,1.5,0.3048319353015173,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Corr score,0.6396505629274989,lower,0.3,,0.3396505629274989,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Factor KS,0.11441048145448655,upper,,0.15,0.03558951854551344,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2001,deepvar_sni,1001,2001,Tail q99,1.1593076975762973,band,0.5,1.5,0.34069230242370274,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Cov90,0.9619591836734694,band,0.75,0.98,0.01804081632653054,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,CalErr,0.17227042915931806,upper,,0.2,0.02772957084068195,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Level KS,0.142660619803477,upper,,0.2,0.057339380196523015,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Width rho,0.22545689604513133,lower,0.2,,0.025456896045131322,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,MR ratio,0.3750370386554718,band,0.25,1.75,0.12503703865547178,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Econ ratio,1.0380829433596903,band,0.75,1.3,0.26191705664030973,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Jump KS,0.22517006802721087,upper,,0.5,0.27482993197278915,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Kurtosis,0.8029176612939876,band,0.5,1.5,0.30291766129398756,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Corr score,0.640698828137163,lower,0.3,,0.34069882813716296,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Factor KS,0.11493241145664612,upper,,0.15,0.03506758854335387,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2002,deepvar_sni,1001,2002,Tail q99,1.1582990730092582,band,0.5,1.5,0.34170092699074184,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Cov90,0.9611942554799697,band,0.75,0.98,0.018805744520030254,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,CalErr,0.17022524565381703,upper,,0.2,0.029774754346182986,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Level KS,0.14382464096749814,upper,,0.2,0.05617535903250187,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Width rho,0.21190098416989173,lower,0.2,,0.011900984169891715,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,MR ratio,0.3739306053214998,band,0.25,1.75,0.1239306053214998,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Econ ratio,1.02339841858964,band,0.75,1.3,0.2733984185896401,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Jump KS,0.21292517006802722,upper,,0.5,0.28707482993197275,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Kurtosis,0.7922668485482198,band,0.5,1.5,0.2922668485482198,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Corr score,0.6397579714215267,lower,0.3,,0.3397579714215267,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Factor KS,0.11455406071158622,upper,,0.15,0.035445939288413775,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2003,deepvar_sni,1001,2003,Tail q99,1.1586477866867608,band,0.5,1.5,0.3413522133132392,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Cov90,0.9619743008314436,band,0.75,0.98,0.01802569916855634,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,CalErr,0.17149475098681444,upper,,0.2,0.028505249013185574,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Level KS,0.1316855631141346,upper,,0.2,0.06831443688586541,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Width rho,0.21586634653861544,lower,0.2,,0.015866346538615433,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,MR ratio,0.35931409770649286,band,0.25,1.75,0.10931409770649286,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Econ ratio,1.0274326286913023,band,0.75,1.3,0.2725673713086978,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Jump KS,0.20952380952380953,upper,,0.5,0.29047619047619044,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Kurtosis,0.8117304081395468,band,0.5,1.5,0.3117304081395468,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Corr score,0.6406748468364662,lower,0.3,,0.34067484683646626,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Factor KS,0.11466600529100532,upper,,0.15,0.035333994708994676,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2004,deepvar_sni,1001,2004,Tail q99,1.1602746149029706,band,0.5,1.5,0.33972538509702943,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Cov90,0.961167044595616,band,0.75,0.98,0.01883295540438401,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,CalErr,0.17363399680859995,upper,,0.2,0.02636600319140006,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Level KS,0.1453968253968254,upper,,0.2,0.0546031746031746,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Width rho,0.23193305294145633,lower,0.2,,0.03193305294145632,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,MR ratio,0.3589217858165766,band,0.25,1.75,0.10892178581657658,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Econ ratio,1.0261416814587705,band,0.75,1.3,0.27385831854122955,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Jump KS,0.20634920634920634,upper,,0.5,0.29365079365079366,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Kurtosis,0.7996284978263849,band,0.5,1.5,0.2996284978263849,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Corr score,0.6391180682030304,lower,0.3,,0.3391180682030304,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Factor KS,0.11465815989094048,upper,,0.15,0.03534184010905951,pass,0,True
+eval:deepvar_sni:train_1001:rollout_2005,deepvar_sni,1001,2005,Tail q99,1.1594405769691223,band,0.5,1.5,0.3405594230308777,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Cov90,0.9571337868480726,band,0.75,0.98,0.022866213151927384,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,CalErr,0.16042831947593852,upper,,0.2,0.03957168052406149,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Level KS,0.12269085411942549,upper,,0.2,0.07730914588057453,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Width rho,0.27883377127074604,lower,0.2,,0.07883377127074603,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,MR ratio,0.412735359240545,band,0.25,1.75,0.162735359240545,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Econ ratio,0.9916088429885427,band,0.75,1.3,0.24160884298854268,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Jump KS,0.16485260770975058,upper,,0.5,0.3351473922902494,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Kurtosis,0.7742577096827677,band,0.5,1.5,0.27425770968276775,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Corr score,0.6620620408772611,lower,0.3,,0.36206204087726107,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Factor KS,0.1173808511499838,upper,,0.15,0.0326191488500162,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2001,deepvar_sni,1002,2001,Tail q99,1.1866530315477868,band,0.5,1.5,0.3133469684522132,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Cov90,0.9573272864701436,band,0.75,0.98,0.022672713529856336,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,CalErr,0.1614599815234736,upper,,0.2,0.03854001847652641,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Level KS,0.12483749055177627,upper,,0.2,0.07516250944822374,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Width rho,0.2939649985868474,lower,0.2,,0.09396499858684737,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,MR ratio,0.40160501481128824,band,0.25,1.75,0.15160501481128824,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Econ ratio,1.019686945296111,band,0.75,1.3,0.26968694529611104,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Jump KS,0.16281179138321997,upper,,0.5,0.33718820861678,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Kurtosis,0.7700371187820786,band,0.5,1.5,0.2700371187820786,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Corr score,0.6612012186850704,lower,0.3,,0.36120121868507044,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Factor KS,0.1170798577367455,upper,,0.15,0.0329201422632545,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2002,deepvar_sni,1002,2002,Tail q99,1.1920509652848716,band,0.5,1.5,0.30794903471512836,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Cov90,0.9579652305366592,band,0.75,0.98,0.02203476946334082,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,CalErr,0.16283329134122787,upper,,0.2,0.03716670865877214,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Level KS,0.12571428571428567,upper,,0.2,0.07428571428571434,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Width rho,0.29215182576527116,lower,0.2,,0.09215182576527114,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,MR ratio,0.3994249679121365,band,0.25,1.75,0.1494249679121365,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Econ ratio,1.0101662094561885,band,0.75,1.3,0.2601662094561885,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Jump KS,0.17006802721088435,upper,,0.5,0.3299319727891157,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Kurtosis,0.771795249248562,band,0.5,1.5,0.271795249248562,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Corr score,0.6625449328660988,lower,0.3,,0.36254493286609885,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Factor KS,0.11686955039952487,upper,,0.15,0.03313044960047512,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2003,deepvar_sni,1002,2003,Tail q99,1.1874700783381273,band,0.5,1.5,0.31252992166187266,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Cov90,0.9579410430839003,band,0.75,0.98,0.022058956916099715,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,CalErr,0.1628967834047199,upper,,0.2,0.0371032165952801,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Level KS,0.13356009070294783,upper,,0.2,0.06643990929705218,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Width rho,0.2869858432883643,lower,0.2,,0.08698584328836428,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,MR ratio,0.39376249898132204,band,0.25,1.75,0.14376249898132204,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Econ ratio,1.0051637889301275,band,0.75,1.3,0.2551637889301275,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Jump KS,0.16485260770975058,upper,,0.5,0.3351473922902494,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Kurtosis,0.764942671923604,band,0.5,1.5,0.264942671923604,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Corr score,0.6629593060242862,lower,0.3,,0.3629593060242862,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Factor KS,0.11723305393586006,upper,,0.15,0.032766946064139935,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2004,deepvar_sni,1002,2004,Tail q99,1.1910741581484732,band,0.5,1.5,0.30892584185152683,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Cov90,0.9569614512471656,band,0.75,0.98,0.023038548752834398,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,CalErr,0.1611942554799698,upper,,0.2,0.038805744520030216,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Level KS,0.12953892668178382,upper,,0.2,0.07046107331821619,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Width rho,0.2977949221646701,lower,0.2,,0.09779492216467006,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,MR ratio,0.41360076014339053,band,0.25,1.75,0.16360076014339053,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Econ ratio,1.011618525092787,band,0.75,1.3,0.26161852509278694,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Jump KS,0.17573696145124718,upper,,0.5,0.3242630385487528,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Kurtosis,0.7690139452303963,band,0.5,1.5,0.26901394523039635,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Corr score,0.6614036790372406,lower,0.3,,0.36140367903724063,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Factor KS,0.11670074775942121,upper,,0.15,0.03329925224057878,pass,0,True
+eval:deepvar_sni:train_1002:rollout_2005,deepvar_sni,1002,2005,Tail q99,1.1801049414728857,band,0.5,1.5,0.3198950585271143,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Cov90,0.9567256235827665,band,0.75,0.98,0.02327437641723351,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,CalErr,0.16658369026622996,upper,,0.2,0.03341630973377005,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Level KS,0.1419501133786848,upper,,0.2,0.058049886621315216,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Width rho,0.2444839474251239,lower,0.2,,0.044483947425123876,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,MR ratio,0.31933009534687173,band,0.25,1.75,0.06933009534687173,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Econ ratio,0.9762788446022269,band,0.75,1.3,0.22627884460222691,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Jump KS,0.21383219954648527,upper,,0.5,0.28616780045351475,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Kurtosis,0.8157056242032279,band,0.5,1.5,0.3157056242032279,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Corr score,0.6294604675031513,lower,0.3,,0.32946046750315133,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Factor KS,0.1146815273728539,upper,,0.15,0.03531847262714609,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2001,deepvar_sni,1003,2001,Tail q99,1.1765032905026986,band,0.5,1.5,0.32349670949730136,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Cov90,0.9565049130763417,band,0.75,0.98,0.023495086923658315,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,CalErr,0.16404232804232802,upper,,0.2,0.035957671957671994,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Level KS,0.14315948601662887,upper,,0.2,0.056840513983371144,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Width rho,0.25931743326701306,lower,0.2,,0.05931743326701305,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,MR ratio,0.3100888887061646,band,0.25,1.75,0.06008888870616458,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Econ ratio,0.9686945296111021,band,0.75,1.3,0.21869452961110214,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Jump KS,0.22131519274376418,upper,,0.5,0.2786848072562358,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Kurtosis,0.8166439673985579,band,0.5,1.5,0.31664396739855794,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Corr score,0.6285721773709786,lower,0.3,,0.3285721773709786,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Factor KS,0.11499365619263578,upper,,0.15,0.03500634380736421,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2002,deepvar_sni,1003,2002,Tail q99,1.176038672950352,band,0.5,1.5,0.323961327049648,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Cov90,0.9559425547996977,band,0.75,0.98,0.024057445200302285,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,CalErr,0.1637467036197195,upper,,0.2,0.03625329638028052,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Level KS,0.14804232804232798,upper,,0.2,0.051957671957672036,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Width rho,0.24479568050996625,lower,0.2,,0.04479568050996624,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,MR ratio,0.30463181759005115,band,0.25,1.75,0.054631817590051146,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Econ ratio,0.984670001613684,band,0.75,1.3,0.234670001613684,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Jump KS,0.2222222222222222,upper,,0.5,0.2777777777777778,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Kurtosis,0.8091290037548098,band,0.5,1.5,0.3091290037548098,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Corr score,0.6290748697789165,lower,0.3,,0.3290748697789165,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Factor KS,0.11507649686858872,upper,,0.15,0.03492350313141128,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2003,deepvar_sni,1003,2003,Tail q99,1.1737317002342968,band,0.5,1.5,0.32626829976570315,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Cov90,0.9569100529100529,band,0.75,0.98,0.02308994708994705,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,CalErr,0.16471924078273284,upper,,0.2,0.03528075921726717,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Level KS,0.1415873015873016,upper,,0.2,0.058412698412698416,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Width rho,0.24933777706886953,lower,0.2,,0.04933777706886952,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,MR ratio,0.30145768800920736,band,0.25,1.75,0.05145768800920736,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Econ ratio,0.9719218976924319,band,0.75,1.3,0.22192189769243187,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Jump KS,0.21383219954648527,upper,,0.5,0.28616780045351475,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Kurtosis,0.814831319169972,band,0.5,1.5,0.314831319169972,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Corr score,0.6289938644532873,lower,0.3,,0.3289938644532873,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Factor KS,0.11485513848396502,upper,,0.15,0.03514486151603498,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2004,deepvar_sni,1003,2004,Tail q99,1.1779366515485115,band,0.5,1.5,0.32206334845148854,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Cov90,0.9567528344671202,band,0.75,0.98,0.023247165532879754,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,CalErr,0.1655785672293609,upper,,0.2,0.03442143277063911,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Level KS,0.1399395313681029,upper,,0.2,0.060060468631897124,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Width rho,0.2532618641862339,lower,0.2,,0.05326186418623391,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,MR ratio,0.3184676284130717,band,0.25,1.75,0.06846762841307169,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Econ ratio,0.9909633693722768,band,0.75,1.3,0.2409633693722768,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Jump KS,0.21201814058956917,upper,,0.5,0.28798185941043086,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Kurtosis,0.7983649341754157,band,0.5,1.5,0.29836493417541565,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Corr score,0.6286323993468429,lower,0.3,,0.3286323993468429,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Factor KS,0.11503052113702623,upper,,0.15,0.03496947886297376,pass,0,True
+eval:deepvar_sni:train_1003:rollout_2005,deepvar_sni,1003,2005,Tail q99,1.1774162447615182,band,0.5,1.5,0.3225837552384818,pass,0,True
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Cov90,0.9738926681783825,band,0.75,0.98,0.00610733182161749,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,CalErr,0.19389837910472832,upper,,0.2,0.006101620895271692,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Level KS,0.16288737717309143,upper,,0.2,0.03711262282690858,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Width rho,0.3420211441219844,lower,0.2,,0.1420211441219844,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,MR ratio,0.12190748829167647,band,0.25,1.75,-0.12809251170832353,fail,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Econ ratio,0.9514281103759883,band,0.75,1.3,0.2014281103759883,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Jump KS,0.4163265306122449,upper,,0.5,0.0836734693877551,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Kurtosis,1.203215721665179,band,0.5,1.5,0.2967842783348209,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Corr score,0.5569476711413679,lower,0.3,,0.2569476711413679,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Factor KS,0.09873292570996654,upper,,0.15,0.05126707429003345,pass,1,False
+eval:filtered_hs:rollout_2001,filtered_hs,,2001,Tail q99,1.2469885771782732,band,0.5,1.5,0.25301142282172684,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Cov90,0.9726409674981104,band,0.75,0.98,0.0073590325018896285,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,CalErr,0.19174032081968587,upper,,0.2,0.008259679180314144,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Level KS,0.1554648526077097,upper,,0.2,0.04453514739229031,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Width rho,0.3352293364898407,lower,0.2,,0.1352293364898407,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,MR ratio,0.10697307296862994,band,0.25,1.75,-0.14302692703137004,fail,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Econ ratio,0.9296433758270131,band,0.75,1.3,0.17964337582701306,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Jump KS,0.42086167800453517,upper,,0.5,0.07913832199546483,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Kurtosis,1.19910802833774,band,0.5,1.5,0.30089197166226,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Corr score,0.5506685972545484,lower,0.3,,0.25066859725454843,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Factor KS,0.09897115592268654,upper,,0.15,0.05102884407731345,pass,1,False
+eval:filtered_hs:rollout_2002,filtered_hs,,2002,Tail q99,1.2409752815061212,band,0.5,1.5,0.25902471849387876,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Cov90,0.9739138321995465,band,0.75,0.98,0.006086167800453457,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,CalErr,0.19447047954984464,upper,,0.2,0.005529520450155367,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Level KS,0.1601209372637944,upper,,0.2,0.03987906273620562,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Width rho,0.32587916285395274,lower,0.2,,0.12587916285395273,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,MR ratio,0.10784739431453566,band,0.25,1.75,-0.14215260568546434,fail,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Econ ratio,0.9122155881878328,band,0.75,1.3,0.16221558818783277,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Jump KS,0.4170068027210884,upper,,0.5,0.08299319727891158,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Kurtosis,1.2084645606703655,band,0.5,1.5,0.29153543932963455,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Corr score,0.6042459661389673,lower,0.3,,0.3042459661389673,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Factor KS,0.09862098113054743,upper,,0.15,0.051379018869452564,pass,1,False
+eval:filtered_hs:rollout_2003,filtered_hs,,2003,Tail q99,1.2424430232269223,band,0.5,1.5,0.25755697677307765,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Cov90,0.9726198034769463,band,0.75,0.98,0.0073801965230536615,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,CalErr,0.18993936339968082,upper,,0.2,0.010060636600319195,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Level KS,0.15708238851096,upper,,0.2,0.04291761148904,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Width rho,0.34849296361901405,lower,0.2,,0.14849296361901404,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,MR ratio,0.10681742112022573,band,0.25,1.75,-0.14318257887977426,fail,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Econ ratio,0.9431983217685977,band,0.75,1.3,0.19319832176859775,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Jump KS,0.4124716553287982,upper,,0.5,0.0875283446712018,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Kurtosis,1.1585998940541151,band,0.5,1.5,0.3414001059458849,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Corr score,0.5505245534796291,lower,0.3,,0.25052455347962915,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Factor KS,0.09886629751106792,upper,,0.15,0.05113370248893208,pass,1,False
+eval:filtered_hs:rollout_2004,filtered_hs,,2004,Tail q99,1.243127835864526,band,0.5,1.5,0.2568721641354741,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Cov90,0.9735691609977324,band,0.75,0.98,0.0064308390022675965,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,CalErr,0.19405425380028551,upper,,0.2,0.005945746199714497,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Level KS,0.16813303099017385,upper,,0.2,0.03186696900982616,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Width rho,0.3457258427846663,lower,0.2,,0.14572584278466627,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,MR ratio,0.11085952049747937,band,0.25,1.75,-0.13914047950252062,fail,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Econ ratio,0.9330321123124091,band,0.75,1.3,0.18303211231240912,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Jump KS,0.4124716553287982,upper,,0.5,0.0875283446712018,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Kurtosis,1.215014955111314,band,0.5,1.5,0.2849850448886859,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Corr score,0.5436590128356731,lower,0.3,,0.2436590128356731,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Factor KS,0.09885457159054098,upper,,0.15,0.051145428409459015,pass,1,False
+eval:filtered_hs:rollout_2005,filtered_hs,,2005,Tail q99,1.237632818875869,band,0.5,1.5,0.26236718112413104,pass,1,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Cov90,0.9734179894179894,band,0.75,0.98,0.006582010582010578,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,CalErr,0.20752968841857727,upper,,0.2,-0.007529688418577263,fail,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Level KS,0.17560090702947845,upper,,0.2,0.024399092970521563,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Width rho,0.2733633313465247,lower,0.2,,0.07336333134652467,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,MR ratio,0.18442992406070957,band,0.25,1.75,-0.06557007593929043,fail,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Econ ratio,1.0009682104243987,band,0.75,1.3,0.25096821042439865,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Jump KS,0.4925170068027211,upper,,0.5,0.007482993197278909,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Kurtosis,0.9790691761243457,band,0.5,1.5,0.47906917612434574,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Corr score,0.6475477372274993,lower,0.3,,0.34754773722749926,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Factor KS,0.12321867238959075,upper,,0.15,0.026781327610409245,pass,2,False
+eval:garch_ccc:rollout_2001,garch_ccc,,2001,Tail q99,1.0602254129683715,band,0.5,1.5,0.4397745870316285,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Cov90,0.9728253968253968,band,0.75,0.98,0.007174603174603167,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,CalErr,0.20677282270933064,upper,,0.2,-0.006772822709330634,fail,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Level KS,0.1782766439909297,upper,,0.2,0.0217233560090703,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Width rho,0.2922694952106717,lower,0.2,,0.09226949521067168,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,MR ratio,0.19121112441066057,band,0.25,1.75,-0.05878887558933943,fail,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Econ ratio,0.9916088429885427,band,0.75,1.3,0.24160884298854268,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Jump KS,0.4959183673469388,upper,,0.5,0.004081632653061218,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Kurtosis,0.9542299137074539,band,0.5,1.5,0.4542299137074539,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Corr score,0.6493461706655366,lower,0.3,,0.3493461706655366,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Factor KS,0.12397917004103227,upper,,0.15,0.02602082995896772,pass,2,False
+eval:garch_ccc:rollout_2002,garch_ccc,,2002,Tail q99,1.0632928640293668,band,0.5,1.5,0.43670713597063315,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Cov90,0.9726379440665155,band,0.75,0.98,0.00736205593348449,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,CalErr,0.206538338792307,upper,,0.2,-0.0065383387923070024,fail,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Level KS,0.16861678004535147,upper,,0.2,0.031383219954648545,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Width rho,0.27500818509221875,lower,0.2,,0.07500818509221874,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,MR ratio,0.1662883869927818,band,0.25,1.75,-0.08371161300721819,fail,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Econ ratio,0.998386315959335,band,0.75,1.3,0.24838631595933502,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Jump KS,0.4997732426303855,upper,,0.5,0.00022675736961452753,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Kurtosis,0.9480229272786943,band,0.5,1.5,0.4480229272786943,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Corr score,0.6219797368804505,lower,0.3,,0.3219797368804505,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Factor KS,0.12357753617319944,upper,,0.15,0.026422463826800552,pass,2,False
+eval:garch_ccc:rollout_2003,garch_ccc,,2003,Tail q99,1.064122149400141,band,0.5,1.5,0.43587785059985906,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Cov90,0.9728828420256992,band,0.75,0.98,0.007117157974300792,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,CalErr,0.20753338372385988,upper,,0.2,-0.0075333837238598655,fail,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Level KS,0.17930461073318216,upper,,0.2,0.020695389266817854,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Width rho,0.3128567510920452,lower,0.2,,0.11285675109204518,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,MR ratio,0.17261137010414926,band,0.25,1.75,-0.07738862989585074,fail,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Econ ratio,1.0180732612554464,band,0.75,1.3,0.2680732612554464,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Jump KS,0.4963718820861678,upper,,0.5,0.0036281179138322184,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Kurtosis,0.9510504144697146,band,0.5,1.5,0.4510504144697146,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Corr score,0.6492905057570355,lower,0.3,,0.3492905057570355,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Factor KS,0.12333483492603389,upper,,0.15,0.0266651650739661,pass,2,False
+eval:garch_ccc:rollout_2004,garch_ccc,,2004,Tail q99,1.061805581351056,band,0.5,1.5,0.43819441864894393,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Cov90,0.9730098261526833,band,0.75,0.98,0.006990173847316705,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,CalErr,0.20409809355841102,upper,,0.2,-0.004098093558411009,fail,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Level KS,0.18447467876039303,upper,,0.2,0.015525321239606982,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Width rho,0.2831568991232857,lower,0.2,,0.08315689912328567,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,MR ratio,0.17914785022524704,band,0.25,1.75,-0.07085214977475296,fail,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Econ ratio,1.0051637889301275,band,0.75,1.3,0.2551637889301275,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Jump KS,0.49750566893424036,upper,,0.5,0.0024943310657596363,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Kurtosis,0.9394145097721517,band,0.5,1.5,0.4394145097721517,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Corr score,0.6486757561700582,lower,0.3,,0.34867575617005825,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Factor KS,0.12323723140049671,upper,,0.15,0.026762768599503287,pass,2,False
+eval:garch_ccc:rollout_2005,garch_ccc,,2005,Tail q99,1.061048694823537,band,0.5,1.5,0.4389513051764631,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Cov90,0.8977233560090703,band,0.75,0.98,0.08227664399092971,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,CalErr,0.026007558578987153,upper,,0.2,0.17399244142101286,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Level KS,0.12932728647014358,upper,,0.2,0.07067271352985643,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Width rho,0.28800205396844053,lower,0.2,,0.08800205396844052,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,MR ratio,0.00888071663397638,band,0.25,1.75,-0.24111928336602362,fail,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Econ ratio,1.334516701629821,band,0.75,1.3,-0.0345167016298209,fail,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Jump KS,0.3517006802721088,upper,,0.5,0.14829931972789118,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Kurtosis,0.6677480778222642,band,0.5,1.5,0.1677480778222642,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Corr score,0.676464228636352,lower,0.3,,0.37646422863635204,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Factor KS,0.07186091202353959,upper,,0.15,0.07813908797646041,pass,2,False
+eval:historical_sim:rollout_2001,historical_sim,,2001,Tail q99,1.251042960811411,band,0.5,1.5,0.2489570391885889,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Cov90,0.8986636432350718,band,0.75,0.98,0.08133635676492823,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,CalErr,0.024634584698076764,upper,,0.2,0.17536541530192323,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Level KS,0.13053665910808776,upper,,0.2,0.06946334089191225,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Width rho,0.2801379292975932,lower,0.2,,0.08013792929759317,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,MR ratio,0.011925892632813911,band,0.25,1.75,-0.2380741073671861,fail,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Econ ratio,1.3408100693884135,band,0.75,1.3,-0.04081006938841347,fail,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Jump KS,0.3619047619047619,upper,,0.5,0.1380952380952381,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Kurtosis,0.6550439348495678,band,0.5,1.5,0.1550439348495678,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Corr score,0.6762834868296359,lower,0.3,,0.3762834868296359,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Factor KS,0.07275174454702515,upper,,0.15,0.07724825545297484,pass,2,False
+eval:historical_sim:rollout_2002,historical_sim,,2002,Tail q99,1.2508258912312364,band,0.5,1.5,0.24917410876876356,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Cov90,0.898724111866969,band,0.75,0.98,0.081275888133031,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,CalErr,0.025932980599647278,upper,,0.2,0.17406701940035274,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Level KS,0.12353741496598647,upper,,0.2,0.07646258503401354,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Width rho,0.2785735273130231,lower,0.2,,0.07857352731302308,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,MR ratio,-0.003192555936954255,band,0.25,1.75,-0.2531925559369543,fail,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Econ ratio,1.3529126996934002,band,0.75,1.3,-0.05291269969340018,fail,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Jump KS,0.3585034013605442,upper,,0.5,0.1414965986394558,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Kurtosis,0.6579614434578955,band,0.5,1.5,0.15796144345789553,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Corr score,0.6730461398625336,lower,0.3,,0.3730461398625336,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Factor KS,0.07250769355361193,upper,,0.15,0.07749230644638806,pass,2,False
+eval:historical_sim:rollout_2003,historical_sim,,2003,Tail q99,1.2504655535607019,band,0.5,1.5,0.24953444643929812,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Cov90,0.8970823885109599,band,0.75,0.98,0.08291761148904009,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,CalErr,0.027391954312589235,upper,,0.2,0.17260804568741078,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Level KS,0.12893424036281187,upper,,0.2,0.07106575963718814,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Width rho,0.2604328444664579,lower,0.2,,0.06043284446645791,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,MR ratio,0.013598241273683795,band,0.25,1.75,-0.2364017587263162,fail,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Econ ratio,1.3574310150072617,band,0.75,1.3,-0.057431015007261665,fail,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Jump KS,0.3564625850340136,upper,,0.5,0.14353741496598638,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Kurtosis,0.6593450898896406,band,0.5,1.5,0.15934508988964058,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Corr score,0.6763139507902611,lower,0.3,,0.37631395079026114,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Factor KS,0.0726883908325235,upper,,0.15,0.0773116091674765,pass,2,False
+eval:historical_sim:rollout_2004,historical_sim,,2004,Tail q99,1.2518384536316445,band,0.5,1.5,0.24816154636835552,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Cov90,0.8977414965986394,band,0.75,0.98,0.08225850340136054,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,CalErr,0.025660199882422113,upper,,0.2,0.1743398001175779,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Level KS,0.13032501889644743,upper,,0.2,0.06967498110355258,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Width rho,0.27692755423847865,lower,0.2,,0.07692755423847863,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,MR ratio,-0.00037768638564152405,band,0.25,1.75,-0.2503776863856415,fail,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Econ ratio,1.325480071002098,band,0.75,1.3,-0.025480071002097926,fail,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Jump KS,0.3569160997732426,upper,,0.5,0.14308390022675738,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Kurtosis,0.6667270822866133,band,0.5,1.5,0.16672708228661326,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Corr score,0.6752078800885173,lower,0.3,,0.3752078800885173,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Factor KS,0.07242358749055179,upper,,0.15,0.0775764125094482,pass,2,False
+eval:historical_sim:rollout_2005,historical_sim,,2005,Tail q99,1.250738651584686,band,0.5,1.5,0.2492613484153141,pass,2,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Cov90,0.9850219198790627,band,0.75,0.98,-0.005021919879062753,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,CalErr,0.31686436549928615,upper,,0.2,-0.11686436549928614,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Level KS,0.26943310657596364,upper,,0.2,-0.06943310657596363,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Width rho,0.22269579160335465,lower,0.2,,0.022695791603354637,pass,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,MR ratio,-0.01816537444618628,band,0.25,1.75,-0.26816537444618627,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Econ ratio,1.0095207358399225,band,0.75,1.3,0.2595207358399225,pass,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Jump KS,0.5650793650793651,upper,,0.5,-0.06507936507936507,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Kurtosis,0.24311406759448054,band,0.5,1.5,-0.2568859324055195,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Corr score,0.2859773174290292,lower,0.3,,-0.01402268257097078,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Factor KS,0.19634539331605658,upper,,0.15,-0.04634539331605658,fail,8,False
+eval:path_diffusion:train_1001:rollout_2001,path_diffusion,1001,2001,Tail q99,1.4812877910817186,band,0.5,1.5,0.018712208918281403,pass,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Cov90,0.984949357520786,band,0.75,0.98,-0.0049493575207860685,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,CalErr,0.3169124044679601,upper,,0.2,-0.11691240446796008,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Level KS,0.26967498110355254,upper,,0.2,-0.06967498110355252,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Width rho,0.22447272615339844,lower,0.2,,0.024472726153398433,pass,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,MR ratio,0.002952554219370452,band,0.25,1.75,-0.24704744578062954,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Econ ratio,1.0263030498628367,band,0.75,1.3,0.27369695013716333,pass,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Jump KS,0.5616780045351474,upper,,0.5,-0.06167800453514738,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Kurtosis,0.24317033675091743,band,0.5,1.5,-0.2568296632490826,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Corr score,0.28575148077224044,lower,0.3,,-0.014248519227759548,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Factor KS,0.1964564943040708,upper,,0.15,-0.04645649430407081,fail,8,False
+eval:path_diffusion:train_1001:rollout_2002,path_diffusion,1001,2002,Tail q99,1.4781516196941085,band,0.5,1.5,0.021848380305891535,pass,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Cov90,0.9853363567649281,band,0.75,0.98,-0.005336356764928163,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,CalErr,0.31763500461913163,upper,,0.2,-0.11763500461913162,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Level KS,0.27469387755102037,upper,,0.2,-0.07469387755102036,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Width rho,0.21713132805569785,lower,0.2,,0.017131328055697836,pass,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,MR ratio,-0.012554429215900966,band,0.25,1.75,-0.26255442921590094,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Econ ratio,1.0053251573341941,band,0.75,1.3,0.25532515733419414,pass,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Jump KS,0.5643990929705215,upper,,0.5,-0.06439909297052149,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Kurtosis,0.243450088315182,band,0.5,1.5,-0.256549911684818,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Corr score,0.2854095241631195,lower,0.3,,-0.014590475836880501,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Factor KS,0.1964332955404384,upper,,0.15,-0.0464332955404384,fail,8,False
+eval:path_diffusion:train_1001:rollout_2003,path_diffusion,1001,2003,Tail q99,1.4786910340878792,band,0.5,1.5,0.021308965912120836,pass,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Cov90,0.9848798185941043,band,0.75,0.98,-0.004879818594104357,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,CalErr,0.3166819517930629,upper,,0.2,-0.1166819517930629,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Level KS,0.27337868480725624,upper,,0.2,-0.07337868480725623,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Width rho,0.2158431204649692,lower,0.2,,0.01584312046496919,pass,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,MR ratio,0.002933899091798689,band,0.25,1.75,-0.2470661009082013,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Econ ratio,0.9995158947878005,band,0.75,1.3,0.24951589478780045,pass,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Jump KS,0.5643990929705215,upper,,0.5,-0.06439909297052149,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Kurtosis,0.2439807495716269,band,0.5,1.5,-0.2560192504283731,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Corr score,0.2858556355237142,lower,0.3,,-0.014144364476285809,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Factor KS,0.19651664237123426,upper,,0.15,-0.04651664237123426,fail,8,False
+eval:path_diffusion:train_1001:rollout_2004,path_diffusion,1001,2004,Tail q99,1.4768646591716523,band,0.5,1.5,0.023135340828347672,pass,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Cov90,0.9852154195011338,band,0.75,0.98,-0.0052154195011338,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,CalErr,0.3177502309565801,upper,,0.2,-0.1177502309565801,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Level KS,0.2757974300831444,upper,,0.2,-0.07579743008314438,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Width rho,0.219622674244523,lower,0.2,,0.019622674244522992,pass,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,MR ratio,-0.009706207483244446,band,0.25,1.75,-0.25970620748324447,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Econ ratio,1.0169436824269809,band,0.75,1.3,0.26694368242698086,pass,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Jump KS,0.5630385487528344,upper,,0.5,-0.06303854875283443,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Kurtosis,0.24479548474373866,band,0.5,1.5,-0.2552045152562613,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Corr score,0.28577659249254816,lower,0.3,,-0.014223407507451824,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Factor KS,0.19653385163589246,upper,,0.15,-0.046533851635892465,fail,8,False
+eval:path_diffusion:train_1001:rollout_2005,path_diffusion,1001,2005,Tail q99,1.4819988096037098,band,0.5,1.5,0.018001190396290223,pass,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Cov90,0.9849554043839758,band,0.75,0.98,-0.004955404383975792,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,CalErr,0.3165133114974385,upper,,0.2,-0.11651331149743849,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Level KS,0.2684504913076341,upper,,0.2,-0.06845049130763409,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Width rho,0.22014008400563023,lower,0.2,,0.02014008400563022,pass,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,MR ratio,-0.027288629545244133,band,0.25,1.75,-0.27728862954524414,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Econ ratio,1.017266419235114,band,0.75,1.3,0.26726641923511396,pass,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Jump KS,0.5653061224489796,upper,,0.5,-0.0653061224489796,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Kurtosis,0.2430356028829208,band,0.5,1.5,-0.2569643971170792,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Corr score,0.28616503274340677,lower,0.3,,-0.013834967256593222,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Factor KS,0.19625951571104633,upper,,0.15,-0.046259515711046334,fail,8,False
+eval:path_diffusion:train_1002:rollout_2001,path_diffusion,1002,2001,Tail q99,1.480842373306079,band,0.5,1.5,0.01915762669392107,pass,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Cov90,0.9849433106575963,band,0.75,0.98,-0.004943310657596345,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,CalErr,0.3165831863609642,upper,,0.2,-0.11658318636096421,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Level KS,0.2700982615268329,upper,,0.2,-0.0700982615268329,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Width rho,0.2229760435642789,lower,0.2,,0.022976043564278875,pass,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,MR ratio,-0.0048479524058453564,band,0.25,1.75,-0.25484795240584535,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Econ ratio,1.0211392609327095,band,0.75,1.3,0.27113926093270946,pass,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Jump KS,0.5630385487528344,upper,,0.5,-0.06303854875283443,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Kurtosis,0.2428647858008803,band,0.5,1.5,-0.25713521419911967,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Corr score,0.2858729739392901,lower,0.3,,-0.014127026060709869,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Factor KS,0.19637407542382035,upper,,0.15,-0.046374075423820355,fail,8,False
+eval:path_diffusion:train_1002:rollout_2002,path_diffusion,1002,2002,Tail q99,1.4779791880667403,band,0.5,1.5,0.022020811933259665,pass,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Cov90,0.9852789115646259,band,0.75,0.98,-0.005278911564625899,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,CalErr,0.31719895859578395,upper,,0.2,-0.11719895859578394,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Level KS,0.27354497354497354,upper,,0.2,-0.07354497354497352,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Width rho,0.21394194041252865,lower,0.2,,0.013941940412528636,pass,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,MR ratio,-0.02028416832619891,band,0.25,1.75,-0.2702841683261989,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Econ ratio,0.9998386315959337,band,0.75,1.3,0.24983863159593367,pass,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Jump KS,0.5687074829931973,upper,,0.5,-0.06870748299319729,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Kurtosis,0.2428307571071133,band,0.5,1.5,-0.2571692428928867,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Corr score,0.2855247469182328,lower,0.3,,-0.01447525308176717,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Factor KS,0.19631755479969767,upper,,0.15,-0.04631755479969768,fail,8,False
+eval:path_diffusion:train_1002:rollout_2003,path_diffusion,1002,2003,Tail q99,1.4776746945596815,band,0.5,1.5,0.02232530544031852,pass,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Cov90,0.9848586545729403,band,0.75,0.98,-0.004858654572940324,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,CalErr,0.3164283194759385,upper,,0.2,-0.11642831947593851,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Level KS,0.27324263038548746,upper,,0.2,-0.07324263038548745,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Width rho,0.21571327831832035,lower,0.2,,0.01571327831832034,pass,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,MR ratio,-0.006387559641709765,band,0.25,1.75,-0.2563875596417098,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Econ ratio,0.9920929482007425,band,0.75,1.3,0.24209294820074245,pass,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Jump KS,0.5684807256235828,upper,,0.5,-0.06848072562358276,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Kurtosis,0.24473647622693256,band,0.5,1.5,-0.25526352377306744,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Corr score,0.28598685234967336,lower,0.3,,-0.01401314765032663,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Factor KS,0.19632464096749808,upper,,0.15,-0.04632464096749808,fail,8,False
+eval:path_diffusion:train_1002:rollout_2004,path_diffusion,1002,2004,Tail q99,1.4766178456580352,band,0.5,1.5,0.023382154341964778,pass,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Cov90,0.9851912320483749,band,0.75,0.98,-0.005191232048374905,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,CalErr,0.31755841101872845,upper,,0.2,-0.11755841101872844,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Level KS,0.27554043839758124,upper,,0.2,-0.07554043839758123,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Width rho,0.22095005834501635,lower,0.2,,0.020950058345016342,pass,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,MR ratio,-0.01888404009257649,band,0.25,1.75,-0.2688840400925765,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Econ ratio,1.0127481039212523,band,0.75,1.3,0.26274810392125225,pass,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Jump KS,0.5573696145124717,upper,,0.5,-0.05736961451247169,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Kurtosis,0.24503360701190033,band,0.5,1.5,-0.25496639298809964,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Corr score,0.2859269192056264,lower,0.3,,-0.014073080794373583,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Factor KS,0.1963589751376741,upper,,0.15,-0.04635897513767412,fail,8,False
+eval:path_diffusion:train_1002:rollout_2005,path_diffusion,1002,2005,Tail q99,1.482113482425003,band,0.5,1.5,0.01788651757499693,pass,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Cov90,0.9848556311413454,band,0.75,0.98,-0.004855631141345462,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,CalErr,0.3158612580834803,upper,,0.2,-0.1158612580834803,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Level KS,0.26483749055177624,upper,,0.2,-0.06483749055177623,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Width rho,0.2219212160388631,lower,0.2,,0.0219212160388631,pass,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,MR ratio,-0.027773072961595677,band,0.25,1.75,-0.2777730729615957,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Econ ratio,1.0211392609327092,band,0.75,1.3,0.27113926093270924,pass,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Jump KS,0.5707482993197279,upper,,0.5,-0.07074829931972793,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Kurtosis,0.2443264927762618,band,0.5,1.5,-0.25567350722373816,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Corr score,0.28720252001994895,lower,0.3,,-0.01279747998005104,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Factor KS,0.19576449627470036,upper,,0.15,-0.04576449627470036,fail,8,False
+eval:path_diffusion:train_1003:rollout_2001,path_diffusion,1003,2001,Tail q99,1.4787206349710935,band,0.5,1.5,0.021279365028906483,pass,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Cov90,0.9847105064247922,band,0.75,0.98,-0.004710506424792205,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,CalErr,0.31604501553707903,upper,,0.2,-0.11604501553707902,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Level KS,0.2734845049130763,upper,,0.2,-0.07348450491307629,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Width rho,0.22568803745274335,lower,0.2,,0.02568803745274334,pass,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,MR ratio,-0.005661579435468725,band,0.25,1.75,-0.25566157943546874,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Econ ratio,1.03533968049056,band,0.75,1.3,0.26466031950944013,pass,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Jump KS,0.5596371882086167,upper,,0.5,-0.05963718820861674,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Kurtosis,0.24243654743233914,band,0.5,1.5,-0.2575634525676609,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Corr score,0.2869133438800754,lower,0.3,,-0.0130866561199246,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Factor KS,0.19588099624770544,upper,,0.15,-0.04588099624770545,fail,8,False
+eval:path_diffusion:train_1003:rollout_2002,path_diffusion,1003,2002,Tail q99,1.4756117194563547,band,0.5,1.5,0.02438828054364528,pass,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Cov90,0.9850854119425548,band,0.75,0.98,-0.005085411942554852,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,CalErr,0.31674981103552535,upper,,0.2,-0.11674981103552534,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Level KS,0.26695389266817837,upper,,0.2,-0.06695389266817836,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Width rho,0.21826282960736743,lower,0.2,,0.018262829607367415,pass,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,MR ratio,-0.02164477033941366,band,0.25,1.75,-0.27164477033941364,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Econ ratio,1.0127481039212523,band,0.75,1.3,0.26274810392125225,pass,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Jump KS,0.572562358276644,upper,,0.5,-0.07256235827664403,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Kurtosis,0.24274576957434651,band,0.5,1.5,-0.2572542304256535,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Corr score,0.2866240118514093,lower,0.3,,-0.0133759881485907,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Factor KS,0.19577774065975598,upper,,0.15,-0.04577774065975598,fail,8,False
+eval:path_diffusion:train_1003:rollout_2003,path_diffusion,1003,2003,Tail q99,1.4753251992160021,band,0.5,1.5,0.024674800783997863,pass,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Cov90,0.9847830687830688,band,0.75,0.98,-0.004783068783068778,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,CalErr,0.315570336776686,upper,,0.2,-0.11557033677668599,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Level KS,0.26832955404383974,upper,,0.2,-0.06832955404383972,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Width rho,0.21746180989878472,lower,0.2,,0.017461809898784708,pass,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,MR ratio,-0.006625955940022059,band,0.25,1.75,-0.2566259559400221,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Econ ratio,0.9995158947878007,band,0.75,1.3,0.24951589478780067,pass,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Jump KS,0.5678004535147392,upper,,0.5,-0.06780045351473918,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Kurtosis,0.2450967470230338,band,0.5,1.5,-0.2549032529769662,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Corr score,0.28708894171179233,lower,0.3,,-0.012911058288207655,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Factor KS,0.19584311899362922,upper,,0.15,-0.04584311899362922,fail,8,False
+eval:path_diffusion:train_1003:rollout_2004,path_diffusion,1003,2004,Tail q99,1.4737682823135865,band,0.5,1.5,0.026231717686413525,pass,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Cov90,0.9850763416477702,band,0.75,0.98,-0.005076341647770266,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,CalErr,0.3170430839002268,upper,,0.2,-0.11704308390022677,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Level KS,0.27067271352985633,upper,,0.2,-0.07067271352985632,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Width rho,0.2228287119043422,lower,0.2,,0.022828711904342186,pass,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,MR ratio,-0.01974363392822708,band,0.25,1.75,-0.2697436339282271,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Econ ratio,1.0185573664676457,band,0.75,1.3,0.2685573664676457,pass,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Jump KS,0.5639455782312925,upper,,0.5,-0.06394557823129254,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Kurtosis,0.2460328223872385,band,0.5,1.5,-0.2539671776127615,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Corr score,0.28698836911976255,lower,0.3,,-0.013011630880237435,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Factor KS,0.1958853829230105,upper,,0.15,-0.045885382923010504,fail,8,False
+eval:path_diffusion:train_1003:rollout_2005,path_diffusion,1003,2005,Tail q99,1.4790517441455369,band,0.5,1.5,0.020948255854463138,pass,8,False
+eval:pca_var:rollout_2001,pca_var,,2001,Cov90,0.9465064247921391,band,0.75,0.98,0.03349357520786089,pass,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,CalErr,0.1859491055681532,upper,,0.2,0.014050894431846817,pass,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Level KS,0.16037792894935754,upper,,0.2,0.03962207105064247,pass,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Width rho,0.219254694884947,lower,0.2,,0.019254694884946993,pass,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,MR ratio,0.15081722640819684,band,0.25,1.75,-0.09918277359180316,fail,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Econ ratio,1.0655155720509926,band,0.75,1.3,0.23448442794900748,pass,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Jump KS,0.6653061224489796,upper,,0.5,-0.16530612244897958,fail,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Kurtosis,0.35165193759000596,band,0.5,1.5,-0.14834806240999404,fail,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Corr score,0.2050677576454013,lower,0.3,,-0.09493224235459868,fail,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Factor KS,0.11257896015549076,upper,,0.15,0.03742103984450923,pass,4,False
+eval:pca_var:rollout_2001,pca_var,,2001,Tail q99,1.1004964942803959,band,0.5,1.5,0.39950350571960414,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Cov90,0.9473499622071051,band,0.75,0.98,0.03265003779289488,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,CalErr,0.18668211976148485,upper,,0.2,0.013317880238515156,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Level KS,0.16792139077853363,upper,,0.2,0.03207860922146638,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Width rho,0.23343491242650907,lower,0.2,,0.03343491242650906,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,MR ratio,0.15092278941898926,band,0.25,1.75,-0.09907721058101074,fail,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Econ ratio,1.0408262062288203,band,0.75,1.3,0.2591737937711798,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Jump KS,0.6643990929705216,upper,,0.5,-0.16439909297052158,fail,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Kurtosis,0.3570248786014281,band,0.5,1.5,-0.14297512139857188,fail,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Corr score,0.20533606607995236,lower,0.3,,-0.09466393392004763,fail,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Factor KS,0.11234823790627364,upper,,0.15,0.03765176209372635,pass,4,False
+eval:pca_var:rollout_2002,pca_var,,2002,Tail q99,1.1001154240564373,band,0.5,1.5,0.39988457594356275,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Cov90,0.9478306878306878,band,0.75,0.98,0.03216931216931218,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,CalErr,0.18758713361887963,upper,,0.2,0.01241286638112038,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Level KS,0.16334089191232048,upper,,0.2,0.036659108087679526,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Width rho,0.20804797443452905,lower,0.2,,0.008047974434529037,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,MR ratio,0.1448790966478542,band,0.25,1.75,-0.1051209033521458,fail,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Econ ratio,1.0474423107955464,band,0.75,1.3,0.25255768920445365,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Jump KS,0.6575963718820862,upper,,0.5,-0.1575963718820862,fail,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Kurtosis,0.35387537760510923,band,0.5,1.5,-0.14612462239489077,fail,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Corr score,0.2056876455302531,lower,0.3,,-0.0943123544697469,fail,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Factor KS,0.11271983992009503,upper,,0.15,0.037280160079904964,pass,4,False
+eval:pca_var:rollout_2003,pca_var,,2003,Tail q99,1.0972105385573274,band,0.5,1.5,0.4027894614426726,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Cov90,0.9462554799697657,band,0.75,0.98,0.033744520030234315,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,CalErr,0.186549088771311,upper,,0.2,0.013450911228689022,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Level KS,0.16210128495842782,upper,,0.2,0.03789871504157219,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Width rho,0.2330723897950789,lower,0.2,,0.0330723897950789,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,MR ratio,0.14471389775599197,band,0.25,1.75,-0.10528610224400803,fail,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Econ ratio,1.0464741003711473,band,0.75,1.3,0.25352589962885275,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Jump KS,0.6589569160997732,upper,,0.5,-0.15895691609977325,fail,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Kurtosis,0.35407905578469384,band,0.5,1.5,-0.14592094421530616,fail,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Corr score,0.2065115344698779,lower,0.3,,-0.09348846553012208,fail,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Factor KS,0.11265690800129577,upper,,0.15,0.037343091998704225,pass,4,False
+eval:pca_var:rollout_2004,pca_var,,2004,Tail q99,1.094264148832833,band,0.5,1.5,0.4057358511671669,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Cov90,0.9472834467120181,band,0.75,0.98,0.03271655328798184,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,CalErr,0.1888005374989502,upper,,0.2,0.011199462501049806,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Level KS,0.17368102796674226,upper,,0.2,0.026318972033257754,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Width rho,0.22404276395873035,lower,0.2,,0.02404276395873034,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,MR ratio,0.14572615248348783,band,0.25,1.75,-0.10427384751651217,fail,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Econ ratio,1.083427464902372,band,0.75,1.3,0.21657253509762797,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Jump KS,0.6709750566893424,upper,,0.5,-0.17097505668934243,fail,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Kurtosis,0.35462861189155437,band,0.5,1.5,-0.14537138810844563,fail,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Corr score,0.20615021876937378,lower,0.3,,-0.0938497812306262,fail,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Factor KS,0.11283001295756398,upper,,0.15,0.037169987042436015,pass,4,False
+eval:pca_var:rollout_2005,pca_var,,2005,Tail q99,1.0946387027867828,band,0.5,1.5,0.40536129721321723,pass,4,False
+eval:random_walk:rollout_2001,random_walk,,2001,Cov90,0.9778110355253212,band,0.75,0.98,0.002188964474678756,pass,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,CalErr,0.2902531284118586,upper,,0.2,-0.09025312841185856,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Level KS,0.2380347694633409,upper,,0.2,-0.03803476946334089,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Width rho,0.199210873160453,lower,0.2,,-0.0007891268395470163,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,MR ratio,-0.0008976079506193759,band,0.25,1.75,-0.2508976079506194,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Econ ratio,1.0259803130547038,band,0.75,1.3,0.2740196869452962,pass,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Jump KS,0.6492063492063492,upper,,0.5,-0.14920634920634923,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Kurtosis,0.23976250509027044,band,0.5,1.5,-0.2602374949097296,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Corr score,0.6060144067639828,lower,0.3,,0.3060144067639828,pass,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Factor KS,0.1622238925332038,upper,,0.15,-0.0122238925332038,fail,7,False
+eval:random_walk:rollout_2001,random_walk,,2001,Tail q99,1.2077573106420583,band,0.5,1.5,0.29224268935794173,pass,7,False
+eval:random_walk:rollout_2002,random_walk,,2002,Cov90,0.9773817082388511,band,0.75,0.98,0.0026182917611489165,pass,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,CalErr,0.2888455530360292,upper,,0.2,-0.0888455530360292,fail,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Level KS,0.24409674981103546,upper,,0.2,-0.04409674981103545,fail,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Width rho,0.22753465022372585,lower,0.2,,0.027534650223725837,pass,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,MR ratio,0.00683508682450076,band,0.25,1.75,-0.24316491317549924,fail,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Econ ratio,0.9930611586251411,band,0.75,1.3,0.2430611586251411,pass,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Jump KS,0.654421768707483,upper,,0.5,-0.15442176870748303,fail,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Kurtosis,0.2335458186313509,band,0.5,1.5,-0.26645418136864907,fail,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Corr score,0.6062313631866518,lower,0.3,,0.30623136318665184,pass,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Factor KS,0.1626112697062952,upper,,0.15,-0.012611269706295197,fail,6,False
+eval:random_walk:rollout_2002,random_walk,,2002,Tail q99,1.208026510460844,band,0.5,1.5,0.2919734895391559,pass,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Cov90,0.9776296296296296,band,0.75,0.98,0.002370370370370356,pass,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,CalErr,0.2884511631813219,upper,,0.2,-0.0884511631813219,fail,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Level KS,0.2511866969009826,upper,,0.2,-0.0511866969009826,fail,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Width rho,0.22937972391753905,lower,0.2,,0.02937972391753904,pass,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,MR ratio,-0.00281209182551164,band,0.25,1.75,-0.2528120918255116,fail,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Econ ratio,1.0201710505083104,band,0.75,1.3,0.27017105050831036,pass,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Jump KS,0.6526077097505669,upper,,0.5,-0.15260770975056692,fail,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Kurtosis,0.23360684798777365,band,0.5,1.5,-0.26639315201222635,fail,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Corr score,0.6066209999112594,lower,0.3,,0.3066209999112594,pass,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Factor KS,0.1627261668556311,upper,,0.15,-0.012726166855631105,fail,6,False
+eval:random_walk:rollout_2003,random_walk,,2003,Tail q99,1.2113735287017378,band,0.5,1.5,0.28862647129826224,pass,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Cov90,0.9773544973544973,band,0.75,0.98,0.002645502645502673,pass,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,CalErr,0.29006701940035273,upper,,0.2,-0.09006701940035272,fail,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Level KS,0.24253968253968256,upper,,0.2,-0.042539682539682544,fail,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Width rho,0.27038521702387247,lower,0.2,,0.07038521702387246,pass,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,MR ratio,-0.011300668558553174,band,0.25,1.75,-0.26130066855855316,fail,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Econ ratio,1.0329191544295626,band,0.75,1.3,0.26708084557043743,pass,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Jump KS,0.6492063492063492,upper,,0.5,-0.14920634920634923,fail,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Kurtosis,0.2368056799245122,band,0.5,1.5,-0.2631943200754878,fail,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Corr score,0.6062222703817841,lower,0.3,,0.3062222703817841,pass,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Factor KS,0.16242627011121913,upper,,0.15,-0.012426270111219134,fail,6,False
+eval:random_walk:rollout_2004,random_walk,,2004,Tail q99,1.209019770556178,band,0.5,1.5,0.29098022944382196,pass,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Cov90,0.9773182161753591,band,0.75,0.98,0.0026817838246409043,pass,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,CalErr,0.28714201730074745,upper,,0.2,-0.08714201730074744,fail,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Level KS,0.23927437641723356,upper,,0.2,-0.03927437641723355,fail,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Width rho,0.22149964881057319,lower,0.2,,0.021499648810573174,pass,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,MR ratio,-0.003858920356764685,band,0.25,1.75,-0.25385892035676466,fail,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Econ ratio,0.9928997902210747,band,0.75,1.3,0.24289979022107466,pass,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Jump KS,0.6426303854875284,upper,,0.5,-0.14263038548752838,fail,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Kurtosis,0.24003371299371132,band,0.5,1.5,-0.25996628700628865,fail,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Corr score,0.6066049626276726,lower,0.3,,0.3066049626276726,pass,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Factor KS,0.1620976912590433,upper,,0.15,-0.012097691259043308,fail,6,False
+eval:random_walk:rollout_2005,random_walk,,2005,Tail q99,1.2080426335193013,band,0.5,1.5,0.2919573664806987,pass,6,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Cov90,0.7379561602418745,band,0.75,0.98,-0.012043839758125507,fail,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,CalErr,0.12181708238851097,upper,,0.2,0.07818291761148904,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Level KS,0.1622675736961452,upper,,0.2,0.037732426303854816,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Width rho,0.4239403453689168,lower,0.2,,0.22394034536891677,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,MR ratio,1.032303396247326,band,0.25,1.75,0.717696603752674,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Econ ratio,0.9199612715830242,band,0.75,1.3,0.1699612715830242,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Jump KS,0.42471655328798186,upper,,0.5,0.07528344671201814,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Kurtosis,1.0852471882037573,band,0.5,1.5,0.4147528117962427,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Corr score,0.5348016953385448,lower,0.3,,0.23480169533854484,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Factor KS,0.09719514293812763,upper,,0.15,0.052804857061872365,pass,1,False
+eval:scenarioflow:train_1001:rollout_2001,scenarioflow,1001,2001,Tail q99,1.042441682928918,band,0.5,1.5,0.45755831707108197,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Cov90,0.7376900982615269,band,0.75,0.98,-0.012309901738473128,fail,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,CalErr,0.122320987654321,upper,,0.2,0.077679012345679,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Level KS,0.1628269085411943,upper,,0.2,0.03717309145880571,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Width rho,0.4459262026488917,lower,0.2,,0.2459262026488917,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,MR ratio,1.0222817755570903,band,0.25,1.75,0.7277182244429097,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Econ ratio,0.931257059867678,band,0.75,1.3,0.18125705986767804,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Jump KS,0.409297052154195,upper,,0.5,0.09070294784580502,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Kurtosis,1.0893654348047501,band,0.5,1.5,0.4106345651952499,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Corr score,0.5347150365239175,lower,0.3,,0.2347150365239175,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Factor KS,0.09733492603390563,upper,,0.15,0.052665073966094364,pass,1,False
+eval:scenarioflow:train_1001:rollout_2002,scenarioflow,1001,2002,Tail q99,1.039604571732413,band,0.5,1.5,0.46039542826758706,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Cov90,0.7391292517006802,band,0.75,0.98,-0.010870748299319777,fail,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,CalErr,0.12202267573696145,upper,,0.2,0.07797732426303856,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Level KS,0.16380952380952385,upper,,0.2,0.03619047619047616,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Width rho,0.4309340519424553,lower,0.2,,0.2309340519424553,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,MR ratio,1.0081360030206985,band,0.25,1.75,0.7418639969793015,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Econ ratio,0.9202840083911571,band,0.75,1.3,0.1702840083911571,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Jump KS,0.4342403628117914,upper,,0.5,0.0657596371882086,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Kurtosis,1.077584568545353,band,0.5,1.5,0.4224154314546471,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Corr score,0.5338656135956333,lower,0.3,,0.23386561359563335,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Factor KS,0.09695379143720982,upper,,0.15,0.05304620856279017,pass,1,False
+eval:scenarioflow:train_1001:rollout_2003,scenarioflow,1001,2003,Tail q99,1.0404324407992431,band,0.5,1.5,0.45956755920075687,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Cov90,0.7363839758125472,band,0.75,0.98,-0.01361602418745278,fail,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,CalErr,0.12374065675652979,upper,,0.2,0.07625934324347022,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Level KS,0.16123960695389272,upper,,0.2,0.03876039304610729,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Width rho,0.41418525452138893,lower,0.2,,0.21418525452138892,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,MR ratio,1.0198152357498838,band,0.25,1.75,0.7301847642501162,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Econ ratio,0.9378731644344036,band,0.75,1.3,0.1878731644344036,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Jump KS,0.4179138321995465,upper,,0.5,0.08208616780045352,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Kurtosis,1.0888511086685397,band,0.5,1.5,0.41114889133146026,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Corr score,0.5340720798001044,lower,0.3,,0.23407207980010442,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Factor KS,0.09703696954972467,upper,,0.15,0.052963030450275325,pass,1,False
+eval:scenarioflow:train_1001:rollout_2004,scenarioflow,1001,2004,Tail q99,1.0371807082019084,band,0.5,1.5,0.46281929179809156,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Cov90,0.7393015873015873,band,0.75,0.98,-0.010698412698412652,fail,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,CalErr,0.1212842865541278,upper,,0.2,0.0787157134458722,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Level KS,0.16123960695389272,upper,,0.2,0.03876039304610729,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Width rho,0.41740024681201154,lower,0.2,,0.21740024681201153,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,MR ratio,1.02663828369723,band,0.25,1.75,0.7233617163027699,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Econ ratio,0.9335162175246087,band,0.75,1.3,0.18351621752460867,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Jump KS,0.42993197278911566,upper,,0.5,0.07006802721088434,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Kurtosis,1.084010254728181,band,0.5,1.5,0.4159897452718191,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Corr score,0.5328688404071692,lower,0.3,,0.2328688404071692,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Factor KS,0.09707375013497464,upper,,0.15,0.05292624986502535,pass,1,False
+eval:scenarioflow:train_1001:rollout_2005,scenarioflow,1001,2005,Tail q99,1.0418977214472096,band,0.5,1.5,0.4581022785527904,pass,1,False
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Cov90,0.792562358276644,band,0.75,0.98,0.04256235827664401,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,CalErr,0.07775426219870665,upper,,0.2,0.12224573780129336,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Level KS,0.13558578987150416,upper,,0.2,0.06441421012849585,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Width rho,0.36311741479808707,lower,0.2,,0.16311741479808706,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,MR ratio,1.0441594223419102,band,0.25,1.75,0.7058405776580898,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Econ ratio,0.856220751976763,band,0.75,1.3,0.10622075197676295,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Jump KS,0.35578231292517004,upper,,0.5,0.14421768707482996,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Kurtosis,1.2509523992575524,band,0.5,1.5,0.24904760074244758,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Corr score,0.547518478379436,lower,0.3,,0.24751847837943602,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Factor KS,0.0938617758611381,upper,,0.15,0.056138224138861895,pass,0,True
+eval:scenarioflow:train_1002:rollout_2001,scenarioflow,1002,2001,Tail q99,0.9890764702423569,band,0.5,1.5,0.4890764702423569,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Cov90,0.7915374149659864,band,0.75,0.98,0.0415374149659864,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,CalErr,0.07897774418409338,upper,,0.2,0.12102225581590663,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Level KS,0.13339380196523054,upper,,0.2,0.06660619803476947,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Width rho,0.38027336808849416,lower,0.2,,0.18027336808849415,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,MR ratio,1.0356984298241216,band,0.25,1.75,0.7143015701758784,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Econ ratio,0.8484750685815717,band,0.75,1.3,0.09847506858157173,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Jump KS,0.33877551020408164,upper,,0.5,0.16122448979591836,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Kurtosis,1.268403876203904,band,0.5,1.5,0.23159612379609595,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Corr score,0.5464120595462636,lower,0.3,,0.2464120595462636,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Factor KS,0.09411131019868266,upper,,0.15,0.05588868980131734,pass,0,True
+eval:scenarioflow:train_1002:rollout_2002,scenarioflow,1002,2002,Tail q99,0.9939792109420341,band,0.5,1.5,0.4939792109420341,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Cov90,0.7918125472411187,band,0.75,0.98,0.041812547241118714,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,CalErr,0.07877786176198873,upper,,0.2,0.12122213823801128,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Level KS,0.1349206349206349,upper,,0.2,0.0650793650793651,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Width rho,0.3597115769384677,lower,0.2,,0.15971157693846771,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,MR ratio,1.0182142933685385,band,0.25,1.75,0.7317857066314615,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Econ ratio,0.8399225431660482,band,0.75,1.3,0.0899225431660482,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Jump KS,0.35714285714285715,upper,,0.5,0.14285714285714285,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Kurtosis,1.2602967616449312,band,0.5,1.5,0.2397032383550688,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Corr score,0.5466929831579059,lower,0.3,,0.24669298315790594,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Factor KS,0.09395069039520568,upper,,0.15,0.05604930960479432,pass,0,True
+eval:scenarioflow:train_1002:rollout_2003,scenarioflow,1002,2003,Tail q99,0.9909309195106298,band,0.5,1.5,0.49093091951062984,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Cov90,0.7911504157218443,band,0.75,0.98,0.0411504157218443,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,CalErr,0.08068900646678424,upper,,0.2,0.11931099353321577,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Level KS,0.1331972789115646,upper,,0.2,0.06680272108843541,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Width rho,0.3544108552511914,lower,0.2,,0.15441085525119141,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,MR ratio,1.031514555589467,band,0.25,1.75,0.7184854444105331,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Econ ratio,0.8638050669678876,band,0.75,1.3,0.11380506696788761,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Jump KS,0.35941043083900226,upper,,0.5,0.14058956916099774,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Kurtosis,1.2662491671895402,band,0.5,1.5,0.23375083281045983,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Corr score,0.5469253727891772,lower,0.3,,0.2469253727891772,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Factor KS,0.09382955066947411,upper,,0.15,0.05617044933052588,pass,0,True
+eval:scenarioflow:train_1002:rollout_2004,scenarioflow,1002,2004,Tail q99,0.9946515759334822,band,0.5,1.5,0.4946515759334822,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Cov90,0.7940347694633408,band,0.75,0.98,0.04403476946334084,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,CalErr,0.0776262702611909,upper,,0.2,0.12237372973880911,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Level KS,0.13517762660619803,upper,,0.2,0.06482237339380198,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Width rho,0.35898485268233166,lower,0.2,,0.15898485268233165,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,MR ratio,1.0351474685858058,band,0.25,1.75,0.7148525314141942,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Econ ratio,0.8644505405841536,band,0.75,1.3,0.1144505405841536,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Jump KS,0.35351473922902493,upper,,0.5,0.14648526077097507,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Kurtosis,1.24649590901228,band,0.5,1.5,0.25350409098772,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Corr score,0.5460182207502322,lower,0.3,,0.24601822075023222,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Factor KS,0.09390083414318108,upper,,0.15,0.056099165856818914,pass,0,True
+eval:scenarioflow:train_1002:rollout_2005,scenarioflow,1002,2005,Tail q99,0.991404977089025,band,0.5,1.5,0.491404977089025,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Cov90,0.7909538926681784,band,0.75,0.98,0.04095389266817839,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,CalErr,0.08549189552364155,upper,,0.2,0.11450810447635847,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Level KS,0.13481481481481483,upper,,0.2,0.06518518518518518,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Width rho,0.3994592242491402,lower,0.2,,0.1994592242491402,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,MR ratio,1.0964340456866728,band,0.25,1.75,0.6535659543133272,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Econ ratio,0.9081813780861708,band,0.75,1.3,0.15818137808617083,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Jump KS,0.3925170068027211,upper,,0.5,0.10748299319727889,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Kurtosis,1.2849797907056826,band,0.5,1.5,0.21502020929431742,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Corr score,0.5311902728695903,lower,0.3,,0.23119027286959032,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Factor KS,0.09740806540870316,upper,,0.15,0.05259193459129684,pass,0,True
+eval:scenarioflow:train_1003:rollout_2001,scenarioflow,1003,2001,Tail q99,1.038420044037866,band,0.5,1.5,0.4615799559621341,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Cov90,0.790832955404384,band,0.75,0.98,0.04083295540438403,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,CalErr,0.0857210044511632,upper,,0.2,0.11427899554883682,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Level KS,0.13204837490551768,upper,,0.2,0.06795162509448233,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Width rho,0.39660101802958947,lower,0.2,,0.19660101802958946,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,MR ratio,1.0875769810240805,band,0.25,1.75,0.6624230189759195,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Econ ratio,0.9189930611586251,band,0.75,1.3,0.1689930611586251,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Jump KS,0.3986394557823129,upper,,0.5,0.10136054421768709,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Kurtosis,1.2986452919915652,band,0.5,1.5,0.2013547080084348,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Corr score,0.5287528583104988,lower,0.3,,0.2287528583104988,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Factor KS,0.09750178841377823,upper,,0.15,0.05249821158622177,pass,0,True
+eval:scenarioflow:train_1003:rollout_2002,scenarioflow,1003,2002,Tail q99,1.0397806282496147,band,0.5,1.5,0.4602193717503853,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Cov90,0.7905154950869236,band,0.75,0.98,0.04051549508692365,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,CalErr,0.08623901906441589,upper,,0.2,0.11376098093558412,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Level KS,0.13287981859410436,upper,,0.2,0.06712018140589565,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Width rho,0.4100058205100222,lower,0.2,,0.2100058205100222,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,MR ratio,1.0746446233035163,band,0.25,1.75,0.6753553766964837,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Econ ratio,0.9257705341294175,band,0.75,1.3,0.17577053412941746,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Jump KS,0.40068027210884355,upper,,0.5,0.09931972789115645,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Kurtosis,1.2856124931358814,band,0.5,1.5,0.21438750686411856,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Corr score,0.4967083866053704,lower,0.3,,0.19670838660537043,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Factor KS,0.09733711937155813,upper,,0.15,0.05266288062844186,pass,0,True
+eval:scenarioflow:train_1003:rollout_2003,scenarioflow,1003,2003,Tail q99,1.0383526656840334,band,0.5,1.5,0.4616473343159666,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Cov90,0.7894754346182917,band,0.75,0.98,0.03947543461829173,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,CalErr,0.086984126984127,upper,,0.2,0.11301587301587301,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Level KS,0.13505668934240367,upper,,0.2,0.06494331065759634,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Width rho,0.3804588968454515,lower,0.2,,0.18045889684545147,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,MR ratio,1.0799505735169874,band,0.25,1.75,0.6700494264830126,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Econ ratio,0.9167339035016945,band,0.75,1.3,0.16673390350169448,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Jump KS,0.39319727891156464,upper,,0.5,0.10680272108843536,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Kurtosis,1.2949295517346617,band,0.5,1.5,0.20507044826533827,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Corr score,0.5312177872079878,lower,0.3,,0.23121778720798786,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Factor KS,0.09729181851311952,upper,,0.15,0.05270818148688047,pass,0,True
+eval:scenarioflow:train_1003:rollout_2004,scenarioflow,1003,2004,Tail q99,1.0384062277008614,band,0.5,1.5,0.46159377229913856,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Cov90,0.7928102796674226,band,0.75,0.98,0.04281027966742257,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,CalErr,0.08486772486772487,upper,,0.2,0.11513227513227514,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Level KS,0.13157974300831443,upper,,0.2,0.06842025699168558,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Width rho,0.4057376796872595,lower,0.2,,0.20573767968725948,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,MR ratio,1.0901297567622334,band,0.25,1.75,0.6598702432377666,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Econ ratio,0.9091495885105697,band,0.75,1.3,0.1591495885105697,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Jump KS,0.4018140589569161,upper,,0.5,0.09818594104308392,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Kurtosis,1.294159566933172,band,0.5,1.5,0.20584043306682798,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Corr score,0.5283324911811197,lower,0.3,,0.2283324911811197,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Factor KS,0.09744762984558901,upper,,0.15,0.052552370154410985,pass,0,True
+eval:scenarioflow:train_1003:rollout_2005,scenarioflow,1003,2005,Tail q99,1.040719958660894,band,0.5,1.5,0.45928004133910605,pass,0,True
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Cov90,0.7333786848072562,band,0.75,0.98,-0.01662131519274379,fail,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,CalErr,0.11714420089023264,upper,,0.2,0.08285579910976737,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Level KS,0.17699168556311407,upper,,0.2,0.023008314436885946,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Width rho,0.4033819122054416,lower,0.2,,0.2033819122054416,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,MR ratio,1.0438381749646468,band,0.25,1.75,0.7061618250353532,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Econ ratio,0.944327900597063,band,0.75,1.3,0.19432790059706295,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Jump KS,0.37210884353741497,upper,,0.5,0.12789115646258503,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Kurtosis,1.1641689687772196,band,0.5,1.5,0.33583103122278035,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Corr score,0.5504013801704781,lower,0.3,,0.25040138017047814,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Factor KS,0.09759289628549829,upper,,0.15,0.052407103714501704,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2001,scenarioflow_graph,1001,2001,Tail q99,1.014839763298181,band,0.5,1.5,0.48516023670181907,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Cov90,0.7319727891156462,band,0.75,0.98,-0.018027210884353773,fail,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,CalErr,0.11790140253632317,upper,,0.2,0.08209859746367684,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Level KS,0.18049886621315192,upper,,0.2,0.01950113378684809,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Width rho,0.41671269906564024,lower,0.2,,0.21671269906564022,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,MR ratio,1.0345166683936984,band,0.25,1.75,0.7154833316063016,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Econ ratio,0.9533645312247861,band,0.75,1.3,0.20336453122478615,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Jump KS,0.36689342403628117,upper,,0.5,0.13310657596371883,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Kurtosis,1.1643421771861397,band,0.5,1.5,0.33565782281386025,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Corr score,0.5504319614821478,lower,0.3,,0.2504319614821478,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Factor KS,0.0976792800453515,upper,,0.15,0.0523207199546485,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2002,scenarioflow_graph,1001,2002,Tail q99,1.0129122893169102,band,0.5,1.5,0.48708771068308976,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Cov90,0.7333544973544973,band,0.75,0.98,-0.016645502645502686,fail,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,CalErr,0.11758293440833123,upper,,0.2,0.08241706559166878,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Level KS,0.17897203325774746,upper,,0.2,0.021027966742252546,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Width rho,0.4100470957613815,lower,0.2,,0.21004709576138147,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,MR ratio,1.0204207559866452,band,0.25,1.75,0.7295792440133548,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Econ ratio,0.9498144263353236,band,0.75,1.3,0.19981442633532365,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Jump KS,0.3780045351473923,upper,,0.5,0.1219954648526077,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Kurtosis,1.1564969185339375,band,0.5,1.5,0.34350308146606245,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Corr score,0.5500663547039808,lower,0.3,,0.2500663547039808,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Factor KS,0.09737879278695606,upper,,0.15,0.05262120721304393,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2003,scenarioflow_graph,1001,2003,Tail q99,1.0103187026488585,band,0.5,1.5,0.4896812973511415,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Cov90,0.7306061980347694,band,0.75,0.98,-0.01939380196523055,fail,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,CalErr,0.11940639959687578,upper,,0.2,0.08059360040312423,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Level KS,0.17678004535147385,upper,,0.2,0.023219954648526164,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Width rho,0.38726343684326875,lower,0.2,,0.18726343684326874,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,MR ratio,1.0320539163985603,band,0.25,1.75,0.7179460836014397,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Econ ratio,0.955300952073584,band,0.75,1.3,0.205300952073584,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Jump KS,0.3671201814058957,upper,,0.5,0.1328798185941043,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Kurtosis,1.1675172305767225,band,0.5,1.5,0.3324827694232775,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Corr score,0.5496183817493949,lower,0.3,,0.24961838174939494,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Factor KS,0.09748550709966526,upper,,0.15,0.05251449290033473,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2004,scenarioflow_graph,1001,2004,Tail q99,1.0095781004543962,band,0.5,1.5,0.4904218995456038,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Cov90,0.734098261526833,band,0.75,0.98,-0.015901738473167004,fail,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,CalErr,0.1173464348702444,upper,,0.2,0.08265356512975561,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Level KS,0.18341647770219194,upper,,0.2,0.016583522297808073,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Width rho,0.38929991577050405,lower,0.2,,0.18929991577050403,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,MR ratio,1.0386714617425135,band,0.25,1.75,0.7113285382574865,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Econ ratio,0.9536872680329193,band,0.75,1.3,0.20368726803291926,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Jump KS,0.37165532879818597,upper,,0.5,0.12834467120181403,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Kurtosis,1.1527636194261426,band,0.5,1.5,0.3472363805738574,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Corr score,0.549549062371448,lower,0.3,,0.24954906237144797,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Factor KS,0.09753705053449949,upper,,0.15,0.05246294946550051,pass,1,False
+eval:scenarioflow_graph:train_1001:rollout_2005,scenarioflow_graph,1001,2005,Tail q99,1.011095439896825,band,0.5,1.5,0.48890456010317496,pass,1,False
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Cov90,0.7896840513983371,band,0.75,0.98,0.039684051398337084,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,CalErr,0.07417384731670447,upper,,0.2,0.12582615268329556,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Level KS,0.17505668934240365,upper,,0.2,0.024943310657596363,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Width rho,0.36100789966336183,lower,0.2,,0.16100789966336182,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,MR ratio,1.1272950826723633,band,0.25,1.75,0.6227049173276367,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Econ ratio,0.8596094884621592,band,0.75,1.3,0.10960948846215923,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Jump KS,0.4501133786848073,upper,,0.5,0.049886621315192725,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Kurtosis,1.0489568156453584,band,0.5,1.5,0.45104318435464164,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Corr score,0.5723893215186073,lower,0.3,,0.27238932151860734,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Factor KS,0.10530956430191123,upper,,0.15,0.04469043569808877,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2001,scenarioflow_graph,1002,2001,Tail q99,1.0730113679951205,band,0.5,1.5,0.42698863200487946,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Cov90,0.7892214663643236,band,0.75,0.98,0.039221466364323554,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,CalErr,0.07536339968085999,upper,,0.2,0.12463660031914002,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Level KS,0.172713529856387,upper,,0.2,0.027286470143613017,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Width rho,0.3767474822096671,lower,0.2,,0.17674748220966707,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,MR ratio,1.1191713354089612,band,0.25,1.75,0.6308286645910388,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Econ ratio,0.8479909633693723,band,0.75,1.3,0.0979909633693723,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Jump KS,0.4473922902494331,upper,,0.5,0.05260770975056689,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Kurtosis,1.0609355445569988,band,0.5,1.5,0.4390644554430012,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Corr score,0.571830958598963,lower,0.3,,0.27183095859896306,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Factor KS,0.10574300156570567,upper,,0.15,0.04425699843429433,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2002,scenarioflow_graph,1002,2002,Tail q99,1.0756589188605175,band,0.5,1.5,0.42434108113948255,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Cov90,0.7896659108087679,band,0.75,0.98,0.03966591080876791,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,CalErr,0.07488233812043335,upper,,0.2,0.12511766187956666,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Level KS,0.17682539682539683,upper,,0.2,0.02317460317460318,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Width rho,0.35544693401836264,lower,0.2,,0.15544693401836263,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,MR ratio,1.100894239962039,band,0.25,1.75,0.649105760037961,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Econ ratio,0.8360497014684525,band,0.75,1.3,0.08604970146845248,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Jump KS,0.4580498866213152,upper,,0.5,0.04195011337868482,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Kurtosis,1.0546527541888413,band,0.5,1.5,0.4453472458111587,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Corr score,0.5714106415037896,lower,0.3,,0.27141064150378963,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Factor KS,0.10535942055393586,upper,,0.15,0.04464057944606413,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2003,scenarioflow_graph,1002,2003,Tail q99,1.072527792079371,band,0.5,1.5,0.427472207920629,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Cov90,0.7884081632653062,band,0.75,0.98,0.03840816326530616,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,CalErr,0.07691005291005291,upper,,0.2,0.1230899470899471,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Level KS,0.17333333333333334,upper,,0.2,0.026666666666666672,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Width rho,0.3586844528020999,lower,0.2,,0.15868445280209986,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,MR ratio,1.1158543445962166,band,0.25,1.75,0.6341456554037834,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Econ ratio,0.8692915927061482,band,0.75,1.3,0.1192915927061482,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Jump KS,0.4528344671201814,upper,,0.5,0.04716553287981862,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Kurtosis,1.0509954386506324,band,0.5,1.5,0.4490045613493676,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Corr score,0.5721069465838736,lower,0.3,,0.27210694658387363,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Factor KS,0.1053624574829932,upper,,0.15,0.0446375425170068,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2004,scenarioflow_graph,1002,2004,Tail q99,1.074768210398898,band,0.5,1.5,0.425231789601102,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Cov90,0.7910173847316705,band,0.75,0.98,0.04101738473167049,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,CalErr,0.07390711346266901,upper,,0.2,0.126092886537331,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Level KS,0.17578231292517008,upper,,0.2,0.024217687074829936,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Width rho,0.35786174609704025,lower,0.2,,0.15786174609704023,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,MR ratio,1.1194878201298895,band,0.25,1.75,0.6305121798701105,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Econ ratio,0.8544456995320316,band,0.75,1.3,0.10444569953203164,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Jump KS,0.454875283446712,upper,,0.5,0.04512471655328798,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Kurtosis,1.0421355388806848,band,0.5,1.5,0.4578644611193152,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Corr score,0.5711055775506719,lower,0.3,,0.27110557755067194,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Factor KS,0.10531875944822373,upper,,0.15,0.04468124055177626,pass,0,True
+eval:scenarioflow_graph:train_1002:rollout_2005,scenarioflow_graph,1002,2005,Tail q99,1.076071251071562,band,0.5,1.5,0.423928748928438,pass,0,True
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Cov90,0.7064580498866213,band,0.75,0.98,-0.04354195011337869,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,CalErr,0.15014260519022424,upper,,0.2,0.049857394809775774,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Level KS,0.21814058956916105,upper,,0.2,-0.018140589569161036,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Width rho,0.35975844883407915,lower,0.2,,0.15975844883407914,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,MR ratio,1.0919590055164274,band,0.25,1.75,0.6580409944835726,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Econ ratio,0.9186703243504922,band,0.75,1.3,0.16867032435049223,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Jump KS,0.3492063492063492,upper,,0.5,0.1507936507936508,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Kurtosis,1.1274986334633437,band,0.5,1.5,0.37250136653665633,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Corr score,0.5725806524024302,lower,0.3,,0.2725806524024302,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Factor KS,0.11470227972141238,upper,,0.15,0.035297720278587616,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2001,scenarioflow_graph,1003,2001,Tail q99,1.0529038390255656,band,0.5,1.5,0.4470961609744344,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Cov90,0.7065457294028723,band,0.75,0.98,-0.0434542705971277,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,CalErr,0.15109700176366847,upper,,0.2,0.04890299823633154,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Level KS,0.2148299319727891,upper,,0.2,-0.01482993197278909,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Width rho,0.3679551540896079,lower,0.2,,0.16795515408960787,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,MR ratio,1.084587513379487,band,0.25,1.75,0.6654124866205131,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Econ ratio,0.9191544295626917,band,0.75,1.3,0.16915442956269167,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Jump KS,0.35419501133786846,upper,,0.5,0.14580498866213154,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Kurtosis,1.1536574592423594,band,0.5,1.5,0.3463425407576406,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Corr score,0.5720171757478636,lower,0.3,,0.2720171757478636,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Factor KS,0.11481051249865025,upper,,0.15,0.035189487501349745,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2002,scenarioflow_graph,1003,2002,Tail q99,1.0544710633353183,band,0.5,1.5,0.44552893666468174,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Cov90,0.7049674981103553,band,0.75,0.98,-0.045032501889644694,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,CalErr,0.1512710170487948,upper,,0.2,0.0487289829512052,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Level KS,0.21587301587301588,upper,,0.2,-0.015873015873015872,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Width rho,0.3718770025492714,lower,0.2,,0.1718770025492714,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,MR ratio,1.0712151671440089,band,0.25,1.75,0.6787848328559911,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Econ ratio,0.9378731644344036,band,0.75,1.3,0.1878731644344036,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Jump KS,0.35306122448979593,upper,,0.5,0.14693877551020407,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Kurtosis,1.1427599693407196,band,0.5,1.5,0.35724003065928045,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Corr score,0.5708179291231488,lower,0.3,,0.2708179291231488,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Factor KS,0.11472277899254942,upper,,0.15,0.03527722100745058,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2003,scenarioflow_graph,1003,2003,Tail q99,1.0522446737789726,band,0.5,1.5,0.4477553262210274,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Cov90,0.704604686318972,band,0.75,0.98,-0.045395313681028004,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,CalErr,0.1521525153271185,upper,,0.2,0.047847484672881524,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Level KS,0.21729402872260017,upper,,0.2,-0.017294028722600163,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Width rho,0.3520257053870499,lower,0.2,,0.1520257053870499,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,MR ratio,1.0777956163982727,band,0.25,1.75,0.6722043836017273,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Econ ratio,0.9239954816846861,band,0.75,1.3,0.17399548168468615,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Jump KS,0.3634920634920635,upper,,0.5,0.13650793650793652,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Kurtosis,1.1540489183298774,band,0.5,1.5,0.34595108167012256,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Corr score,0.5723932879671386,lower,0.3,,0.27239328796713863,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Factor KS,0.11464474678760395,upper,,0.15,0.03535525321239605,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2004,scenarioflow_graph,1003,2004,Tail q99,1.05182826220112,band,0.5,1.5,0.4481717377988801,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Cov90,0.708347694633409,band,0.75,0.98,-0.041652305366591036,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,CalErr,0.1495137314184933,upper,,0.2,0.050486268581506705,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Level KS,0.21520786092214672,upper,,0.2,-0.01520786092214671,fail,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Width rho,0.365529568470745,lower,0.2,,0.16552956847074501,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,MR ratio,1.0867613042400006,band,0.25,1.75,0.6632386957599994,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Econ ratio,0.9167339035016945,band,0.75,1.3,0.16673390350169448,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Jump KS,0.35374149659863946,upper,,0.5,0.14625850340136054,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Kurtosis,1.1406895517921434,band,0.5,1.5,0.3593104482078566,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Corr score,0.570868093636969,lower,0.3,,0.270868093636969,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Factor KS,0.11465174859626391,upper,,0.15,0.03534825140373608,pass,2,False
+eval:scenarioflow_graph:train_1003:rollout_2005,scenarioflow_graph,1003,2005,Tail q99,1.051429965928955,band,0.5,1.5,0.448570034071045,pass,2,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Cov90,0.9329795918367347,band,0.75,0.98,0.04702040816326525,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,CalErr,0.16278894767783658,upper,,0.2,0.03721105232216343,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Level KS,0.1596220710506425,upper,,0.2,0.04037792894935752,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Width rho,0.37117182537350607,lower,0.2,,0.17117182537350606,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,MR ratio,0.13731589366769983,band,0.25,1.75,-0.11268410633230017,fail,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Econ ratio,0.9720832660964984,band,0.75,1.3,0.22208326609649842,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Jump KS,0.6514739229024943,upper,,0.5,-0.15147392290249428,fail,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Kurtosis,0.23737902580441542,band,0.5,1.5,-0.2626209741955846,fail,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Corr score,0.40317607835432434,lower,0.3,,0.10317607835432435,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Factor KS,0.14566739890400604,upper,,0.15,0.004332601095993954,pass,3,False
+eval:timegrad:train_1001:rollout_2001,timegrad,1001,2001,Tail q99,1.1649064123302468,band,0.5,1.5,0.33509358766975317,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Cov90,0.9340831443688586,band,0.75,0.98,0.04591685563114134,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,CalErr,0.16466179558243046,upper,,0.2,0.035338204417569546,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Level KS,0.17995464852607707,upper,,0.2,0.020045351473922945,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Width rho,0.3927362553412974,lower,0.2,,0.1927362553412974,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,MR ratio,0.15445337853723748,band,0.25,1.75,-0.09554662146276252,fail,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Econ ratio,0.9677263191867033,band,0.75,1.3,0.21772631918670327,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Jump KS,0.6537414965986394,upper,,0.5,-0.15374149659863945,fail,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Kurtosis,0.23736337552427317,band,0.5,1.5,-0.26263662447572683,fail,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Corr score,0.40341406033854466,lower,0.3,,0.10341406033854467,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Factor KS,0.14552516939315407,upper,,0.15,0.00447483060684592,pass,3,False
+eval:timegrad:train_1001:rollout_2002,timegrad,1001,2002,Tail q99,1.1635382979473081,band,0.5,1.5,0.3364617020526919,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Cov90,0.9332819349962207,band,0.75,0.98,0.046718065003779286,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,CalErr,0.16417300747459476,upper,,0.2,0.03582699252540525,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Level KS,0.16504913076341649,upper,,0.2,0.034950869236583526,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Width rho,0.37878927794894185,lower,0.2,,0.17878927794894184,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,MR ratio,0.16463433029552618,band,0.25,1.75,-0.08536566970447382,fail,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Econ ratio,0.9732128449249636,band,0.75,1.3,0.22321284492496363,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Jump KS,0.6530612244897959,upper,,0.5,-0.15306122448979587,fail,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Kurtosis,0.23619837271216257,band,0.5,1.5,-0.2638016272878374,fail,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Corr score,0.40317246696148723,lower,0.3,,0.10317246696148724,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Factor KS,0.14567136378360865,upper,,0.15,0.004328636216391346,pass,3,False
+eval:timegrad:train_1001:rollout_2003,timegrad,1001,2003,Tail q99,1.1643197108997054,band,0.5,1.5,0.33568028910029457,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Cov90,0.9330430839002267,band,0.75,0.98,0.04695691609977326,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,CalErr,0.16378298479885778,upper,,0.2,0.03621701520114223,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Level KS,0.15298563869992443,upper,,0.2,0.04701436130007558,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Width rho,0.3674692254524188,lower,0.2,,0.16746922545241877,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,MR ratio,0.1532713830304016,band,0.25,1.75,-0.09672861696959839,fail,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Econ ratio,0.9664353719541715,band,0.75,1.3,0.2164353719541715,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Jump KS,0.6541950113378685,upper,,0.5,-0.1541950113378685,fail,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Kurtosis,0.23449547852853417,band,0.5,1.5,-0.26550452147146586,fail,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Corr score,0.4036915940045349,lower,0.3,,0.10369159400453493,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Factor KS,0.14592376633192963,upper,,0.15,0.0040762336680703615,pass,3,False
+eval:timegrad:train_1001:rollout_2004,timegrad,1001,2004,Tail q99,1.1645158859343452,band,0.5,1.5,0.3354841140656548,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Cov90,0.9333786848072563,band,0.75,0.98,0.046621315192743706,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,CalErr,0.16426135886453347,upper,,0.2,0.03573864113546654,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Level KS,0.16208616780045354,upper,,0.2,0.03791383219954647,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Width rho,0.3800661523350599,lower,0.2,,0.1800661523350599,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,MR ratio,0.14871402634780814,band,0.25,1.75,-0.10128597365219186,fail,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Econ ratio,0.965951266741972,band,0.75,1.3,0.21595126674197196,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Jump KS,0.6507936507936508,upper,,0.5,-0.1507936507936508,fail,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Kurtosis,0.23867578735953143,band,0.5,1.5,-0.26132421264046857,fail,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Corr score,0.4038157184672001,lower,0.3,,0.10381571846720011,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Factor KS,0.1457121092484613,upper,,0.15,0.004287890751538681,pass,3,False
+eval:timegrad:train_1001:rollout_2005,timegrad,1001,2005,Tail q99,1.1628460619279912,band,0.5,1.5,0.3371539380720088,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Cov90,0.9338896447467876,band,0.75,0.98,0.04611035525321239,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,CalErr,0.16070277987738305,upper,,0.2,0.039297220122616966,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Level KS,0.17587301587301585,upper,,0.2,0.024126984126984163,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Width rho,0.4495617827550601,lower,0.2,,0.24956178275506008,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,MR ratio,0.15871790235761746,band,0.25,1.75,-0.09128209764238254,fail,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Econ ratio,1.0355010488946264,band,0.75,1.3,0.2644989511053737,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Jump KS,0.6517006802721088,upper,,0.5,-0.1517006802721088,fail,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Kurtosis,0.23507605452351027,band,0.5,1.5,-0.26492394547648973,fail,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Corr score,0.4042535116831347,lower,0.3,,0.10425351168313474,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Factor KS,0.14217037509448224,upper,,0.15,0.007829624905517751,pass,3,False
+eval:timegrad:train_1002:rollout_2001,timegrad,1002,2001,Tail q99,1.1579712505563908,band,0.5,1.5,0.34202874944360917,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Cov90,0.9347150415721844,band,0.75,0.98,0.04528495842781555,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,CalErr,0.16234887041236246,upper,,0.2,0.037651129587637555,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Level KS,0.1813454270597128,upper,,0.2,0.018654572940287217,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Width rho,0.4689271512800925,lower,0.2,,0.2689271512800925,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,MR ratio,0.17575738018636253,band,0.25,1.75,-0.07424261981363747,fail,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Econ ratio,1.0179118928513795,band,0.75,1.3,0.2679118928513795,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Jump KS,0.6560090702947846,upper,,0.5,-0.1560090702947846,fail,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Kurtosis,0.2341108902957126,band,0.5,1.5,-0.26588910970428736,fail,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Corr score,0.4042702506111,lower,0.3,,0.10427025061110001,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Factor KS,0.14197154060036715,upper,,0.15,0.008028459399632842,pass,3,False
+eval:timegrad:train_1002:rollout_2002,timegrad,1002,2002,Tail q99,1.159164866197334,band,0.5,1.5,0.34083513380266606,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Cov90,0.9342766439909297,band,0.75,0.98,0.04572335600907029,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,CalErr,0.1624681279919375,upper,,0.2,0.03753187200806252,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Level KS,0.18380952380952387,upper,,0.2,0.016190476190476144,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Width rho,0.44439020363390114,lower,0.2,,0.24439020363390113,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,MR ratio,0.18736901183062474,band,0.25,1.75,-0.06263098816937526,fail,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Econ ratio,1.0040342101016622,band,0.75,1.3,0.25403421010166216,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Jump KS,0.6557823129251701,upper,,0.5,-0.15578231292517009,fail,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Kurtosis,0.2333703760719656,band,0.5,1.5,-0.2666296239280344,fail,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Corr score,0.40443932750425693,lower,0.3,,0.10443932750425694,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Factor KS,0.14198605037252998,upper,,0.15,0.008013949627470013,pass,3,False
+eval:timegrad:train_1002:rollout_2003,timegrad,1002,2003,Tail q99,1.1592226346265706,band,0.5,1.5,0.3407773653734294,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Cov90,0.93405291005291,band,0.75,0.98,0.04594708994708996,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,CalErr,0.16233879230704623,upper,,0.2,0.03766120769295378,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Level KS,0.17809523809523808,upper,,0.2,0.021904761904761927,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Width rho,0.4443118506143717,lower,0.2,,0.24431185061437166,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,MR ratio,0.17542303065291712,band,0.25,1.75,-0.07457696934708288,fail,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Econ ratio,1.0020977892528644,band,0.75,1.3,0.2520977892528644,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Jump KS,0.6537414965986394,upper,,0.5,-0.15374149659863945,fail,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Kurtosis,0.2334250510104827,band,0.5,1.5,-0.2665749489895173,fail,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Corr score,0.40467179559933275,lower,0.3,,0.10467179559933276,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Factor KS,0.1421848848666451,upper,,0.15,0.007815115133354894,pass,3,False
+eval:timegrad:train_1002:rollout_2004,timegrad,1002,2004,Tail q99,1.1573693763963342,band,0.5,1.5,0.3426306236036658,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Cov90,0.9336810279667422,band,0.75,0.98,0.046318972033257744,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,CalErr,0.16199042579994963,upper,,0.2,0.03800957420005038,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Level KS,0.17915343915343918,upper,,0.2,0.020846560846560835,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Width rho,0.4564411778697493,lower,0.2,,0.2564411778697493,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,MR ratio,0.17070058139047103,band,0.25,1.75,-0.07929941860952897,fail,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Econ ratio,1.0169436824269806,band,0.75,1.3,0.26694368242698063,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Jump KS,0.6528344671201814,upper,,0.5,-0.15283446712018145,fail,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Kurtosis,0.23821719148919354,band,0.5,1.5,-0.2617828085108065,fail,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Corr score,0.4049798170630686,lower,0.3,,0.10497981706306864,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Factor KS,0.14205935846560847,upper,,0.15,0.00794064153439153,pass,3,False
+eval:timegrad:train_1002:rollout_2005,timegrad,1002,2005,Tail q99,1.1592064605293606,band,0.5,1.5,0.3407935394706394,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Cov90,0.9274618291761149,band,0.75,0.98,0.05253817082388512,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,CalErr,0.1615590828924162,upper,,0.2,0.03844091710758382,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Level KS,0.176885865457294,upper,,0.2,0.023114134542706,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Width rho,0.4226942525261853,lower,0.2,,0.2226942525261853,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,MR ratio,0.14280846935339234,band,0.25,1.75,-0.10719153064660766,fail,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Econ ratio,1.0308213651766986,band,0.75,1.3,0.2691786348233014,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Jump KS,0.6512471655328799,upper,,0.5,-0.15124716553287987,fail,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Kurtosis,0.23585759179147522,band,0.5,1.5,-0.26414240820852475,fail,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Corr score,0.4029335434260959,lower,0.3,,0.1029335434260959,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Factor KS,0.13736510973436994,upper,,0.15,0.012634890265630055,pass,3,False
+eval:timegrad:train_1003:rollout_2001,timegrad,1003,2001,Tail q99,1.16099544676225,band,0.5,1.5,0.3390045532377499,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Cov90,0.9286953892668178,band,0.75,0.98,0.051304610733182154,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,CalErr,0.16292265054169816,upper,,0.2,0.03707734945830185,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Level KS,0.16665154950869232,upper,,0.2,0.03334845049130769,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Width rho,0.44044652826165437,lower,0.2,,0.24044652826165436,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,MR ratio,0.15988562479984075,band,0.25,1.75,-0.09011437520015925,fail,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Econ ratio,1.0358237857027595,band,0.75,1.3,0.2641762142972406,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Jump KS,0.6562358276643991,upper,,0.5,-0.15623582766439914,fail,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Kurtosis,0.23379273155184496,band,0.5,1.5,-0.266207268448155,fail,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Corr score,0.40319099525420665,lower,0.3,,0.10319099525420666,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Factor KS,0.13713565287226,upper,,0.15,0.012864347127739983,pass,3,False
+eval:timegrad:train_1003:rollout_2002,timegrad,1003,2002,Tail q99,1.159787621137304,band,0.5,1.5,0.34021237886269606,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Cov90,0.9281239606953893,band,0.75,0.98,0.05187603930461071,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,CalErr,0.1630130175527001,upper,,0.2,0.03698698244729992,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Level KS,0.1691307634164777,upper,,0.2,0.030869236583522308,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Width rho,0.4235885962776719,lower,0.2,,0.2235885962776719,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,MR ratio,0.17145633760497928,band,0.25,1.75,-0.07854366239502072,fail,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Econ ratio,1.0106503146683878,band,0.75,1.3,0.26065031466838784,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Jump KS,0.6528344671201814,upper,,0.5,-0.15283446712018145,fail,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Kurtosis,0.2355345830325276,band,0.5,1.5,-0.2644654169674724,fail,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Corr score,0.40319302393269174,lower,0.3,,0.10319302393269175,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Factor KS,0.13723873974192852,upper,,0.15,0.012761260258071477,pass,3,False
+eval:timegrad:train_1003:rollout_2003,timegrad,1003,2003,Tail q99,1.1591505172787215,band,0.5,1.5,0.34084948272127846,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Cov90,0.9277671957671958,band,0.75,0.98,0.052232804232804186,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,CalErr,0.16130612244897957,upper,,0.2,0.03869387755102044,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Level KS,0.16978080120937267,upper,,0.2,0.030219198790627344,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Width rho,0.4252480012984215,lower,0.2,,0.22524800129842149,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,MR ratio,0.15916305180464596,band,0.25,1.75,-0.09083694819535404,fail,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Econ ratio,1.0217847345489754,band,0.75,1.3,0.27178473454897545,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Jump KS,0.6535147392290249,upper,,0.5,-0.15351473922902492,fail,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Kurtosis,0.23387958274781376,band,0.5,1.5,-0.26612041725218627,fail,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Corr score,0.40367514216373945,lower,0.3,,0.10367514216373946,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Factor KS,0.13750134974624773,upper,,0.15,0.01249865025375227,pass,3,False
+eval:timegrad:train_1003:rollout_2004,timegrad,1003,2004,Tail q99,1.161382636335128,band,0.5,1.5,0.33861736366487194,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Cov90,0.9274769463340892,band,0.75,0.98,0.05252305366591081,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,CalErr,0.16221415973796927,upper,,0.2,0.037785840262030745,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Level KS,0.16814814814814816,upper,,0.2,0.03185185185185185,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Width rho,0.4355000741555363,lower,0.2,,0.2355000741555363,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,MR ratio,0.1540234176889441,band,0.25,1.75,-0.09597658231105591,fail,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Econ ratio,1.024689365822172,band,0.75,1.3,0.27468936582217207,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Jump KS,0.6528344671201814,upper,,0.5,-0.15283446712018145,fail,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Kurtosis,0.23719741968419936,band,0.5,1.5,-0.2628025803158006,fail,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Corr score,0.4038066785563603,lower,0.3,,0.10380667855636033,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Factor KS,0.1371779168016413,upper,,0.15,0.012822083198358702,pass,3,False
+eval:timegrad:train_1003:rollout_2005,timegrad,1003,2005,Tail q99,1.1574899232170779,band,0.5,1.5,0.3425100767829221,pass,3,False

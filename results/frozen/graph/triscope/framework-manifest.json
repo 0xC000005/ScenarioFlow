@@ -1,0 +1,88 @@
+{
+  "framework_id": "768a_astgi_graph_k8_shortprefix_fm_state_aware_normalized_innovation",
+  "post_hoc_glued_decks": false,
+  "task_specific_loss_recipes": false,
+  "scope_values": {
+    "iv_only": {
+      "generated_coordinate": "state_aware_normalized_innovation",
+      "normalization_family": "support_aware_zero_center_history_scale",
+      "temporal_factorization": "ar_daily",
+      "backend": "flow_matching",
+      "stochastic_source": "shared_noise_within_scope",
+      "shared_core": "state_encoder_transition_adaptive_graph_residual",
+      "scalar_loss_terms": [
+        "fm",
+        "rollout_energy",
+        "channel_energy",
+        "short_prefix_generated_fm"
+      ],
+      "loss_weights": {
+        "fm": 1.0,
+        "rollout_energy": 0.2,
+        "channel_energy": 0.05,
+        "short_prefix_generated_fm": 0.2
+      },
+      "sampler": "flow_sampler_continuous_readout",
+      "training_protocol": "zero_center_alltrain_e2_channel_level_w005_shortprefix_fm_k5_w02_adaptive_graph_k8",
+      "input_head": "iv_only",
+      "decoder_head": "iv_only",
+      "input_dim": 25,
+      "output_dim": 25,
+      "support_transform": "bounded_logit_iv"
+    },
+    "anchor_only": {
+      "generated_coordinate": "state_aware_normalized_innovation",
+      "normalization_family": "support_aware_zero_center_history_scale",
+      "temporal_factorization": "ar_daily",
+      "backend": "flow_matching",
+      "stochastic_source": "shared_noise_within_scope",
+      "shared_core": "state_encoder_transition_adaptive_graph_residual",
+      "scalar_loss_terms": [
+        "fm",
+        "rollout_energy",
+        "channel_energy",
+        "short_prefix_generated_fm"
+      ],
+      "loss_weights": {
+        "fm": 1.0,
+        "rollout_energy": 0.2,
+        "channel_energy": 0.05,
+        "short_prefix_generated_fm": 0.2
+      },
+      "sampler": "flow_sampler_continuous_readout",
+      "training_protocol": "zero_center_alltrain_e2_channel_level_w005_shortprefix_fm_k5_w02_adaptive_graph_k8",
+      "input_head": "anchor_only",
+      "decoder_head": "anchor_only",
+      "input_dim": 14,
+      "output_dim": 14,
+      "support_transform": "support_aware_log_or_diff_level"
+    },
+    "joint": {
+      "generated_coordinate": "state_aware_normalized_innovation",
+      "normalization_family": "support_aware_zero_center_history_scale",
+      "temporal_factorization": "ar_daily",
+      "backend": "flow_matching",
+      "stochastic_source": "shared_noise_within_scope",
+      "shared_core": "state_encoder_transition_adaptive_graph_residual",
+      "scalar_loss_terms": [
+        "fm",
+        "rollout_energy",
+        "channel_energy",
+        "short_prefix_generated_fm"
+      ],
+      "loss_weights": {
+        "fm": 1.0,
+        "rollout_energy": 0.2,
+        "channel_energy": 0.05,
+        "short_prefix_generated_fm": 0.2
+      },
+      "sampler": "flow_sampler_continuous_readout",
+      "training_protocol": "zero_center_alltrain_e2_channel_level_w005_shortprefix_fm_k5_w02_adaptive_graph_k8",
+      "input_head": "joint39",
+      "decoder_head": "joint39",
+      "input_dim": 39,
+      "output_dim": 39,
+      "support_transform": "bounded_logit_iv_plus_support_aware_log_or_diff_level"
+    }
+  }
+}
