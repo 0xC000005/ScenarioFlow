@@ -284,6 +284,9 @@ def run_full_iv_suite(
     history_arr = np.asarray(history, dtype=np.float64).reshape(
         history.shape[0], history.shape[1], 5, 5
     )
+    conditional_sample_limit = min(samples.shape[1], int(conditionality_samples))
+    conditional_deck = samples[:, :conditional_sample_limit]
+    shuffled = shuffled[:, :conditional_sample_limit]
     levels = (0.5, 0.8, 0.9, 0.95)
     overall: dict[float, float] = {}
     per_horizon: dict[int, dict[float, float]] = {}
@@ -429,13 +432,11 @@ def run_full_iv_suite(
 
     median = np.median(samples, axis=1)
     cond_limit = min(samples.shape[0], int(conditionality_batch_size) * 8)
-    sample_limit = min(samples.shape[1], int(conditionality_samples))
-    cond_samples = samples[:cond_limit, :sample_limit]
+    cond_samples = conditional_deck[:cond_limit]
     cond_truth = truth[:cond_limit]
     cond_history = history_arr[:cond_limit]
-    cond_median = median[:cond_limit]
+    cond_median = np.median(cond_samples, axis=1)
     shuffled_truth = truth[: shuffled.shape[0]]
-    shuffled = shuffled[:, :sample_limit]
     rolled = np.median(shuffled, axis=1)
     conditional_mae = float(np.abs(cond_median - cond_truth).mean())
     rolled_mae = float(np.abs(rolled - shuffled_truth).mean())

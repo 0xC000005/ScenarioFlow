@@ -497,6 +497,35 @@ def test_conditionality_truncates_matched_and_shuffled_decks_to_32_scenarios() -
     assert suite["conditionality"]["avg_uncond_mae"] == 0.0
 
 
+def test_conditionality_slices_first_32_before_median_mae_width_and_gates() -> None:
+    rng = np.random.default_rng(992)
+    history = rng.uniform(0.1, 0.4, size=(4, 30, 25))
+    truth = rng.uniform(0.2, 0.3, size=(4, 30, 25))
+    matched = np.empty((4, 64, 30, 25), dtype=np.float64)
+    shuffled = np.empty_like(matched)
+    matched[:, :32] = truth[:, None] + np.linspace(-0.02, 0.02, 32)[None, :, None, None]
+    shuffled[:, :32] = truth[:, None] + np.linspace(0.08, 0.12, 32)[None, :, None, None]
+    matched[:, 32:] = truth[:, None] + 1.0
+    shuffled[:, 32:] = truth[:, None] - 1.0
+
+    suite, _metrics = evaluate_iv_suite(
+        matched,
+        truth,
+        history,
+        shuffled_samples=shuffled,
+        returns=rng.normal(0.0, 0.01, size=200),
+        window_indices=np.arange(40, 44),
+    )
+    diagnostics = suite["conditionality"]
+    assert diagnostics["avg_cond_mae"] == pytest.approx(0.0, abs=1e-12)
+    assert diagnostics["avg_uncond_mae"] == pytest.approx(0.1)
+    assert diagnostics["mae_reduction_pct"] == pytest.approx(100.0)
+    assert diagnostics["mae_pass"] is True
+    assert diagnostics["worst_cell_width_ratio"] == pytest.approx(1.0)
+    assert diagnostics["worst_cell_wr_pass"] is True
+    assert diagnostics["overall_pass"] is True
+
+
 def test_block_alignment_is_computed_from_panel_bytes() -> None:
     from scenarioflow.state import build_increment_coordinate_block
 
