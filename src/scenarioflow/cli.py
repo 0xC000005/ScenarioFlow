@@ -30,10 +30,6 @@ def _root_parser() -> argparse.ArgumentParser:
         ("setup", "check the native installation"),
         ("fetch", "fetch checksum-pinned release artifacts"),
         ("artifacts", "inspect artifact integrity"),
-        ("train", "train ScenarioFlow numerically"),
-        ("infer", "run numerical path inference"),
-        ("reproduce", "run or resume the paper benchmark"),
-        ("paper", "export frozen paper tables"),
         ("demo", "inspect or launch optional demos"),
     ):
         commands.add_parser(name, help=help_text, add_help=False)
@@ -261,35 +257,6 @@ def _run_demo(arguments: list[str]) -> int:
     raise ArtifactError(f"unknown demo command: {arguments[0]}")
 
 
-def _run_paper(arguments: list[str]) -> int:
-    if not arguments or arguments[0] in {"-h", "--help"}:
-        parser = argparse.ArgumentParser(prog="scenarioflow paper")
-        commands = parser.add_subparsers(dest="command")
-        commands.add_parser("export-tables", help="export benchmark tables")
-        commands.add_parser(
-            "export-dollar-liquidity",
-            help="export the frozen dollar-liquidity table",
-        )
-        commands.add_parser("plot", help="regenerate a numerical paper figure")
-        parser.print_help()
-        return 0
-    if arguments[0] == "export-tables":
-        from .paper import tables
-
-        return tables.main(arguments[1:], prog="scenarioflow paper export-tables")
-    if arguments[0] == "export-dollar-liquidity":
-        from .paper import dollar_liquidity
-
-        return dollar_liquidity.main(
-            arguments[1:], prog="scenarioflow paper export-dollar-liquidity"
-        )
-    if arguments[0] == "plot":
-        from .paper import plots
-
-        return plots.main(arguments[1:], prog="scenarioflow paper plot")
-    raise ArtifactError(f"unknown paper command: {arguments[0]}")
-
-
 def main(argv: list[str] | None = None) -> int | None:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if not arguments or arguments[0] in {"-h", "--help"}:
@@ -308,20 +275,6 @@ def main(argv: list[str] | None = None) -> int | None:
             if tail[0] != "verify":
                 raise ArtifactError(f"unknown artifacts command: {tail[0]}")
             return _run_verify(tail[1:])
-        if command == "train":
-            from . import training
-
-            return training.main(tail)
-        if command == "infer":
-            from . import inference
-
-            return inference.main(tail)
-        if command == "reproduce":
-            from .workflows import reproduction
-
-            return reproduction.main(["reproduce", *tail])
-        if command == "paper":
-            return _run_paper(tail)
         if command == "demo":
             return _run_demo(tail)
         raise ArtifactError(f"unknown command: {command}")

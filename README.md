@@ -1,76 +1,180 @@
 # ScenarioFlow
 
-ScenarioFlow is a reproducible research release for conditional market-scenario generation.
+[![Release](https://img.shields.io/github/v/release/0xC000005/ScenarioFlow?display_name=tag&sort=semver)](https://github.com/0xC000005/ScenarioFlow/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/downloads/)
+[![Live demo](https://img.shields.io/badge/live_demo-open-16A34A.svg)](http://138.28.239.185:8766/)
 
-The release includes the portable Stage 1 flow-matching model, Stage 2 free-rollout
-objective, adaptive-graph variant, and the frozen processed inputs.
+ScenarioFlow is a temporal foundation model for generating conditional,
+multivariate time series. Given numerical market history—or a natural-language
+description through its language interface—it generates joint multi-day scenarios
+across markets.
+
+ScenarioFlow uses autoregressive flow matching to learn how variables evolve
+together across time. This repository includes the model, adaptive-graph variant,
+baselines, processed data, paper results, and two interactive demos.
+
+**Live demo:** [http://138.28.239.185:8766/](http://138.28.239.185:8766/)
+
+## How ScenarioFlow works
+
+![ScenarioFlow autoregressive generation](paper_assets/figures/illustrations/flow-transport.png)
+
+*ScenarioFlow repeatedly transforms fresh noise into the next joint market state,
+appending each generated state to construct a complete multi-day scenario.*
+
+## Quick start
+
+Install the environment and fetch the released weights:
+
+```bash
+./scripts/setup.sh --bundle-dir /path/to/release-bundle
+./scripts/check_installation.sh
+```
+
+The released weights are used directly; this does not retrain the model. The
+Stage 2 checkpoint is installed at
+`artifacts/cache/models/core/stage2/best_model.pt`.
+
+## Example outputs
+
+### Conditional joint scenarios
+
+![Conditional joint paths for SPX, VIX, and US 10Y](paper_assets/figures/generated/joint-factor-fans.png)
+
+*Conditional joint paths for SPX, VIX, and US 10Y. Shaded regions show the
+generated distribution, while individual lines show sampled scenarios.*
+
+### Marginal distributions
+
+![Observed and generated implied-volatility change distributions across all 25 surface cells](paper_assets/figures/generated/iv-marginal-daily-changes-all25.png)
+
+*Generated IV-change distributions overlap the observed distributions across
+all 25 maturity and moneyness cells.*
+
+## Model architecture
+
+![ScenarioFlow model architecture](paper_assets/figures/illustrations/scenarioflow-architecture.png)
+
+ScenarioFlow has three main parts. A causal Transformer encodes the available
+history into a prefix memory. A conditional velocity network combines that
+memory with flow time and one token per variable to transform Gaussian noise
+into the next joint innovation. The generated state is reconstructed in market
+units, appended to the history, and used to generate the following day.
+
+**Code map:**
+
+- [Core model and temporal prefix encoder](reproduction/source/scenarioflow/diffusion/block_ar/generic_state_aware_normalized_innovation_flow_matching.py#L393)
+- [Conditional velocity network](reproduction/source/scenarioflow/diffusion/block_ar/causal_future_memory_transition_flow_matching.py#L31)
+- [State representation and reconstruction](reproduction/source/scenarioflow/experiments/backfill/block_ar/normalized_innovation_662_utils.py#L93)
+- [Stage 1 next-step training](reproduction/source/scenarioflow/experiments/backfill/block_ar/train_662a_state_aware_normalized_innovation_flow.py)
+- [Stage 2 rollout fine-tuning](reproduction/source/scenarioflow/experiments/backfill/block_ar/train_666a_normalized_innovation_rollout_energy_finetune.py)
+- [Numerical inference](reproduction/source/scenarioflow/experiments/backfill/baselines/evaluate_sni_current_panel_metrics.py#L155)
+
+The natural-language interface adds lightweight alignment modules that supply
+multimodal context to the same frozen ScenarioFlow generator.
+
+[Open the vector architecture diagram](paper_assets/figures/illustrations/scenarioflow-architecture.pdf).
+
+## Reproduce the paper
+
+Generate the numerical plots used in the paper:
+
+```bash
+./scripts/reproduce_paper.sh plots
+```
+
+The numerical tables used in the paper are included under
+`paper_assets/tables/golden/`. After running the training reproduction below,
+regenerate the table outputs with:
+
+```bash
+./scripts/reproduce_paper.sh tables
+```
+
+## Run training using our data
+
+Train one seed with the original Stage 1 and Stage 2 commands:
+
+```bash
+./scripts/train_next_step.sh 1001
+./scripts/finetune_rollouts.sh 1001
+```
+
+The trained checkpoints are written under `build/reproduction/checkpoints/`.
+To reproduce the complete paper experiment across all training and rollout
+seeds, run:
+
+```bash
+./scripts/reproduce.sh
+```
+
+The complete run uses three training seeds, five rollout seeds, 441 validation
+windows, and 64 paths per window. It requires a CUDA-capable GPU. Outputs are
+written under `build/reproduction/`, and completed jobs are reused when the
+command is resumed.
+
+## Run inference
+
+### Run ScenarioFlow inference
+
+Numerical inference requires only the final Stage 2 weights and the packaged
+market histories. Stage 2 is the final trained ScenarioFlow model; Stage 1 is
+only the intermediate next-step training checkpoint. Fetch the final weights if
+they are not already installed:
+
+```bash
+uv run scenarioflow fetch --artifact core.stage2 \
+  --bundle-dir /path/to/release-bundle
+```
+
+Generate conditional 30-day joint paths from the numerical histories:
+
+```bash
+./scripts/run_inference.sh
+```
+
+The command uses the preserved ScenarioFlow sampler and writes its outputs to
+`build/inference/scenarioflow/`. It does not use OpenAI or Codex.
+
+### Run multimodal conditional inference
+
+The narrative interface requires the language runtime and the same final Stage
+2 weights:
+
+```bash
+uv sync --extra demo-server --extra demo-openai
+uv run scenarioflow fetch --profile nl-runtime \
+  --bundle-dir /path/to/release-bundle
+uv run scenarioflow fetch --artifact core.stage2 \
+  --bundle-dir /path/to/release-bundle
+uv run scenarioflow demo doctor
+./scripts/run_demo.sh
+```
+
+Set `OPENAI_API_KEY`, install the Codex CLI, and sign in with `codex login`.
+Then open `http://127.0.0.1:8766`. The narrative-to-scenario demo turns a
+natural-language condition into a conditional distribution. The
+scenario-to-narrative demo describes a numerical scenario. OpenAI and Codex are used only by the interactive demos.
 
 ## Repository contents
 
 - `data/`: five checksum-pinned processed market-data files.
-- `src/scenarioflow/`: state/data preparation, model, losses, training, inference,
-  evaluation, and artifact APIs.
+- `reproduction/source/`: checksum-pinned copies of the original experiment code.
+- `results/frozen/multiseed/command-dag.json`: the original 3-training-seed and
+  5-rollout-seed command schedule.
+- `src/scenarioflow/`: artifact, setup, and demo support code.
 - `artifacts/manifest-v1.tsv`: checksums and release paths for large external files.
-- `paper_assets/`: final ICAIF/FMTS tables and figures, with reproduction modes.
+- `paper_assets/`: final paper tables and figures, with reproduction modes.
 - `tests/`: data and public-release contract tests.
 - `scripts/check_release.py`: secret, host-path, and file-size release checks.
 
 ## Verify the release contract
 
 ```bash
-pytest -q tests/test_release_contract.py
-python scripts/check_release.py --all
+uv run pytest -q tests/test_release_contract.py
+uv run python scripts/check_release.py --all
 ```
-
-## Numerical APIs and CLIs
-
-Install the locked environment and inspect the parameterized workflows:
-
-```bash
-uv sync --extra dev
-uv run scenarioflow setup --check
-uv run scenarioflow fetch --profile core --bundle-dir /path/to/release-bundle
-uv run scenarioflow train --help
-uv run scenarioflow infer --help
-uv run scenarioflow reproduce --help
-uv run scenarioflow demo doctor
-```
-
-`scenarioflow train` consumes a portable NPZ batch and either a JSON model
-configuration or an existing checkpoint. `scenarioflow infer` consumes a
-checkpoint plus a portable NPZ conditioning batch and writes deterministic sampled
-normalized-innovation paths for a supplied seed. The reusable Python surfaces are
-`stage1_training_step`, `stage2_training_step`, `load_model`, and
-`sample_normalized_innovations`.
-
-Large checkpoints and evidence files are not stored in Git. Fetching accepts a
-publisher-provided URL or a local release bundle and installs a file only after its
-size and SHA-256 match the tracked manifest. Missing OpenAI or Codex requirements
-affect only the corresponding optional demo; numerical workflows remain available.
-
-## Run the demos locally
-
-Install the demo dependencies and fetch the NL runtime plus the Stage 2 checkpoint:
-
-```bash
-uv sync --extra demo-server --extra demo-openai
-uv run scenarioflow fetch --profile nl-runtime --bundle-dir /path/to/release-bundle
-uv run scenarioflow fetch --artifact core.stage2 --bundle-dir /path/to/release-bundle
-uv run scenarioflow demo doctor
-```
-
-Narrative-to-scenario requires `OPENAI_API_KEY`. Scenario-to-narrative requires an
-installed Codex CLI authenticated with `codex login`. Start the two backends and the
-React site in separate terminals:
-
-```bash
-uv run scenarioflow demo launch narrative-to-scenario
-uv run scenarioflow demo launch scenario-to-narrative
-cd web && npm ci && npm run dev -- --host 127.0.0.1 --port 8766
-```
-
-Open `http://127.0.0.1:8766`. A hosted demo link can be added to the repository
-description without changing the reproducible local setup.
 
 ## Docker
 
@@ -85,20 +189,23 @@ docker compose up frontend narrative-to-scenario scenario-to-narrative
 ```
 
 Open `http://127.0.0.1:8766`. Omit either backend from the `docker compose up`
-command when its optional credential is unavailable. For numerical commands, use
-the runtime target directly and mount the required inputs and output directory.
+command when its optional credential is unavailable. For numerical reproduction,
+run `scripts/reproduce.sh` in the runtime container with the repository and output
+directory mounted.
 
 ## Databricks
 
-The optional Asset Bundle builds this package as a wheel and invokes the same
-`scenarioflow reproduce` entry point on Unity Catalog volume paths. See the
-[Databricks job](deploy/databricks/README.md) for its parameters and commands.
+Databricks uses a separate numerical GPU image:
+
+```bash
+docker build -f deploy/databricks/Dockerfile \
+  -t <registry>/scenarioflow-databricks:<tag> .
+```
+
+The image runs the same training, inference, and reproduction scripts as the
+native release. See the [Databricks deployment note](deploy/databricks/README.md)
+for the push, deployment, and run commands.
 
 See [DATA_SOURCES.md](DATA_SOURCES.md) for the processed-data provenance and
 [Paper assets](paper_assets/README.md) for table and figure reproduction, and
 [LICENSE](LICENSE) for the repository license.
-
-## Papers
-
-- ICAIF paper: link will be added after publication.
-- FMTS workshop paper: link will be added after publication.

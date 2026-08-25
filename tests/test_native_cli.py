@@ -71,9 +71,6 @@ def _fixture_manifest(path: Path, payload: bytes = b"fixture") -> Path:
         ((), "setup"),
         (("fetch", "--help"), "--bundle-dir"),
         (("artifacts", "verify", "--help"), "--artifact-root"),
-        (("train", "--help"), "--stage"),
-        (("infer", "--help"), "--checkpoint"),
-        (("reproduce", "--help"), "--output-root"),
         (("demo", "doctor", "--help"), "--json"),
         (("demo", "launch", "--help"), "narrative-to-scenario"),
     ],
@@ -87,31 +84,6 @@ def test_native_help_surfaces_are_available(
     assert needle in result.stdout
 
 
-def test_train_infer_and_reproduce_forward_argument_tails(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The umbrella CLI must not reinterpret established numerical arguments."""
-    calls: list[tuple[str, list[str]]] = []
-    monkeypatch.setattr(
-        "scenarioflow.training.main", lambda args: calls.append(("train", args))
-    )
-    monkeypatch.setattr(
-        "scenarioflow.inference.main", lambda args: calls.append(("infer", args))
-    )
-    monkeypatch.setattr(
-        "scenarioflow.workflows.reproduction.main",
-        lambda args: calls.append(("reproduce", args)),
-    )
-    cli.main(["train", "--stage", "stage1", "--steps", "2"])
-    cli.main(["infer", "--checkpoint", "model.pt", "--samples", "3"])
-    cli.main(["reproduce", "--output-root", "out", "--smoke"])
-    assert calls == [
-        ("train", ["--stage", "stage1", "--steps", "2"]),
-        ("infer", ["--checkpoint", "model.pt", "--samples", "3"]),
-        ("reproduce", ["reproduce", "--output-root", "out", "--smoke"]),
-    ]
-
-
 def test_setup_check_validates_packaged_data_and_manifest() -> None:
     """A native installation with changed data or manifest must not report ready."""
     result = _run("setup", "--check", "--json")
@@ -121,7 +93,7 @@ def test_setup_check_validates_packaged_data_and_manifest() -> None:
     assert payload["processed_data"] == "ok"
     assert payload["artifact_manifest"] == "ok"
     external = payload["external_artifacts"]
-    assert external["total"] == 41
+    assert external["total"] == 43
     assert 0 <= external["present"] <= external["total"]
 
 
@@ -189,12 +161,12 @@ def test_artifacts_verify_json_reports_safe_relative_status(tmp_path: Path) -> N
     assert str(tmp_path) not in result.stdout
 
 
-def test_demo_failure_does_not_break_numerical_help() -> None:
-    """Missing optional demo capabilities must leave core numerical commands usable."""
+def test_demo_failure_does_not_break_setup_and_fetch_help() -> None:
+    """Missing optional demo capabilities must leave release commands usable."""
     doctor = _run("demo", "doctor", "--json")
     assert doctor.returncode == 0
-    assert _run("train", "--help").returncode == 0
-    assert _run("infer", "--help").returncode == 0
+    assert _run("setup", "--help").returncode == 0
+    assert _run("fetch", "--help").returncode == 0
 
 
 def test_demo_launch_forwards_reader_facing_arguments(

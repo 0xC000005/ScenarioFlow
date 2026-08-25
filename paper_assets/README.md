@@ -1,82 +1,60 @@
 # Paper assets
 
-This directory contains the final tables and figures used by the ICAIF and
-Foundation Models for Temporal Systems papers. `paper_assets/ASSETS.tsv` records
-the venue, source authority, byte size, SHA-256, and reproduction mode of every
-asset.
+This directory contains the released tables and figures for the ICAIF and
+Foundation Models for Temporal Systems papers. `ASSETS.tsv` records each file's
+venue, size, SHA-256, and source.
 
-## Verify the frozen evidence
-
-The numerical authorities live under `results/frozen/` and are indexed by
-`results/FROZEN_AUTHORITY.tsv`. From the repository root, run:
+## Verify the released assets
 
 ```bash
 uv sync --extra dev --extra paper
-uv run pytest -q tests/test_frozen_evidence.py tests/test_paper_figures.py
+uv run pytest -q tests/test_frozen_evidence.py tests/test_paper_release_boundary.py
 uv run python scripts/check_release.py --root . --all
 ```
 
-## Export the benchmark tables
+## Regenerate the numerical results
 
-This validates the frozen authorities before writing reader-facing JSON, CSV,
-and LaTeX fragments to a separate build directory:
-
-```bash
-uv run scenarioflow paper export-tables \
-  --authority results/FROZEN_AUTHORITY.tsv \
-  --output build/paper/tables
-```
-
-The dollar-liquidity table also uses two checksum-pinned numerical arrays. Fetch
-them from a publisher-provided bundle, then export all three paper views:
+The full benchmark uses the archived command schedule and preserved original
+experiment sources:
 
 ```bash
-uv run scenarioflow fetch \
-  --artifact evidence.nl.dollar-liquidity-cohesive \
-  --artifact evidence.nl.dollar-liquidity-start-only \
-  --bundle-dir RELEASE_BUNDLE \
-  --artifact-root artifacts/cache
-
-uv run scenarioflow paper export-dollar-liquidity \
-  --artifact-root artifacts/cache \
-  --output build/paper/dollar-liquidity
+./scripts/reproduce.sh
+./scripts/reproduce_paper.sh tables
 ```
+
+The first command trains and evaluates the released candidates across the full
+seed grid. The second calls the original aggregator and table generators. It
+writes its outputs under `build/paper/` and leaves the released files unchanged.
+Fresh CUDA training can change learned-model values slightly. The archived
+tables retain the values used in the papers; a fresh table reports the new full
+rerun.
+
+The workshop and ICAIF tables under `tables/golden/` are the frozen
+paper-facing views. The original multi-seed generator is preserved at
+`reproduction/source/paper/paper/scripts/generate_fmts_multiseed_appendix.py`;
+the original ICAIF table generator is beside it as `generate_paper_tables.py`.
+The ICAIF generator produces the upstream comparison tables. The final ICAIF
+table is preserved in its camera-ready form.
 
 ## Regenerate the numerical plots
 
-Fetch the two plot checkpoints once:
+Fetch the Stage 2 checkpoint, then run the original plotting scripts:
 
 ```bash
-uv run scenarioflow fetch \
-  --artifact core.iv-only \
-  --artifact core.stage2 \
-  --bundle-dir RELEASE_BUNDLE \
-  --artifact-root artifacts/cache
+uv run scenarioflow fetch --artifact core.stage2 \
+  --bundle-dir /path/to/release-bundle
+./scripts/reproduce_paper.sh plots
 ```
 
-Then run any numerical recipe:
+The original plotting files are preserved under
+`reproduction/source/scenarioflow/experiments/backfill/block_ar/`. Generated
+plots are written under `build/paper/`.
 
-```bash
-uv run scenarioflow paper plot iv-marginal \
-  --artifact-root artifacts/cache \
-  --output build/paper/iv-marginal-daily-changes.png
+The dollar-liquidity tables are frozen ScenarioFlow-NL outputs. They are not part
+of the numerical no-OpenAI reproduction route.
 
-uv run scenarioflow paper plot iv-cross-cell \
-  --artifact-root artifacts/cache \
-  --output build/paper/iv-cross-cell-sensitivity.png
+## Illustrations
 
-uv run scenarioflow paper plot joint-factor-fans \
-  --artifact-root artifacts/cache \
-  --output build/paper/joint-factor-fans.png
-```
-
-The committed PNGs remain the paper authorities. A fresh raster may differ in
-font rendering or image metadata across Matplotlib environments. The joint fan
-recipe also writes its history-selection JSON for an exact comparison.
-
-## Preserved illustrations
-
-The files under `figures/illustrations/` are final conceptual illustrations.
-They are preserved byte-for-byte and have no regeneration command. The release
-does not include either LaTeX paper workspace or an illustration authoring
-toolchain.
+Files under `figures/illustrations/` are the final conceptual illustrations used
+by the papers. They are preserved, not recreated by the numerical pipeline. The
+LaTeX workspaces are not included in this repository.

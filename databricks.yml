@@ -3,28 +3,21 @@ bundle:
   databricks_cli_version: ">=0.218.0"
 
 include:
-  - deploy/databricks/*.yml
-
-artifacts:
-  default:
-    type: whl
-    path: .
-    build: uv build --wheel
+  - deploy/databricks/resources.yml
 
 variables:
-  cluster_id:
-    description: Existing Databricks cluster used for the reproduction job.
-  data_dir:
-    description: Unity Catalog volume directory containing the processed data.
-    default: /Volumes/main/default/scenarioflow/data
-  checkpoint_root:
-    description: Unity Catalog volume directory containing fetched checkpoints.
-    default: /Volumes/main/default/scenarioflow/checkpoints
+  image_url:
+    description: Registry URL of the separately built ScenarioFlow Databricks image.
+  gpu_node_type:
+    description: GPU node type available in the target Databricks workspace.
+  spark_version:
+    description: Databricks Runtime matching the custom image.
+    default: 18.3.x-scala2.13
   artifact_root:
-    description: Unity Catalog volume directory containing fetched evidence artifacts.
+    description: Volume directory containing fetched ScenarioFlow artifacts.
     default: /Volumes/main/default/scenarioflow/artifacts
   output_root:
-    description: Unity Catalog volume directory for resumable runs and the final summary.
+    description: Volume directory for checkpoints and numerical results.
     default: /Volumes/main/default/scenarioflow/results
 
 workspace:

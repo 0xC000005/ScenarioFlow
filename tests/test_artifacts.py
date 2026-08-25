@@ -74,8 +74,8 @@ def test_release_manifest_is_the_exact_external_subset() -> None:
     """Adding Git data/evidence or dropping a frozen payload must fail the release gate."""
     resolver = ArtifactResolver.from_tsv(MANIFEST)
     records = resolver.records
-    assert len(records) == 41
-    assert sum(record.expected_bytes for record in records) == 1_186_583_031
+    assert len(records) == 43
+    assert sum(record.expected_bytes for record in records) == 1_240_283_503
     assert (
         sum(
             record.category
@@ -127,9 +127,13 @@ def test_release_manifest_is_the_exact_external_subset() -> None:
         "multiseed": 12,
         "foundation": 2,
         "nl-runtime": 10,
-        "evidence": 8,
-        "all": 41,
+        "evidence": 10,
+        "all": 43,
     }
+    assert {
+        "paper.icaif.iv-plot-arrays",
+        "paper.icaif.joint-factor-fan-arrays",
+    }.issubset({record.artifact_id for record in records})
     assert not DATA_FILENAMES.intersection(
         {Path(record.relative_path).name for record in records}
     )
@@ -144,7 +148,7 @@ def test_release_manifest_is_the_exact_external_subset() -> None:
     ).hexdigest()
     assert (
         authority_digest
-        == "962092c18342aa7c9e56ed645f7d2ec3ba6d6853ab0a90faa99be4ad3f062471"
+        == "2cba6bc1248a5e5e0e64d9e901321bee0b0dc75a0b3e19052523add2d0c30825"
     )
 
     with GITHUB_AUTHORITY.open(encoding="utf-8", newline="") as handle:

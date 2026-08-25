@@ -1,8 +1,18 @@
 # Data sources
 
-The five processed inputs in `data/` are the frozen market-data bundle used by
-this release. Their provenance is Rotman FinHub and WRDS, including
-OptionMetrics options data.
+The five processed inputs in `data/` are the market-data bundle used by this
+release. The SPX 5×5 implied-volatility surface comes from the data release
+accompanying [Chen et al.](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4628457).
+The surface was constructed from OptionMetrics IvyDB US data accessed through
+WRDS. The [upstream release](https://github.com/rotmanfinhub/vol-surface-vae-pub)
+includes the surface data and its processing code.
+
+The remaining market panel combines the following FRED and Yahoo Finance series:
+
+| Source | Series |
+| --- | --- |
+| Yahoo Finance | S&P 500 (`^GSPC`), Nikkei 225 (`^N225`), U.S. Dollar Index (`DX-Y.NYB`), copper (`HG=F`), wheat (`ZW=F`), and VIX (`^VIX`) |
+| FRED | USD/CAD (`DEXCAUS`), USD/JPY (`DEXJPUS`), gold (`GOLDAMGBD228NLBM`), WTI crude oil (`DCOILWTICO`), 2-year and 10-year Treasury yields (`DGS2`, `DGS10`), and AAA and BBB corporate spreads (`BAMLC0A1CAAA`, `BAMLC0A4CBBB`) |
 
 | File | Contents |
 | --- | --- |

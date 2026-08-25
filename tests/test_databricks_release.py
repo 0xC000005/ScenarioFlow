@@ -1,80 +1,149 @@
-"""Contract tests for the optional Databricks job wrapper."""
+"""Behavioral contract for the separate Databricks numerical image."""
 
 from __future__ import annotations
 
+import json
+import os
 from pathlib import Path
+import stat
+import subprocess
+import sys
 
 import yaml
 
-from scenarioflow.workflows.multiseed import build_protocol
-
 
 ROOT = Path(__file__).resolve().parents[1]
+LAUNCHER = ROOT / "deploy/databricks/run_job.py"
 
 
-def test_tracked_reproduction_manifests_build_the_native_protocol(
-    tmp_path: Path,
-) -> None:
-    """Cloud execution must use the same frozen authorities as native execution."""
-    checkpoint_root = tmp_path / "checkpoints"
-    artifact_root = tmp_path / "artifacts"
-    checkpoint_root.mkdir()
-    artifact_root.mkdir()
-    protocol = build_protocol(
-        output_root=tmp_path / "runs",
-        source_manifest=ROOT / "reproduction" / "FROZEN_SOURCE.tsv",
-        artifact_manifest=ROOT / "reproduction" / "FROZEN_DATA.tsv",
-        data_dir=ROOT / "data",
-        checkpoint_root=checkpoint_root,
-        artifact_root=artifact_root,
+def test_databricks_image_is_separate_and_numerical_only() -> None:
+    dockerfile = (ROOT / "deploy/databricks/Dockerfile").read_text(encoding="utf-8")
+
+    assert dockerfile.startswith("FROM databricksruntime/standard:18.3-LTS")
+    assert "torch==2.4.1" in dockerfile
+    assert "--torch-backend cu121" in dockerfile
+    for required in (
+        "COPY data ./data",
+        "COPY reproduction ./reproduction",
+        "COPY results/frozen ./results/frozen",
+        "COPY scripts ./scripts",
+    ):
+        assert required in dockerfile
+    for forbidden in ("codex", "node:", "nginx", "demo-openai", "web/"):
+        assert forbidden not in dockerfile.lower()
+
+
+def test_bundle_runs_the_launcher_in_the_custom_gpu_image() -> None:
+    bundle = yaml.safe_load((ROOT / "databricks.yml").read_text(encoding="utf-8"))
+    resources = yaml.safe_load(
+        (ROOT / "deploy/databricks/resources.yml").read_text(encoding="utf-8")
     )
-    assert protocol["candidate_ids"] == [
-        "scenarioflow",
-        "scenarioflow_graph",
-        "random_walk",
-        "bootstrap",
-        "historical_sim",
-        "pca_var",
-        "garch_ccc",
-        "filtered_hs",
-        "deepvar",
-        "timegrad",
-        "path_diffusion",
-        "deepvar_sni",
-    ]
-    assert protocol["train_seeds"] == [1001, 1002, 1003]
-    assert protocol["rollout_seeds"] == [2001, 2002, 2003, 2004, 2005]
 
+    assert bundle["include"] == ["deploy/databricks/resources.yml"]
+    variables = bundle["variables"]
+    assert "image_url" in variables and "default" not in variables["image_url"]
+    assert "gpu_node_type" in variables and "default" not in variables["gpu_node_type"]
 
-def test_databricks_job_invokes_the_native_wheel_entrypoint() -> None:
-    """The bundle may wrap `scenarioflow reproduce`, but must not fork it."""
-    root = yaml.safe_load((ROOT / "databricks.yml").read_text())
-    job_document = yaml.safe_load(
-        (ROOT / "deploy" / "databricks" / "resources.yml").read_text()
-    )
-    assert root["include"] == ["deploy/databricks/*.yml"]
-    assert root["artifacts"]["default"]["type"] == "whl"
-    assert root["artifacts"]["default"]["path"] == "."
-
-    task = job_document["resources"]["jobs"]["reproduce"]["tasks"][0]
-    assert task["existing_cluster_id"] == "${var.cluster_id}"
-    assert task["python_wheel_task"]["package_name"] == "scenarioflow"
-    assert task["python_wheel_task"]["entry_point"] == "scenarioflow"
-    assert task["python_wheel_task"]["parameters"] == [
-        "reproduce",
-        "--output-root",
-        "${var.output_root}/runs",
-        "--source-manifest",
-        "/Workspace${workspace.file_path}/reproduction/FROZEN_SOURCE.tsv",
-        "--artifact-manifest",
-        "/Workspace${workspace.file_path}/reproduction/FROZEN_DATA.tsv",
-        "--data-dir",
-        "${var.data_dir}",
-        "--checkpoint-root",
-        "${var.checkpoint_root}",
+    job = resources["resources"]["jobs"]["scenarioflow"]
+    task = job["tasks"][0]
+    cluster = job["job_clusters"][0]["new_cluster"]
+    assert task["spark_python_task"]["python_file"] == "./run_job.py"
+    assert task["spark_python_task"]["parameters"] == [
+        "--operation",
+        "{{job.parameters.operation}}",
+        "--seed",
+        "{{job.parameters.seed}}",
         "--artifact-root",
         "${var.artifact_root}",
-        "--output",
-        "${var.output_root}/summary.json",
+        "--output-root",
+        "${var.output_root}",
     ]
-    assert task["libraries"] == [{"whl": "./dist/*.whl"}]
+    assert cluster["docker_image"]["url"] == "${var.image_url}"
+    assert cluster["node_type_id"] == "${var.gpu_node_type}"
+    assert cluster["spark_version"] == "${var.spark_version}"
+    assert cluster["data_security_mode"] == "DATA_SECURITY_MODE_DEDICATED"
+    assert cluster["spark_conf"]["spark.databricks.unityCatalog.volumes.enabled"] == "true"
+
+
+def _write_command(path: Path, label: str) -> None:
+    path.write_text(
+        "#!/usr/bin/env bash\n"
+        "set -euo pipefail\n"
+        f"printf '%s\\n' '{label}:'\"$*\" >> \"$SCENARIOFLOW_TEST_CALLS\"\n",
+        encoding="utf-8",
+    )
+    path.chmod(path.stat().st_mode | stat.S_IXUSR)
+
+
+def test_launcher_dispatches_existing_scripts_and_redirects_runtime_state(
+    tmp_path: Path,
+) -> None:
+    release_root = tmp_path / "release"
+    scripts = release_root / "scripts"
+    scripts.mkdir(parents=True)
+    (release_root / "artifacts").mkdir()
+    for filename, label in (
+        ("train_next_step.sh", "stage1"),
+        ("finetune_rollouts.sh", "stage2"),
+        ("run_inference.sh", "inference"),
+        ("reproduce.sh", "reproduce"),
+    ):
+        _write_command(scripts / filename, label)
+
+    calls = tmp_path / "calls.txt"
+    artifact_root = tmp_path / "artifacts"
+    output_root = tmp_path / "outputs"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(LAUNCHER),
+            "--operation",
+            "train",
+            "--seed",
+            "1002",
+            "--artifact-root",
+            str(artifact_root),
+            "--output-root",
+            str(output_root),
+        ],
+        env={
+            **os.environ,
+            "SCENARIOFLOW_ROOT": str(release_root),
+            "SCENARIOFLOW_TEST_CALLS": str(calls),
+        },
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == [
+        "stage1:1002",
+        "stage2:1002",
+    ]
+    assert (release_root / "build").resolve() == output_root.resolve()
+    assert (release_root / "artifacts/cache").resolve() == artifact_root.resolve()
+    summary = json.loads(result.stdout)
+    assert summary["operation"] == "train"
+    assert summary["commands"] == [
+        [str(scripts / "train_next_step.sh"), "1002"],
+        [str(scripts / "finetune_rollouts.sh"), "1002"],
+    ]
+
+
+def test_databricks_guide_has_copyable_build_deploy_and_run_commands() -> None:
+    guide = (ROOT / "deploy/databricks/README.md").read_text(encoding="utf-8")
+
+    for command in (
+        "docker build -f deploy/databricks/Dockerfile",
+        "docker push \"$IMAGE_URL\"",
+        "databricks bundle validate",
+        "databricks bundle deploy",
+        "databricks bundle run scenarioflow --params operation=inference",
+        "databricks bundle run scenarioflow --params operation=train,seed=1001",
+        "databricks bundle run scenarioflow --params operation=reproduce",
+    ):
+        assert command in guide
+    assert "separate numerical image" in guide
+    assert "OpenAI" not in guide
+    assert "Codex" not in guide

@@ -1,29 +1,41 @@
 resources:
   jobs:
-    reproduce:
-      name: scenarioflow-reproduce-${bundle.target}
+    scenarioflow:
+      name: scenarioflow-${bundle.target}
       max_concurrent_runs: 1
+      parameters:
+        - name: operation
+          default: inference
+        - name: seed
+          default: "1001"
       tasks:
-        - task_key: reproduce
-          existing_cluster_id: ${var.cluster_id}
-          python_wheel_task:
-            package_name: scenarioflow
-            entry_point: scenarioflow
+        - task_key: scenarioflow
+          job_cluster_key: gpu
+          spark_python_task:
+            python_file: ./run_job.py
             parameters:
-              - reproduce
-              - --output-root
-              - ${var.output_root}/runs
-              - --source-manifest
-              - /Workspace${workspace.file_path}/reproduction/FROZEN_SOURCE.tsv
-              - --artifact-manifest
-              - /Workspace${workspace.file_path}/reproduction/FROZEN_DATA.tsv
-              - --data-dir
-              - ${var.data_dir}
-              - --checkpoint-root
-              - ${var.checkpoint_root}
+              - --operation
+              - "{{job.parameters.operation}}"
+              - --seed
+              - "{{job.parameters.seed}}"
               - --artifact-root
               - ${var.artifact_root}
-              - --output
-              - ${var.output_root}/summary.json
-          libraries:
-            - whl: ./dist/*.whl
+              - --output-root
+              - ${var.output_root}
+      job_clusters:
+        - job_cluster_key: gpu
+          new_cluster:
+            num_workers: 0
+            node_type_id: ${var.gpu_node_type}
+            spark_version: ${var.spark_version}
+            runtime_engine: STANDARD
+            data_security_mode: DATA_SECURITY_MODE_DEDICATED
+            docker_image:
+              url: ${var.image_url}
+            spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*, 4]
+              spark.databricks.unityCatalog.volumes.enabled: "true"
+            custom_tags:
+              ResourceClass: SingleNode
+            autotermination_minutes: 30

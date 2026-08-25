@@ -1,0 +1,83 @@
+"""Contracts for the archived original experiment routes."""
+
+from __future__ import annotations
+
+import importlib.util
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _runner():
+    path = ROOT / "scripts/run_reproduction.py"
+    spec = importlib.util.spec_from_file_location("scenarioflow_release_runner", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_release_dag_uses_the_original_training_and_evaluation_files() -> None:
+    payload = _runner().materialize_payload()
+    nodes = {node["id"]: node for node in payload["commands"]}
+    assert len(nodes) == 141
+    assert nodes["train:scenarioflow:stage1:1001"]["command"][1] == (
+        "experiments/backfill/block_ar/"
+        "train_662a_state_aware_normalized_innovation_flow.py"
+    )
+    assert nodes["train:scenarioflow:stage2:1001"]["command"][1] == (
+        "experiments/backfill/block_ar/"
+        "train_666a_normalized_innovation_rollout_energy_finetune.py"
+    )
+    assert nodes["eval:scenarioflow:train_1001:rollout_2001"]["command"][1] == (
+        "experiments/backfill/baselines/evaluate_sni_current_panel_metrics.py"
+    )
+    for node in nodes.values():
+        working_directory = Path(node["working_directory"])
+        assert (working_directory / node["command"][1]).is_file()
+        assert "src/scenarioflow" not in " ".join(node["command"])
+
+
+def test_release_dag_keeps_the_paper_contract_and_seed_grid() -> None:
+    payload = _runner().materialize_payload()
+    protocol = payload["protocol"]
+    assert protocol["train_seeds"] == [1001, 1002, 1003]
+    assert protocol["rollout_seeds"] == [2001, 2002, 2003, 2004, 2005]
+    assert protocol["contract"] == {
+        "mode": "current_realvix_39_state_panel",
+        "n_market_variables": 39,
+        "n_evaluation_windows": 441,
+        "n_scenarios_per_window": 64,
+        "history_length": 30,
+        "future_length": 30,
+        "threshold_contract_hash": (
+            "68b5ab9ca4497ff5ec07b43a184c5ab1470d3d8aba5dd21ccb428b00ff6afc09"
+        ),
+        "state_specification_hash": (
+            "65540401c58143dc51a2c907916c9b4903b484c3c3ad0ba9ce1c062b96fc6076"
+        ),
+    }
+
+
+def test_friendly_wrappers_only_select_archived_nodes() -> None:
+    wrappers = {
+        "train_next_step.sh": "train:scenarioflow:stage1:${SEED}",
+        "finetune_rollouts.sh": "train:scenarioflow:stage2:${SEED}",
+        "evaluate_benchmark.sh": "--node-id \"$1\"",
+        "reproduce.sh": "--resume-all",
+    }
+    for filename, expected in wrappers.items():
+        contents = (ROOT / "scripts" / filename).read_text(encoding="utf-8")
+        assert "run_reproduction.py" in contents
+        assert expected in contents
+
+
+def test_scenarioflow_inference_wrapper_uses_the_released_model() -> None:
+    script = ROOT / "scripts/run_inference.sh"
+    contents = script.read_text(encoding="utf-8")
+
+    assert "artifacts/cache/models/core/stage2/best_model.pt" in contents
+    assert "evaluate_sni_current_panel_metrics.py" in contents
+    assert "OPENAI_API_KEY" not in contents
+    assert "codex" not in contents.lower()

@@ -188,6 +188,32 @@ def test_release_scanners_reject_secrets_and_host_paths(tmp_path: Path) -> None:
     assert "absolute host path" in result.stdout
 
 
+def test_release_scanner_distinguishes_latex_from_windows_unc_paths(
+    tmp_path: Path,
+) -> None:
+    """LaTeX control sequences are not Windows network paths."""
+    (tmp_path / "latex.py").write_text(r'ltx.replace("x", r"\\hline\n")')
+    command = [
+        "python",
+        str(ROOT / "scripts" / "check_release.py"),
+        "--root",
+        str(tmp_path),
+        "--all",
+    ]
+    latex_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert latex_result.returncode == 0
+
+    unc_path = "\\" * 2 + "server" + "\\" + "share" + "\\" + "artifact.pt"
+    (tmp_path / "unc.txt").write_text(unc_path)
+    unc_result = subprocess.run(
+        command, text=True, capture_output=True, check=False
+    )
+    assert unc_result.returncode == 1
+    assert "absolute host path" in unc_result.stdout
+
+
 def test_release_scanner_ignores_local_virtual_environments(tmp_path: Path) -> None:
     """Host paths in ignored local dependencies must not block a source-release scan."""
     virtual_environment = tmp_path / ".venv"

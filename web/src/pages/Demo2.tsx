@@ -236,7 +236,7 @@ export default function Demo2() {
           )}
           {generationError && (
             <p className="mt-2 text-xs text-destructive" role="alert">
-              Generation failed. Check the ScenarioFlow service and try again; any existing result remains available.
+              Generation failed. Check the ScenarioFlow service and try again.
             </p>
           )}
           {inputsChanged && (

@@ -18,6 +18,7 @@ SKIP_DIRECTORY_NAMES = {
     ".superpowers",
     ".venv",
     "__pycache__",
+    "build",
     "dist",
     "node_modules",
 }
@@ -37,7 +38,9 @@ DOCKERFILE_HOST_PATH_PATTERN = re.compile(
     r"(?<![A-Za-z0-9_.-])/(?:home|Users|private)/[^\s\"']+"
 )
 WINDOWS_DRIVE_PATH_PATTERN = re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]")
-WINDOWS_UNC_PATH_PATTERN = re.compile(r"(?<!\\)\\\\[A-Za-z0-9._-]+[\\/][A-Za-z0-9._-]+")
+WINDOWS_UNC_PATH_PATTERN = re.compile(
+    r"(?<!\\)\\\\[A-Za-z0-9._-]+[\\/][A-Za-z0-9._-]{2,}"
+)
 LOCAL_FILE_URI_PATTERN = re.compile(r"(?i)(?<![A-Za-z0-9+.-])file:[\\/]+")
 TRIPLE_SLASH_URI_PATTERN = re.compile(
     r"(?i)(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]*:/{3,}"

@@ -139,7 +139,7 @@ export default function Demo1() {
             {dates.length === 0 && <option>loading dates…</option>}
             {dates.map((d) => <option key={d.index} value={d.index}>{d.date}</option>)}
           </select>
-          <p className="mt-1 text-xs text-muted-foreground">Type a year to search · spans 2000–2016 incl. the 2008 crisis.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Type a year to search. Dates span 2000–2016, including the 2008 crisis.</p>
 
           <label htmlFor="d1-factor" className="mt-4 block text-sm font-medium">Market variable</label>
           <select id="d1-factor" value={factor} onChange={(e) => setFactor(e.target.value)}

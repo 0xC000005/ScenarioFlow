@@ -126,7 +126,9 @@ def test_built_runtime_executes_the_native_cli() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stderr
-    assert "reproduce" in result.stdout
+    assert "setup" in result.stdout
+    assert "fetch" in result.stdout
+    assert "demo" in result.stdout
 
 
 def test_built_runtime_contains_the_codex_platform_binary() -> None:
