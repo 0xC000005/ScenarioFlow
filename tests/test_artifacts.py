@@ -61,7 +61,7 @@ def _write_manifest(
         "bytes": str(len(payload) if size is None else size),
         "sha256": digest or _sha256(payload),
         "frozen_source_path": "frozen/source.bin",
-        "url_path": relative_path if url_path is None else url_path,
+        "url_path": "core.fixture.pt" if url_path is None else url_path,
     }
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t")
@@ -138,7 +138,12 @@ def test_release_manifest_is_the_exact_external_subset() -> None:
         {Path(record.relative_path).name for record in records}
     )
     assert all(record.category != "data" for record in records)
-    assert all(record.url_path == record.relative_path for record in records)
+    assert len({record.url_path for record in records}) == len(records)
+    assert all("/" not in record.url_path for record in records)
+    assert resolver.record("core.stage2").url_path == "core.stage2.pt"
+    assert resolver.record("foundation.toto-1-0.checkpoint").url_path == (
+        "foundation.toto-1-0.checkpoint.ckpt"
+    )
     frozen_identities = sorted(
         (record.frozen_source_path, record.expected_bytes, record.sha256)
         for record in records
@@ -198,7 +203,7 @@ def test_release_manifest_is_the_exact_external_subset() -> None:
             {
                 "category": "data",
                 "relative_path": "data/input.bin",
-                "url_path": "data/input.bin",
+                "url_path": "data.input.bin",
             },
             "data",
         ),
@@ -245,7 +250,7 @@ def test_local_bundle_fetch_is_verified_atomic_and_idempotent(tmp_path: Path) ->
     manifest = _write_manifest(tmp_path / "manifest.tsv", payload=payload)
     resolver = ArtifactResolver.from_tsv(manifest)
     bundle = tmp_path / "bundle"
-    source = bundle / "models/core/fixture/best_model.pt"
+    source = bundle / "core.fixture.pt"
     source.parent.mkdir(parents=True)
     source.write_bytes(payload)
     root = tmp_path / "cache"
@@ -272,7 +277,7 @@ def test_corrupt_final_requires_repair_and_survives_failed_repair(
     final.parent.mkdir(parents=True)
     final.write_bytes(b"old corrupt bytes")
     bundle = tmp_path / "bundle"
-    source = bundle / "models/core/fixture/best_model.pt"
+    source = bundle / "core.fixture.pt"
     source.parent.mkdir(parents=True)
     source.write_bytes(b"wrong replacement")
 
@@ -297,7 +302,7 @@ def test_local_bundle_missing_member_has_safe_actionable_error(tmp_path: Path) -
         )
     message = str(caught.value)
     assert "core.fixture" in message
-    assert "models/core/fixture/best_model.pt" in message
+    assert "core.fixture.pt" in message
     assert resolver.record("core.fixture").sha256 in message
     assert str(tmp_path) not in message
 
@@ -314,7 +319,7 @@ def test_symlink_destination_is_never_followed(tmp_path: Path) -> None:
     root.mkdir()
     (root / "models").symlink_to(outside, target_is_directory=True)
     bundle = tmp_path / "bundle"
-    source = bundle / "models/core/fixture/best_model.pt"
+    source = bundle / "core.fixture.pt"
     source.parent.mkdir(parents=True)
     source.write_bytes(payload)
     with pytest.raises(ArtifactError, match="symlink"):

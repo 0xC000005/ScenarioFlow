@@ -7,10 +7,10 @@ assets, and evidence files distributed separately from the repository.
 Fetch a named profile from the release URL:
 
 ```bash
-scenarioflow fetch --profile core --base-url "$RELEASE_BASE_URL"
+./scripts/setup.sh --profile core
 ```
 
-Or use a local release bundle with the same member paths as `url_path`:
+Or use a local release bundle containing the filenames listed in `url_path`:
 
 ```bash
 scenarioflow fetch --profile core --bundle-dir /path/to/scenarioflow-v1
@@ -19,8 +19,7 @@ scenarioflow fetch --profile core --bundle-dir /path/to/scenarioflow-v1
 Available profiles are `core`, `baselines`, `multiseed`, `foundation`,
 `nl-runtime`, `evidence`, and `all`. The optional IV-only checkpoint belongs
 only to `all`; `core` is the three 39-state Stage 1, Stage 2, and adaptive-graph
-checkpoints. Set `SCENARIOFLOW_ARTIFACT_BASE_URL` instead of `--base-url` when
-a permanent release URL becomes available.
+checkpoints. Set `SCENARIOFLOW_ARTIFACT_BASE_URL` to use a release mirror.
 
 The `evidence` profile includes the complete sampled arrays used to regenerate
 the numerical paper figures. These arrays preserve the published sample decks;

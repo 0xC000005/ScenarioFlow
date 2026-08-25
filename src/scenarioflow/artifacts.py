@@ -11,7 +11,7 @@ import re
 import shutil
 from typing import Collection, Iterable, Literal
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urljoin
+from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
 
@@ -170,6 +170,7 @@ class ArtifactResolver:
         records: list[ArtifactRecord] = []
         seen_ids: set[str] = set()
         seen_paths: set[str] = set()
+        seen_url_paths: set[str] = set()
         for index, row in enumerate(rows, start=2):
             if row["schema_version"] != SCHEMA_VERSION:
                 raise ArtifactError(f"row {index} has an unsupported schema version")
@@ -190,10 +191,11 @@ class ArtifactResolver:
                 _safe_posix_path(row["frozen_source_path"], label="frozen source path")
             )
             url_path = str(_safe_posix_path(row["url_path"], label="URL path"))
-            if url_path != quote(relative, safe="/._-"):
-                raise ArtifactError(
-                    f"row {index} URL path does not encode its relative path"
-                )
+            if len(PurePosixPath(url_path).parts) != 1:
+                raise ArtifactError(f"row {index} URL path must be a release filename")
+            if url_path in seen_url_paths:
+                raise ArtifactError(f"duplicate URL path: {url_path}")
+            seen_url_paths.add(url_path)
 
             category = row["category"].strip()
             if not category or category == "data" or relative.startswith("data/"):

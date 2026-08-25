@@ -28,7 +28,7 @@ appending each generated state to construct a complete multi-day scenario.*
 Install the environment and fetch the released weights:
 
 ```bash
-./scripts/setup.sh --bundle-dir /path/to/release-bundle
+./scripts/setup.sh
 ./scripts/check_installation.sh
 ```
 
@@ -124,8 +124,7 @@ only the intermediate next-step training checkpoint. Fetch the final weights if
 they are not already installed:
 
 ```bash
-uv run scenarioflow fetch --artifact core.stage2 \
-  --bundle-dir /path/to/release-bundle
+./scripts/setup.sh
 ```
 
 Generate conditional 30-day joint paths from the numerical histories:
@@ -143,11 +142,8 @@ The narrative interface requires the language runtime and the same final Stage
 2 weights:
 
 ```bash
-uv sync --extra demo-server --extra demo-openai
-uv run scenarioflow fetch --profile nl-runtime \
-  --bundle-dir /path/to/release-bundle
-uv run scenarioflow fetch --artifact core.stage2 \
-  --bundle-dir /path/to/release-bundle
+./scripts/setup.sh
+./scripts/setup.sh --profile nl-runtime
 uv run scenarioflow demo doctor
 ./scripts/run_demo.sh
 ```

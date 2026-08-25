@@ -81,3 +81,13 @@ def test_scenarioflow_inference_wrapper_uses_the_released_model() -> None:
     assert "evaluate_sni_current_panel_metrics.py" in contents
     assert "OPENAI_API_KEY" not in contents
     assert "codex" not in contents.lower()
+
+
+def test_setup_uses_the_v1_github_release_by_default() -> None:
+    contents = (ROOT / "scripts/setup.sh").read_text(encoding="utf-8")
+
+    assert (
+        'DEFAULT_BASE_URL="https://github.com/0xC000005/ScenarioFlow/'
+        'releases/download/v1.0.0"'
+    ) in contents
+    assert 'BASE_URL="${SCENARIOFLOW_ARTIFACT_BASE_URL:-$DEFAULT_BASE_URL}"' in contents

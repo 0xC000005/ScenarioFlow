@@ -89,14 +89,12 @@ def inspect_demo_capabilities(
     if not narrative_runtime_ready:
         demo_one_missing.append("nl-runtime artifacts")
         demo_one_actions.append(
-            "Run `uv run scenarioflow fetch --profile nl-runtime "
-            "--bundle-dir /path/to/release-bundle`."
+            "Run `./scripts/setup.sh --profile nl-runtime`."
         )
     if not stage2_ready:
         demo_one_missing.append("Stage 2 checkpoint")
         demo_one_actions.append(
-            "Run `uv run scenarioflow fetch --artifact core.stage2 "
-            "--bundle-dir /path/to/release-bundle`."
+            "Run `./scripts/setup.sh`."
         )
     if not narrative_backend_ready:
         demo_one_missing.append("demo backend")
@@ -110,8 +108,7 @@ def inspect_demo_capabilities(
     if not _artifacts_ready(resolver, artifact_root, nl_runtime_ids):
         demo_two_missing.append("nl-runtime artifacts")
         demo_two_actions.append(
-            "Run `uv run scenarioflow fetch --profile nl-runtime "
-            "--bundle-dir /path/to/release-bundle`."
+            "Run `./scripts/setup.sh --profile nl-runtime`."
         )
     codex = which("codex")
     if codex is None:

@@ -3,7 +3,12 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROFILE="core"
-BASE_URL="${SCENARIOFLOW_ARTIFACT_BASE_URL:-}"
+DEFAULT_BASE_URL="https://github.com/0xC000005/ScenarioFlow/releases/download/v1.0.0"
+BASE_URL="${SCENARIOFLOW_ARTIFACT_BASE_URL:-$DEFAULT_BASE_URL}"
+BASE_URL_OVERRIDDEN=0
+if [[ -n "${SCENARIOFLOW_ARTIFACT_BASE_URL:-}" ]]; then
+  BASE_URL_OVERRIDDEN=1
+fi
 BUNDLE_DIR=""
 ARTIFACT_ROOT="$ROOT_DIR/artifacts/cache"
 
@@ -15,12 +20,13 @@ Install ScenarioFlow and fetch a checksum-verified artifact profile.
 
 Options:
   --profile NAME       Artifact profile to fetch (default: core)
-  --base-url URL       Base URL of the hosted artifact bundle
-  --bundle-dir PATH    Local artifact bundle with manifest paths preserved
+  --base-url URL       Override the GitHub Release URL
+  --bundle-dir PATH    Use a local release bundle instead
   --artifact-root PATH Installation directory for artifacts
   -h, --help           Show this help message
 
-Set SCENARIOFLOW_ARTIFACT_BASE_URL instead of passing --base-url each time.
+The v1.0.0 GitHub Release is used by default. Set
+SCENARIOFLOW_ARTIFACT_BASE_URL to use another host.
 EOF
 }
 
@@ -32,6 +38,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --base-url)
       BASE_URL="${2:?--base-url requires a value}"
+      BASE_URL_OVERRIDDEN=1
       shift 2
       ;;
     --bundle-dir)
@@ -54,13 +61,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -n "$BASE_URL" && -n "$BUNDLE_DIR" ]]; then
+if [[ -n "$BUNDLE_DIR" && "$BASE_URL_OVERRIDDEN" -eq 1 ]]; then
   echo "Use either --base-url or --bundle-dir, not both." >&2
   exit 2
 fi
-if [[ -z "$BASE_URL" && -z "$BUNDLE_DIR" ]]; then
-  echo "Pass --base-url or --bundle-dir to fetch release artifacts." >&2
-  exit 2
+if [[ -n "$BUNDLE_DIR" ]]; then
+  BASE_URL=""
 fi
 if [[ -n "$BUNDLE_DIR" && ! -d "$BUNDLE_DIR" ]]; then
   echo "Artifact bundle not found: $BUNDLE_DIR" >&2
@@ -85,4 +91,3 @@ uv run scenarioflow fetch \
   "${SOURCE_ARGS[@]}" \
   --artifact-root "$ARTIFACT_ROOT"
 uv run scenarioflow setup --check --artifact-root "$ARTIFACT_ROOT"
-

@@ -67,7 +67,7 @@ def _resolver_with_runtime(
                     "bytes": len(payload),
                     "sha256": hashlib.sha256(payload).hexdigest(),
                     "frozen_source_path": f"frozen/{artifact_id}.bin",
-                    "url_path": relative,
+                    "url_path": f"{artifact_id}{Path(relative).suffix}",
                 }
             )
     root = tmp_path / "cache"

@@ -59,7 +59,7 @@ def _fixture_manifest(path: Path, payload: bytes = b"fixture") -> Path:
                 "bytes": len(payload),
                 "sha256": hashlib.sha256(payload).hexdigest(),
                 "frozen_source_path": "frozen/fixture.bin",
-                "url_path": relative,
+                "url_path": "core.fixture.pt",
             }
         )
     return path
