@@ -12,18 +12,65 @@ uv run pytest -q tests/test_frozen_evidence.py tests/test_paper_release_boundary
 uv run python scripts/check_release.py --root . --all
 ```
 
+`ASSETS.tsv` classifies every file as `generated`, `verified-from-evidence`, or
+`preserved-only`. `generated` means byte-identical reproduction.
+`verified-from-evidence` means that the released arrays reproduce the same
+figure content, while PNG encoding, metadata, and rasterization can differ
+across Matplotlib versions. `preserved-only` means no exact surviving generator
+is claimed.
+
+## Regenerate the numerical assets
+
+Fetch the `evidence` artifact profile, then choose a caller-owned output
+directory:
+
+```bash
+./scripts/setup.sh --profile evidence
+./scripts/reproduce_paper.sh all \
+  --artifact-root artifacts/cache \
+  --output-dir build/paper-reproduction
+```
+
+Use `tables` or `plots` in place of `all` to render only one group. These
+commands consume the checksum-pinned released JSON/NPZ evidence and require
+neither an OpenAI API key nor Codex. They never overwrite `paper_assets/` or
+`results/frozen/`.
+
+The byte-identical generated outputs are:
+
+- the FMTS multi-seed table from `results/frozen/multiseed/summary.json`;
+- the three dollar-liquidity table views from the frozen reports and released
+  narrative/start-only arrays;
+- the joint-factor fan-selection JSON.
+
+The ICAIF nine-panel marginal, cross-cell sensitivity, and joint-factor fan
+figures are deterministic within one installed environment and are
+`verified-from-evidence`. The launcher compares each regenerated PNG with its
+golden using dimensions (at most one pixel of renderer-version drift per axis)
+and a 128 x 128 RGB pixel comparison (normalized mean absolute error at most
+0.045). Golden PNG byte hashes remain pinned in `ASSETS.tsv`; regenerated PNG
+byte hashes are not promised across Matplotlib/Pillow versions.
+
+The ICAIF nine-panel marginal is
+`figures/generated/iv-marginal-daily-changes.png`. The separate
+`iv-marginal-daily-changes-all25.png` remains the README display and is not
+claimed as an output of the nine-panel recipe.
+
 ## Frozen paper-facing views
 
-The workshop and ICAIF tables under `tables/golden/`, together with the figures
-in `figures/`, are the released paper-facing assets. They are preserved as
-evidence for the published results; the historical experiment tree and its
-paper-rendering launchers are not shipped in this source archive.
+The final compact FMTS benchmark tables and the final ICAIF benchmark table do
+not have an exact surviving generator. They remain `preserved-only`: the paper
+command verifies their bytes and declared source relationship but does not copy
+them into the output directory or claim to regenerate their final rows. A fresh
+benchmark aggregate under `scenarioflow.benchmark` is a new result, not a
+byte-exact reconstruction of those final camera-ready views.
 
-The dollar-liquidity tables are frozen ScenarioFlow-NL outputs. They are not part
-of the numerical no-OpenAI inference route.
+No historical experiment tree, numbered experiment route, LaTeX workspace, or
+checkpoint-driven plot launcher is restored by this workflow.
 
 ## Illustrations
 
 Files under `figures/illustrations/` are the final conceptual illustrations used
-by the papers. They are preserved, not recreated by the numerical pipeline. The
-LaTeX workspaces are not included in this repository.
+by the papers. They are `preserved-only`, have no generator command, and are not
+recreated by the numerical pipeline. The LaTeX workspaces are not included in
+this repository.

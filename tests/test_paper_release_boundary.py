@@ -101,9 +101,15 @@ def test_paper_table_manifest_distinguishes_frozen_views_from_reruns() -> None:
     with (PAPER_ASSETS / "ASSETS.tsv").open(encoding="utf-8", newline="") as handle:
         rows = {row["asset_id"]: row for row in csv.DictReader(handle, delimiter="\t")}
 
-    for asset_id in ("fmts.multiseed", "icaif.benchmark"):
-        assert rows[asset_id]["mode"] == "frozen-paper-view"
+    for asset_id in (
+        "fmts.benchmark-full",
+        "fmts.benchmark-short",
+        "icaif.benchmark",
+    ):
+        assert rows[asset_id]["mode"] == "preserved-only"
         assert rows[asset_id]["generator"] == ""
+    assert rows["fmts.multiseed"]["mode"] == "generated"
+    assert rows["fmts.multiseed"]["generator"] == "./scripts/reproduce_paper.sh tables"
 
     guide = (PAPER_ASSETS / "README.md").read_text(encoding="utf-8")
     assert "historical experiment tree" in guide

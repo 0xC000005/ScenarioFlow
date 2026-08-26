@@ -30,6 +30,7 @@ def _root_parser() -> argparse.ArgumentParser:
         ("setup", "check the native installation"),
         ("fetch", "fetch checksum-pinned release artifacts"),
         ("artifacts", "inspect artifact integrity"),
+        ("paper", "render numerical paper assets from released evidence"),
         ("demo", "inspect or launch optional demos"),
     ):
         commands.add_parser(name, help=help_text, add_help=False)
@@ -94,6 +95,19 @@ def _launch_parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-dir", type=Path, default=_repository_root() / "data")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int)
+    return parser
+
+
+def _paper_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="scenarioflow paper")
+    parser.add_argument(
+        "mode", choices=("all", "tables", "plots"), nargs="?", default="all"
+    )
+    parser.add_argument("--manifest", type=Path, default=default_manifest_path())
+    parser.add_argument("--artifact-root", type=Path, default=Path("artifacts/cache"))
+    parser.add_argument(
+        "--output-dir", type=Path, default=Path("build/paper-reproduction")
+    )
     return parser
 
 
@@ -257,6 +271,23 @@ def _run_demo(arguments: list[str]) -> int:
     raise ArtifactError(f"unknown demo command: {arguments[0]}")
 
 
+def _run_paper(arguments: list[str]) -> int:
+    args = _paper_parser().parse_args(arguments)
+    from .paper.render import PaperRenderError, render_paper_assets, render_report_json
+
+    try:
+        report = render_paper_assets(
+            mode=args.mode,
+            artifact_manifest=args.manifest,
+            artifact_root=args.artifact_root,
+            output_dir=args.output_dir,
+        )
+    except PaperRenderError as error:
+        raise ArtifactError(str(error)) from error
+    print(render_report_json(report))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int | None:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if not arguments or arguments[0] in {"-h", "--help"}:
@@ -277,6 +308,8 @@ def main(argv: list[str] | None = None) -> int | None:
             return _run_verify(tail[1:])
         if command == "demo":
             return _run_demo(tail)
+        if command == "paper":
+            return _run_paper(tail)
         raise ArtifactError(f"unknown command: {command}")
     except ArtifactError as error:
         print(f"error: {error}", file=sys.stderr)
