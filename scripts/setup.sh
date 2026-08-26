@@ -81,8 +81,22 @@ if [[ -n "$BUNDLE_DIR" ]]; then
   SOURCE_ARGS=(--bundle-dir "$BUNDLE_DIR")
 fi
 
-uv run scenarioflow fetch \
+if ! uv run scenarioflow fetch \
   --profile "$PROFILE" \
   "${SOURCE_ARGS[@]}" \
-  --artifact-root "$ARTIFACT_ROOT"
+  --artifact-root "$ARTIFACT_ROOT"; then
+  if [[ -z "$BUNDLE_DIR" ]]; then
+    cat >&2 <<EOF
+
+Automatic artifact download failed.
+
+Download the v1.0.0 release assets from:
+  https://github.com/0xC000005/ScenarioFlow/releases/tag/v1.0.0
+
+Place the downloaded files together in one directory, then rerun:
+  ./scripts/setup.sh --profile $PROFILE --bundle-dir /path/to/downloaded-release-assets
+EOF
+  fi
+  exit 1
+fi
 uv run scenarioflow setup --check --artifact-root "$ARTIFACT_ROOT"

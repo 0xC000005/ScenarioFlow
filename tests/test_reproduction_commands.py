@@ -139,3 +139,45 @@ def test_setup_installs_the_locked_base_project_and_fetches_core(
         ),
         f"run scenarioflow setup --check --artifact-root {artifact_root}",
     ]
+
+
+def test_setup_explains_manual_release_fallback_when_remote_fetch_fails(
+    tmp_path: Path,
+) -> None:
+    """A private or unavailable release must leave the user a usable next step."""
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_uv = fake_bin / "uv"
+    fake_uv.write_text(
+        "#!/usr/bin/env bash\n"
+        "if [[ \"$*\" == run\\ scenarioflow\\ fetch* ]]; then\n"
+        "  exit 1\n"
+        "fi\n",
+        encoding="utf-8",
+    )
+    fake_uv.chmod(0o755)
+    environment = {
+        **os.environ,
+        "PATH": f"{fake_bin}:{os.environ['PATH']}",
+    }
+
+    result = subprocess.run(
+        [str(ROOT / "scripts" / "setup.sh")],
+        cwd=ROOT,
+        env=environment,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "Automatic artifact download failed." in result.stderr
+    assert (
+        "https://github.com/0xC000005/ScenarioFlow/releases/tag/v1.0.0"
+        in result.stderr
+    )
+    assert (
+        "./scripts/setup.sh --profile core "
+        "--bundle-dir /path/to/downloaded-release-assets"
+        in result.stderr
+    )
