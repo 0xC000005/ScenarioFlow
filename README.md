@@ -38,6 +38,13 @@ The released weights are used directly; this does not retrain the model. The
 Stage 2 checkpoint is installed at
 `artifacts/cache/models/core/stage2/best_model.pt`.
 
+If automatic artifact download is unavailable, download
+`scenarioflow-core-v1.0.0.zip` from the v1.0.0 release, extract it, and run:
+
+```bash
+./scripts/setup.sh --bundle-dir /path/to/extracted-core-bundle
+```
+
 ## Example outputs
 
 ### Conditional joint scenarios

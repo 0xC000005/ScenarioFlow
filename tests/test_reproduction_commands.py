@@ -176,6 +176,7 @@ def test_setup_explains_manual_release_fallback_when_remote_fetch_fails(
         "https://github.com/0xC000005/ScenarioFlow/releases/tag/v1.0.0"
         in result.stderr
     )
+    assert "scenarioflow-core-v1.0.0.zip" in result.stderr
     assert (
         "./scripts/setup.sh --profile core "
         "--bundle-dir /path/to/downloaded-release-assets"
