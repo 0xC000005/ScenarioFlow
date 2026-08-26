@@ -11,3 +11,4 @@ build/
 .env.*
 artifacts/cache/
 .codex-unavailable/
+.worktrees/
