@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import os
 from pathlib import Path
+import shutil
 import subprocess
 
 
@@ -139,6 +140,52 @@ def test_setup_installs_the_locked_base_project_and_fetches_core(
         ),
         f"run scenarioflow setup --check --artifact-root {artifact_root}",
     ]
+
+
+def test_setup_repairs_data_links_flattened_by_source_zip(tmp_path: Path) -> None:
+    """Browser-downloaded source ZIPs must retain working reproduction routes."""
+    release = tmp_path / "release"
+    scripts = release / "scripts"
+    scripts.mkdir(parents=True)
+    shutil.copy2(ROOT / "scripts/setup.sh", scripts / "setup.sh")
+    (release / "data").mkdir()
+
+    for snapshot in ("scenarioflow", "baselines", "garch_ccc", "deepvar_sni"):
+        source = release / "reproduction/source" / snapshot
+        source.mkdir(parents=True)
+        (source / "data").write_text("../../../data", encoding="utf-8")
+
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_uv = fake_bin / "uv"
+    fake_uv.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    fake_uv.chmod(0o755)
+    environment = {
+        **os.environ,
+        "PATH": f"{fake_bin}:{os.environ['PATH']}",
+    }
+
+    result = subprocess.run(
+        [str(scripts / "setup.sh")],
+        cwd=release,
+        env=environment,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    for snapshot in ("scenarioflow", "baselines", "garch_ccc", "deepvar_sni"):
+        data = release / "reproduction/source" / snapshot / "data"
+        assert data.is_symlink()
+        assert os.readlink(data) == "../../../data"
+
+
+def test_installation_check_probes_data_through_preserved_source_links() -> None:
+    contents = (ROOT / "scripts/check_installation.sh").read_text(encoding="utf-8")
+
+    assert "vol_surface_with_ret.npz" in contents
+    assert "preserved data routes: ok" in contents
 
 
 def test_setup_explains_manual_release_fallback_when_remote_fetch_fails(
