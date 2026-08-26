@@ -403,10 +403,10 @@ def _record_completion(node: Mapping[str, Any], payload: Mapping[str, Any]) -> N
 
 def execute_nodes(
     payload: Mapping[str, Any], nodes: Sequence[Mapping[str, Any]]
-) -> dict[str, list[str]]:
+) -> dict[str, Any]:
     """Execute dependency-ordered nodes, skipping only valid completions."""
     completed: set[str] = set()
-    result: dict[str, list[str]] = {"completed": [], "skipped": []}
+    result: dict[str, Any] = {"completed": [], "skipped": []}
     for node in nodes:
         missing = set(map(str, node.get("depends_on", []))) - completed
         if missing:
@@ -515,8 +515,18 @@ def main(argv: list[str] | None = None) -> int:
             )
         )
         return 0
-    ensure_protocol_manifest(payload)
-    print(json.dumps(execute_nodes(payload, nodes), sort_keys=True))
+    manifest = ensure_protocol_manifest(payload)
+    completion = execute_nodes(payload, nodes)
+    if args.resume_all:
+        from .aggregate import aggregate_study
+
+        aggregate_path = result_root / "aggregate"
+        aggregate_study(
+            protocol_manifest=manifest,
+            output_dir=aggregate_path,
+        )
+        completion["aggregate_path"] = str(aggregate_path)
+    print(json.dumps(completion, sort_keys=True))
     return 0
 
 

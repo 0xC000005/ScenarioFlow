@@ -32,7 +32,7 @@ def _commands(root: Path, operation: str, seed: int) -> list[list[str]]:
         ]
     if operation == "inference":
         return [[str(scripts / "run_inference.sh"), "--seed", str(seed)]]
-    return [[str(scripts / "reproduce.sh")]]
+    return [[str(scripts / "reproduce.sh"), "--resume-all"]]
 
 
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:

@@ -11,7 +11,6 @@ import sys
 
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 LAUNCHER = ROOT / "deploy/databricks/run_job.py"
 
@@ -40,6 +39,7 @@ def test_bundle_runs_the_launcher_in_the_custom_gpu_image() -> None:
     )
 
     assert bundle["include"] == ["deploy/databricks/resources.yml"]
+    assert bundle["bundle"]["databricks_cli_version"] == ">=0.299.0"
     variables = bundle["variables"]
     assert "image_url" in variables and "default" not in variables["image_url"]
     assert "gpu_node_type" in variables and "default" not in variables["gpu_node_type"]
@@ -62,7 +62,9 @@ def test_bundle_runs_the_launcher_in_the_custom_gpu_image() -> None:
     assert cluster["node_type_id"] == "${var.gpu_node_type}"
     assert cluster["spark_version"] == "${var.spark_version}"
     assert cluster["data_security_mode"] == "DATA_SECURITY_MODE_DEDICATED"
-    assert cluster["spark_conf"]["spark.databricks.unityCatalog.volumes.enabled"] == "true"
+    assert (
+        cluster["spark_conf"]["spark.databricks.unityCatalog.volumes.enabled"] == "true"
+    )
 
 
 def _write_command(path: Path, label: str) -> None:
@@ -199,10 +201,59 @@ def test_launcher_runs_the_existing_root_reproduction_launcher(tmp_path: Path) -
     )
 
     assert result.returncode == 0, result.stderr
-    assert calls.read_text(encoding="utf-8").splitlines() == ["reproduce:"]
+    assert calls.read_text(encoding="utf-8").splitlines() == ["reproduce:--resume-all"]
     assert json.loads(result.stdout)["commands"] == [
-        [str(scripts / "reproduce.sh")]
+        [str(scripts / "reproduce.sh"), "--resume-all"]
     ]
+
+
+def test_databricks_reproduction_command_reaches_real_executor_parser(
+    tmp_path: Path,
+) -> None:
+    """The Databricks command must be accepted by the real full-grid launcher."""
+    dry_run = subprocess.run(
+        [
+            sys.executable,
+            str(LAUNCHER),
+            "--operation",
+            "reproduce",
+            "--artifact-root",
+            str(tmp_path / "artifacts"),
+            "--output-root",
+            str(tmp_path / "outputs"),
+            "--dry-run",
+        ],
+        env={**os.environ, "SCENARIOFLOW_ROOT": str(ROOT)},
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert dry_run.returncode == 0, dry_run.stderr
+    command = json.loads(dry_run.stdout)["commands"][0]
+    assert command == [str(ROOT / "scripts/reproduce.sh"), "--resume-all"]
+
+    model_root = tmp_path / "models"
+    result_root = tmp_path / "results"
+    parsed = subprocess.run(
+        [
+            *command,
+            "--dry-run",
+            "--model-root",
+            str(model_root),
+            "--result-root",
+            str(result_root),
+            "--device",
+            "cpu",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert parsed.returncode == 0, parsed.stderr
+    assert json.loads(parsed.stdout)["node_count"] == 141
+    assert not model_root.exists()
+    assert not result_root.exists()
 
 
 def test_databricks_guide_has_copyable_build_deploy_and_run_commands() -> None:
@@ -210,7 +261,7 @@ def test_databricks_guide_has_copyable_build_deploy_and_run_commands() -> None:
 
     for command in (
         "docker build -f deploy/databricks/Dockerfile",
-        "docker push \"$IMAGE_URL\"",
+        'docker push "$IMAGE_URL"',
         "databricks bundle validate",
         "databricks bundle deploy",
         "databricks bundle run scenarioflow --params operation=inference,seed=2001",
@@ -219,5 +270,8 @@ def test_databricks_guide_has_copyable_build_deploy_and_run_commands() -> None:
     ):
         assert command in guide
     assert "separate numerical image" in guide
+    assert "actively supported Databricks CLI" in guide
+    assert "v0.299.x" in guide
+    assert "current latest release" in guide
     assert "OpenAI" not in guide
     assert "Codex" not in guide

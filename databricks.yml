@@ -1,6 +1,6 @@
 bundle:
   name: scenarioflow
-  databricks_cli_version: ">=0.218.0"
+  databricks_cli_version: ">=0.299.0"
 
 include:
   - deploy/databricks/resources.yml

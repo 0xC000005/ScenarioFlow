@@ -5,10 +5,12 @@ stack are not part of this deployment.
 
 ## Prerequisites
 
-Use an authenticated Databricks CLI version 0.218 or newer, and build the
-image from a checkout that includes the root `scripts/reproduce.sh` benchmark
-launcher. The target workspace also needs Databricks Container Services and a
-GPU node type compatible with Databricks Runtime 18.3 LTS.
+Use an authenticated, actively supported Databricks CLI.
+Choose the current latest release or the extended-support v0.299.x line. The
+bundle enforces a minimum of 0.299.0. Build the image from a checkout that
+includes the root `scripts/reproduce.sh` benchmark launcher. The target
+workspace also needs Databricks Container Services and a GPU node type
+compatible with Databricks Runtime 18.3 LTS.
 
 ## Build and push the image
 
@@ -64,7 +66,9 @@ Run the complete multi-seed reproduction:
 databricks bundle run scenarioflow --params operation=reproduce
 ```
 
-The reproduction route invokes the root launcher and runs its complete
-multi-seed grid; it does not use the single-seed job parameter. All three routes
-invoke the same scripts used by the native release. Checkpoints and results are
-written to the configured output Volume.
+The reproduction route invokes the root launcher with `--resume-all`, runs its
+complete multi-seed grid, and does not use the single-seed job parameter. A
+successful full run writes its semantic rerun aggregate below the configured
+result root at `aggregate/` and names that path in the completion JSON. All
+three routes invoke the same scripts used by the native release. Checkpoints
+and results are written to the configured output Volume.

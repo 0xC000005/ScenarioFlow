@@ -162,6 +162,16 @@ For a bounded local check, pass explicit limits such as
 change the workload and are not paper-result settings. Resume skips a node only
 when every declared checkpoint/JSON/NPZ completion artifact can be loaded.
 
+After a successful full `--resume-all` run, validated result and window-score
+artifacts are aggregated under `build/reproduction/results/aggregate`. The
+completion JSON names that directory. This semantic rerun output is not a
+historical byte-identical artifact. Learned-model intervals use three trained
+model means (each averaged across five sampling seeds), classical intervals use
+five sampling-seed values, and paired proper-score comparisons use chronological
+window evidence. The stable outputs are `summary.json`, `summary.md`,
+`per-run-metrics.csv`, `per-run-thresholds.csv`, `metric-summaries.csv`, and
+`paired-comparisons.csv`.
+
 The command graph comes from
 `results/frozen/multiseed/command-dag.json`; clean commands dispatch installed
 `scenarioflow` modules and never require the removed numbered experiment tree.
