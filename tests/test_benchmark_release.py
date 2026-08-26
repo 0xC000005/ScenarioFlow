@@ -477,6 +477,20 @@ def test_numbered_experiment_guard_detects_source_archive_files(tmp_path: Path) 
     ]
 
 
+def test_numbered_experiment_guard_falls_back_when_git_is_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An exported source archive must not require a Git executable."""
+    stale = tmp_path / "experiments/train_999_removed_branch.py"
+    stale.parent.mkdir()
+    stale.write_text("raise SystemExit\n", encoding="utf-8")
+    monkeypatch.setenv("PATH", "")
+
+    assert tracked_numbered_experiments(tmp_path) == [
+        Path("experiments/train_999_removed_branch.py")
+    ]
+
+
 def test_final_baseline_implementations_smoke_on_synthetic_panel() -> None:
     """The public classical and deep implementations must generate real trajectories."""
     rng = np.random.default_rng(17)

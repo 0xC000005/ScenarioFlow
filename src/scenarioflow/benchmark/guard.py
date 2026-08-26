@@ -35,13 +35,16 @@ def assert_isolated_output_root(
 def tracked_numbered_experiments(root: str | Path) -> list[Path]:
     """Return tracked numbered experiment scripts, which must remain absent."""
     repository = Path(root).resolve()
-    completed = subprocess.run(
-        ["git", "ls-files", "-z"],
-        cwd=repository,
-        capture_output=True,
-        check=False,
-    )
-    if completed.returncode == 0:
+    try:
+        completed = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=repository,
+            capture_output=True,
+            check=False,
+        )
+    except OSError:
+        completed = None
+    if completed is not None and completed.returncode == 0:
         paths = [
             Path(value) for value in completed.stdout.decode().split("\0") if value
         ]
