@@ -74,12 +74,7 @@ if [[ -n "$BUNDLE_DIR" && ! -d "$BUNDLE_DIR" ]]; then
 fi
 
 cd "$ROOT_DIR"
-uv sync \
-  --extra dev \
-  --extra baseline-classical \
-  --extra demo-server \
-  --extra demo-openai \
-  --extra paper
+uv sync --locked
 
 SOURCE_ARGS=(--base-url "$BASE_URL")
 if [[ -n "$BUNDLE_DIR" ]]; then

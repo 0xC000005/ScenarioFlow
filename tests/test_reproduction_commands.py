@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
+import subprocess
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -91,3 +93,49 @@ def test_setup_uses_the_v1_github_release_by_default() -> None:
         'releases/download/v1.0.0"'
     ) in contents
     assert 'BASE_URL="${SCENARIOFLOW_ARTIFACT_BASE_URL:-$DEFAULT_BASE_URL}"' in contents
+
+
+def test_setup_installs_the_locked_base_project_and_fetches_core(
+    tmp_path: Path,
+) -> None:
+    """The default install must stay minimal while installing the released model."""
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    calls = tmp_path / "uv-calls.txt"
+    fake_uv = fake_bin / "uv"
+    fake_uv.write_text(
+        "#!/usr/bin/env bash\n"
+        "printf '%s\\n' \"$*\" >> \"$UV_CALLS_FILE\"\n",
+        encoding="utf-8",
+    )
+    fake_uv.chmod(0o755)
+    artifact_root = tmp_path / "artifacts"
+    environment = {
+        **os.environ,
+        "PATH": f"{fake_bin}:{os.environ['PATH']}",
+        "UV_CALLS_FILE": str(calls),
+    }
+
+    result = subprocess.run(
+        [
+            str(ROOT / "scripts" / "setup.sh"),
+            "--artifact-root",
+            str(artifact_root),
+        ],
+        cwd=ROOT,
+        env=environment,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == [
+        "sync --locked",
+        (
+            "run scenarioflow fetch --profile core --base-url "
+            "https://github.com/0xC000005/ScenarioFlow/releases/download/v1.0.0 "
+            f"--artifact-root {artifact_root}"
+        ),
+        f"run scenarioflow setup --check --artifact-root {artifact_root}",
+    ]

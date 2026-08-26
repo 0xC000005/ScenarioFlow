@@ -3,6 +3,8 @@
 [![Release](https://img.shields.io/github/v/release/0xC000005/ScenarioFlow?display_name=tag&sort=semver)](https://github.com/0xC000005/ScenarioFlow/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/downloads/)
+[![Ubuntu](https://img.shields.io/badge/platform-Ubuntu-E95420.svg?logo=ubuntu&logoColor=white)](#quick-start)
+[![GHCR](https://img.shields.io/badge/container-GHCR%20v1.0.0-2496ED.svg?logo=docker&logoColor=white)](https://github.com/users/0xC000005/packages/container/package/scenarioflow)
 [![Live demo](https://img.shields.io/badge/live_demo-open-16A34A.svg)](http://138.28.239.185:8766/)
 
 ScenarioFlow is a temporal foundation model for generating conditional,
@@ -106,6 +108,7 @@ To reproduce the complete paper experiment across all training and rollout
 seeds, run:
 
 ```bash
+uv sync --locked --extra baseline-classical
 ./scripts/reproduce.sh
 ```
 
@@ -144,6 +147,7 @@ The narrative interface requires the language runtime and the same final Stage
 ```bash
 ./scripts/setup.sh
 ./scripts/setup.sh --profile nl-runtime
+uv sync --locked --extra demo-server --extra demo-openai
 uv run scenarioflow demo doctor
 ./scripts/run_demo.sh
 ```
@@ -174,8 +178,16 @@ uv run python scripts/check_release.py --all
 
 ## Docker
 
-The image uses the same package and commands as the native setup. Data and fetched
-artifacts remain bind-mounted from the checkout:
+The published runtime image supports `linux/amd64` and `linux/arm64`:
+
+```bash
+docker pull ghcr.io/0xc000005/scenarioflow:v1.0.0
+docker run --rm ghcr.io/0xc000005/scenarioflow:v1.0.0 scenarioflow --help
+```
+
+It uses the same package and commands as the native setup. Data and fetched
+artifacts remain bind-mounted from the checkout. To run the full demo site,
+build its runtime and frontend services with Compose:
 
 ```bash
 docker compose build

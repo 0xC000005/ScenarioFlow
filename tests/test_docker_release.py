@@ -9,11 +9,13 @@ import shutil
 import subprocess
 
 import pytest
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_IMAGE = "scenarioflow-narrative-to-scenario"
 FRONTEND_IMAGE = "scenarioflow-frontend"
+PUBLISH_WORKFLOW = ROOT / ".github" / "workflows" / "publish-container.yml"
 
 
 def _compose_config() -> dict[str, object]:
@@ -161,3 +163,28 @@ def test_built_frontend_can_start_without_either_optional_backend() -> None:
         check=False,
     )
     assert check.returncode == 0, check.stderr
+
+
+def test_publish_workflow_builds_only_the_v1_runtime_for_both_architectures() -> None:
+    """The public tag must not silently publish the frontend or a latest alias."""
+    with PUBLISH_WORKFLOW.open(encoding="utf-8") as handle:
+        workflow = yaml.safe_load(handle)
+
+    assert workflow["permissions"] == {"contents": "read", "packages": "write"}
+    job = workflow["jobs"]["publish-runtime"]
+    steps = job["steps"]
+    checkout = next(
+        step for step in steps if step.get("uses", "").startswith("actions/checkout@")
+    )
+    publish = next(
+        step
+        for step in steps
+        if step.get("uses", "").startswith("docker/build-push-action@")
+    )
+
+    assert checkout["with"]["ref"] == "v1.0.0"
+    assert publish["with"]["target"] == "runtime"
+    assert publish["with"]["platforms"] == "linux/amd64,linux/arm64"
+    assert publish["with"]["push"] is True
+    assert publish["with"]["tags"] == "ghcr.io/0xc000005/scenarioflow:v1.0.0"
+    assert ":latest" not in PUBLISH_WORKFLOW.read_text(encoding="utf-8").lower()
