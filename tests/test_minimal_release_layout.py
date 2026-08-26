@@ -9,6 +9,7 @@ import subprocess
 import pytest
 
 from scenarioflow.reproduction import finetune_rollouts, inference, train_next_step
+from scenarioflow.benchmark.guard import tracked_numbered_experiments
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,24 +44,7 @@ def test_release_contains_only_the_clean_numerical_core() -> None:
         if path.relative_to(ROOT).parts[:2] == ("reproduction", "source")
     ]
 
-    stale_numbered_scripts = [
-        path.relative_to(ROOT)
-        for path in shipped_files
-        if "tests/fixtures" not in path.as_posix()
-        and any(
-            path.stem.removeprefix(prefix)[:1].isdigit()
-            for prefix in (
-                "analyze_",
-                "audit_",
-                "evaluate_",
-                "plot_",
-                "test_",
-                "train_",
-            )
-            if path.stem.startswith(prefix)
-        )
-    ]
-    assert not stale_numbered_scripts
+    assert tracked_numbered_experiments(ROOT) == []
 
 
 def test_public_cli_parsers_supply_overridable_core_defaults() -> None:

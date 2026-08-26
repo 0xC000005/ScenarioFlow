@@ -16,10 +16,11 @@ def assert_isolated_output_root(
 ) -> Path:
     repository = Path(root).resolve()
     candidate = Path(output).expanduser().resolve()
-    if repository != candidate and repository not in candidate.parents:
-        raise UnsafeOutputRoot("benchmark output must remain below the repository root")
     for supplied in protected:
-        protected_path = (repository / supplied).resolve()
+        protected_path = Path(supplied).expanduser()
+        if not protected_path.is_absolute():
+            protected_path = repository / protected_path
+        protected_path = protected_path.resolve()
         if (
             candidate == protected_path
             or candidate in protected_path.parents

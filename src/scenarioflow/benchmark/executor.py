@@ -14,6 +14,7 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 import torch
 
+from .guard import assert_isolated_output_root
 from .protocol import (
     DEFAULT_PROTOCOL,
     SmokeOverrides,
@@ -24,6 +25,22 @@ from .protocol import (
 )
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+PROTECTED_RELEASE_PATHS = (
+    ".github",
+    ".superpowers",
+    "results/frozen",
+    "data",
+    "artifacts",
+    "deploy",
+    "foundation_envs",
+    "metadata",
+    "paper_assets",
+    "src",
+    "scripts",
+    "reproduction",
+    "tests",
+    "web",
+)
 
 
 class BenchmarkExecutionError(RuntimeError):
@@ -38,34 +55,229 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
-def _valid_artifact(path: Path) -> bool:
+def _command_option(node: Mapping[str, Any], *names: str) -> str | None:
+    command = list(map(str, node.get("command", [])))
+    for name in names:
+        if name in command:
+            position = command.index(name)
+            return command[position + 1] if position + 1 < len(command) else None
+    return None
+
+
+def _node_contract(node: Mapping[str, Any]) -> Mapping[str, Any]:
+    configuration = node.get("configuration")
+    if not isinstance(configuration, Mapping):
+        return {}
+    contract = configuration.get("contract")
+    return contract if isinstance(contract, Mapping) else {}
+
+
+def _valid_result(path: Path, node: Mapping[str, Any]) -> bool:
+    document = json.loads(path.read_text(encoding="utf-8"))
+    contract = _node_contract(node)
+    expected_windows = int(
+        _command_option(node, "--max_windows")
+        or contract.get("n_evaluation_windows", 0)
+    )
+    expected_samples = int(
+        _command_option(node, "--n_samples", "--samples")
+        or contract.get("n_scenarios_per_window", 0)
+    )
+    expected_variables = int(contract.get("n_market_variables", 0))
+    required_metrics = {
+        "current_panel_iv_metrics",
+        "joint_panel_quality",
+        "panel_b_crps",
+        "panel_b_energy_score",
+        "panel_b_variogram_score",
+        "panel_b_correlation",
+        "panel_b_factor_ks",
+    }
+    return (
+        isinstance(document, dict)
+        and document.get("baseline_name") == node.get("candidate")
+        and document.get("mode") == contract.get("mode")
+        and document.get("n_windows") == expected_windows
+        and document.get("n_samples") == expected_samples
+        and isinstance(document.get("state_specs"), list)
+        and len(document["state_specs"]) == expected_variables
+        and required_metrics.issubset(document)
+    )
+
+
+def _valid_window_scores(path: Path, node: Mapping[str, Any]) -> bool:
+    contract = _node_contract(node)
+    expected_windows = int(
+        _command_option(node, "--max_windows")
+        or contract.get("n_evaluation_windows", 0)
+    )
+    expected_variables = int(contract.get("n_market_variables", 0))
+    expected_horizons = np.asarray([1, 7, 14, 30], dtype=np.int64)
+    required = {
+        "schema_version",
+        "window_indices",
+        "horizons",
+        "variable_names",
+        "crps_contributions",
+        "energy_contributions",
+        "variogram_h30_contributions",
+        "coverage_levels",
+        "coverage_by_window",
+        "iv_history_activity",
+        "iv_deck_width",
+        "full_panel_history_activity",
+        "full_panel_deck_width",
+    }
+    with np.load(path, allow_pickle=False) as document:
+        if not required.issubset(document.files):
+            return False
+        horizons = document["horizons"]
+        return (
+            document["schema_version"].shape == ()
+            and str(document["schema_version"].item()) == "fmts.window_scores.v1"
+            and np.array_equal(horizons, expected_horizons)
+            and document["window_indices"].shape == (expected_windows,)
+            and document["variable_names"].shape == (expected_variables,)
+            and document["crps_contributions"].shape
+            == (expected_windows, len(expected_horizons), expected_variables)
+            and document["energy_contributions"].shape
+            == (expected_windows, len(expected_horizons))
+            and document["variogram_h30_contributions"].shape == (expected_windows,)
+            and document["coverage_by_window"].shape == (expected_windows, 4)
+        )
+
+
+def _valid_checkpoint(path: Path, node: Mapping[str, Any]) -> bool:
+    document = torch.load(path, map_location="cpu", weights_only=False)
+    if not isinstance(document, Mapping):
+        return False
+    state = document.get("model_state_dict")
+    config = document.get("config")
+    contract = _node_contract(node)
+    if not isinstance(state, Mapping) or not state or not isinstance(config, Mapping):
+        return False
+    dimension = config.get("input_dim", config.get("n_cells"))
+    if int(dimension or 0) != int(contract.get("n_market_variables", 0)):
+        return False
+    if int(config.get("history_len", 0)) != int(contract.get("history_length", 0)):
+        return False
+    if int(config.get("future_len", 0)) != int(contract.get("future_length", 0)):
+        return False
+    expected_model_type = {
+        "deepvar": "deepvar",
+        "timegrad": "timegrad",
+        "path_diffusion": "path_diffusion",
+        "deepvar_sni": "deepvar",
+    }.get(str(node.get("candidate")))
+    return (
+        expected_model_type is None or document.get("model_type") == expected_model_type
+    )
+
+
+def _valid_artifact(path: Path, node: Mapping[str, Any]) -> bool:
     if not path.is_file() or path.stat().st_size == 0:
         return False
     try:
-        if path.suffix == ".json":
-            return isinstance(json.loads(path.read_text(encoding="utf-8")), dict)
-        if path.suffix == ".npz":
-            with np.load(path, allow_pickle=False) as payload:
-                return bool(payload.files)
-        if path.suffix == ".pt":
-            return isinstance(
-                torch.load(path, map_location="cpu", weights_only=False), Mapping
-            )
-    except (OSError, ValueError, json.JSONDecodeError, EOFError, RuntimeError):
+        if path.name == "results_current_panel.json":
+            return _valid_result(path, node)
+        if path.name == "window_scores.npz":
+            return _valid_window_scores(path, node)
+        if path.name == "best_model.pt":
+            return _valid_checkpoint(path, node)
+    except (
+        KeyError,
+        OSError,
+        TypeError,
+        ValueError,
+        json.JSONDecodeError,
+        EOFError,
+        RuntimeError,
+    ):
         return False
-    return True
+    return False
 
 
-def completion_is_valid(paths: Sequence[str | Path]) -> bool:
-    """Return true only when every declared completion artifact can be loaded."""
-    resolved = [Path(path) for path in paths]
-    return bool(resolved) and all(_valid_artifact(path) for path in resolved)
+def _artifacts_are_valid(node: Mapping[str, Any]) -> bool:
+    resolved = _completion_paths(node)
+    return bool(resolved) and all(_valid_artifact(path, node) for path in resolved)
 
 
 def _completion_paths(node: Mapping[str, Any]) -> list[Path]:
     return [
         Path(path) for path in node.get("resume", {}).get("completion_artifacts", [])
     ]
+
+
+def _read_json_object(path: Path) -> dict[str, Any] | None:
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return document if isinstance(document, dict) else None
+
+
+def completion_is_valid(node: Mapping[str, Any], payload: Mapping[str, Any]) -> bool:
+    """Validate artifacts plus their exact current node/protocol completion record."""
+    if not _artifacts_are_valid(node):
+        return False
+    sidecar = Path(str(node.get("sidecar_manifest", {}).get("path", "")))
+    status_path = Path(str(node.get("destination", ""))) / "status.json"
+    manifest = _read_json_object(sidecar)
+    status = _read_json_object(status_path)
+    if manifest is None or status is None:
+        return False
+    identity = {
+        "node_id": node.get("id"),
+        "protocol_dag_sha256": payload.get("protocol", {}).get("executable_dag_sha256"),
+        "command_sha256": node.get("command_sha256"),
+        "configuration_sha256": node.get("configuration_sha256"),
+    }
+    if any(manifest.get(key) != value for key, value in identity.items()):
+        return False
+    if any(status.get(key) != value for key, value in identity.items()):
+        return False
+    if (
+        manifest.get("schema_version") != "fmts.node_run.v1"
+        or status.get("schema_version") != "fmts.node_status.v1"
+        or manifest.get("candidate") != node.get("candidate")
+        or manifest.get("display_name") != node.get("display_name")
+        or manifest.get("action") != node.get("action")
+        or manifest.get("training_seed") != node.get("training_seed")
+        or manifest.get("rollout_seed") != node.get("rollout_seed")
+        or manifest.get("contract") != payload.get("protocol", {}).get("contract")
+        or status.get("state") != "completed"
+        or status.get("returncode") != 0
+    ):
+        return False
+    artifacts = _completion_paths(node)
+    expected_paths = {str(path.resolve()) for path in artifacts} | {
+        str(sidecar.resolve())
+    }
+    recorded_hashes = status.get("artifact_hashes")
+    if (
+        not isinstance(recorded_hashes, Mapping)
+        or set(recorded_hashes) != expected_paths
+    ):
+        return False
+    return all(
+        Path(path).is_file() and sha256_file(path) == expected
+        for path, expected in recorded_hashes.items()
+    )
+
+
+def validate_output_roots(
+    model_root: str | Path, result_root: str | Path
+) -> tuple[Path, Path]:
+    """Resolve output roots and reject overlap with authority, inputs, or source."""
+    models = Path(model_root).expanduser().resolve()
+    results = Path(result_root).expanduser().resolve()
+    models = assert_isolated_output_root(
+        REPOSITORY_ROOT, (*PROTECTED_RELEASE_PATHS, results), models
+    )
+    results = assert_isolated_output_root(
+        REPOSITORY_ROOT, (*PROTECTED_RELEASE_PATHS, models), results
+    )
+    return models, results
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -144,8 +356,7 @@ def execute_nodes(
             raise BenchmarkExecutionError(
                 f"dependencies not completed for {node['id']}: {sorted(missing)}"
             )
-        artifacts = _completion_paths(node)
-        if completion_is_valid(artifacts):
+        if completion_is_valid(node, payload):
             completed.add(str(node["id"]))
             result["skipped"].append(str(node["id"]))
             continue
@@ -156,11 +367,15 @@ def execute_nodes(
             raise BenchmarkExecutionError(
                 f"node {node['id']} failed with exit code {process.returncode}"
             )
-        if not completion_is_valid(artifacts):
+        if not _artifacts_are_valid(node):
             raise BenchmarkExecutionError(
                 f"node {node['id']} omitted or corrupted a completion artifact"
             )
         _record_completion(node, payload)
+        if not completion_is_valid(node, payload):
+            raise BenchmarkExecutionError(
+                f"node {node['id']} completion record failed validation"
+            )
         completed.add(str(node["id"]))
         result["completed"].append(str(node["id"]))
     return result
@@ -211,10 +426,11 @@ def main(argv: list[str] | None = None) -> int:
         if any(value is not None for value in smoke_values.values())
         else None
     )
+    model_root, result_root = validate_output_roots(args.model_root, args.result_root)
     payload = materialize_protocol(
         load_protocol(args.protocol),
-        model_root=args.model_root,
-        result_root=args.result_root,
+        model_root=model_root,
+        result_root=result_root,
         device=args.device,
         smoke=smoke,
     )

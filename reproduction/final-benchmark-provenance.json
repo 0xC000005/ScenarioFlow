@@ -1,9 +1,10 @@
 {
-  "schema_version": "scenarioflow.final-benchmark-provenance.v1",
+  "schema_version": "scenarioflow.final-benchmark-provenance.v2",
   "protocol": {
     "released_path": "results/frozen/multiseed/command-dag.json",
     "command_count": 141,
     "executable_dag_sha256": "c6d570106975a79750d9fc47be96b07b71ea09930812c72154116a54e3a37d72",
+    "projected_payload_sha256": "ecf90958d519226e280c3f35cfc10bfbed067e068fb5f381b2edb4c343e83844",
     "training_seeds": [1001, 1002, 1003],
     "sampling_seeds": [2001, 2002, 2003, 2004, 2005]
   },
@@ -27,18 +28,18 @@
     "unavailable_window_score_helper_sha256": "287a5df95bfc30e53db386b830b8d407fe9c4dfadfdf1cdc9faef035d7600d49",
     "claim": "Reruns use the released semantic contract but are not promised byte-identical to historical result bytes."
   },
-  "implementation_mapping": {
-    "scenarioflow": "scenarioflow.reproduction train_next_step, finetune_rollouts; scenarioflow.benchmark.evaluate_scenarioflow",
-    "scenarioflow_graph": "scenarioflow.reproduction finetune_rollouts adaptive graph; scenarioflow.benchmark.evaluate_scenarioflow",
-    "random_walk": "scenarioflow.benchmark.baselines.classical.JointRandomWalk",
-    "bootstrap": "scenarioflow.benchmark.baselines.classical.JointBootstrap",
-    "historical_sim": "scenarioflow.benchmark.baselines.classical.WindowHistoricalSimulation",
-    "pca_var": "scenarioflow.benchmark.baselines.classical.JointPCAVAR",
-    "garch_ccc": "scenarioflow.benchmark.baselines.classical.JointGaussianGARCHCCC",
-    "filtered_hs": "scenarioflow.benchmark.baselines.classical.JointFilteredHistoricalSimulation",
-    "deepvar": "scenarioflow.benchmark.baselines.deep.CurrentPanelDeepVAR",
-    "timegrad": "scenarioflow.benchmark.baselines.deep.CurrentPanelTimeGrad",
-    "path_diffusion": "scenarioflow.benchmark.baselines.deep.CurrentPanelPathDiffusion",
-    "deepvar_sni": "scenarioflow.benchmark.baselines.deepvar_sni.DeepVARSNIInterfaceBaseline"
-  }
+  "implementation_mapping": [
+    {"display_name": "ScenarioFlow", "candidate_id": "scenarioflow", "clean_implementation": "scenarioflow.reproduction.train_next_step + scenarioflow.reproduction.finetune_rollouts + scenarioflow.benchmark.evaluate_scenarioflow"},
+    {"display_name": "ScenarioFlow + graph", "candidate_id": "scenarioflow_graph", "clean_implementation": "scenarioflow.reproduction.finetune_rollouts[adaptive_graph_residual] + scenarioflow.benchmark.evaluate_scenarioflow"},
+    {"display_name": "Random walk", "candidate_id": "random_walk", "clean_implementation": "scenarioflow.benchmark.baselines.classical.JointRandomWalk"},
+    {"display_name": "Joint-increment bootstrap", "candidate_id": "bootstrap", "clean_implementation": "scenarioflow.benchmark.baselines.classical.JointBootstrap"},
+    {"display_name": "State-matched historical simulation", "candidate_id": "historical_sim", "clean_implementation": "scenarioflow.benchmark.baselines.classical.WindowHistoricalSimulation"},
+    {"display_name": "PCA-VAR", "candidate_id": "pca_var", "clean_implementation": "scenarioflow.benchmark.baselines.classical.JointPCAVAR"},
+    {"display_name": "GARCH-CCC", "candidate_id": "garch_ccc", "clean_implementation": "scenarioflow.benchmark.baselines.classical.JointGaussianGARCHCCC"},
+    {"display_name": "Filtered historical simulation", "candidate_id": "filtered_hs", "clean_implementation": "scenarioflow.benchmark.baselines.classical.JointFilteredHistoricalSimulation"},
+    {"display_name": "DeepVAR", "candidate_id": "deepvar", "clean_implementation": "scenarioflow.benchmark.baselines.deep.CurrentPanelDeepVAR"},
+    {"display_name": "TimeGrad", "candidate_id": "timegrad", "clean_implementation": "scenarioflow.benchmark.baselines.deep.CurrentPanelTimeGrad"},
+    {"display_name": "CSDI", "candidate_id": "path_diffusion", "clean_implementation": "scenarioflow.benchmark.baselines.deep.CurrentPanelPathDiffusion"},
+    {"display_name": "DeepVAR + ScenarioFlow support", "candidate_id": "deepvar_sni", "clean_implementation": "scenarioflow.benchmark.baselines.deepvar_sni.DeepVARSNIInterfaceBaseline"}
+  ]
 }

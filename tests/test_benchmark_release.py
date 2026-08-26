@@ -20,15 +20,21 @@ from scenarioflow.benchmark.baselines.classical import (
 from scenarioflow.benchmark.baselines.deep import build_model
 from scenarioflow.benchmark.executor import (
     BenchmarkExecutionError,
+    _record_completion,
     completion_is_valid,
     ensure_protocol_manifest,
     execute_nodes,
+    validate_output_roots,
 )
+from scenarioflow.benchmark.guard import UnsafeOutputRoot, tracked_numbered_experiments
 from scenarioflow.benchmark.protocol import (
     CANDIDATE_IDS,
+    FROZEN_PROJECTED_PAYLOAD_HASH,
     ROLLOUT_SEEDS,
     TRAIN_SEEDS,
+    ProtocolError,
     SmokeOverrides,
+    canonical_json_sha256,
     load_protocol,
     materialize_protocol,
     select_nodes,
@@ -40,6 +46,98 @@ FROZEN_DAG = ROOT / "results/frozen/multiseed/command-dag.json"
 
 def _option(command: list[str], name: str) -> str:
     return command[command.index(name) + 1]
+
+
+def _write_protocol(path: Path, document: dict) -> None:
+    path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+
+def _evaluation_completion(tmp_path: Path) -> tuple[dict, dict, Path, Path]:
+    destination = tmp_path / "run"
+    result = destination / "random_walk/results_current_panel.json"
+    scores = destination / "random_walk/window_scores.npz"
+    command = [
+        sys.executable,
+        "-c",
+        "pass",
+        "--max_windows",
+        "1",
+        "--n_samples",
+        "2",
+    ]
+    configuration = {
+        "contract": {
+            "mode": "current_realvix_39_state_panel",
+            "n_evaluation_windows": 441,
+            "n_market_variables": 39,
+            "n_scenarios_per_window": 64,
+            "history_length": 30,
+            "future_length": 30,
+        }
+    }
+    node = {
+        "id": "eval:random_walk:rollout_2001",
+        "candidate": "random_walk",
+        "display_name": "Random walk",
+        "action": "evaluate",
+        "training_seed": None,
+        "rollout_seed": 2001,
+        "depends_on": [],
+        "destination": str(destination),
+        "command": command,
+        "command_sha256": canonical_json_sha256(command),
+        "configuration": configuration,
+        "configuration_sha256": canonical_json_sha256(configuration),
+        "resume": {"completion_artifacts": [str(result), str(scores)]},
+        "sidecar_manifest": {"path": str(destination / "run_manifest.json")},
+    }
+    payload = {
+        "protocol": {
+            "contract": configuration["contract"],
+            "executable_dag_sha256": "a" * 64,
+        }
+    }
+    return payload, node, result, scores
+
+
+def _write_valid_evaluation(result: Path, scores: Path) -> None:
+    result.parent.mkdir(parents=True, exist_ok=True)
+    result.write_text(
+        json.dumps(
+            {
+                "baseline_name": "random_walk",
+                "mode": "current_realvix_39_state_panel",
+                "n_windows": 1,
+                "n_samples": 2,
+                "state_specs": [{"name": f"state:{index}"} for index in range(39)],
+                "current_panel_iv_metrics": {},
+                "joint_panel_quality": {},
+                "panel_b_crps": {},
+                "panel_b_energy_score": {},
+                "panel_b_variogram_score": {},
+                "panel_b_correlation": {},
+                "panel_b_factor_ks": {},
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    np.savez_compressed(
+        scores,
+        schema_version=np.asarray("fmts.window_scores.v1"),
+        window_indices=np.asarray([4511]),
+        horizons=np.asarray([1, 7, 14, 30]),
+        variable_names=np.asarray([f"state:{index}" for index in range(39)]),
+        crps_contributions=np.zeros((1, 4, 39)),
+        energy_contributions=np.zeros((1, 4)),
+        variogram_h30_contributions=np.zeros(1),
+        coverage_levels=np.asarray([0.5, 0.8, 0.9, 0.95]),
+        coverage_by_window=np.zeros((1, 4)),
+        iv_history_activity=np.zeros(1),
+        iv_deck_width=np.zeros(1),
+        full_panel_history_activity=np.zeros(1),
+        full_panel_deck_width=np.zeros(1),
+    )
 
 
 def test_frozen_protocol_materializes_all_clean_final_commands(tmp_path: Path) -> None:
@@ -54,6 +152,9 @@ def test_frozen_protocol_materializes_all_clean_final_commands(tmp_path: Path) -
 
     assert frozen["protocol"]["executable_dag_sha256"] == (
         "c6d570106975a79750d9fc47be96b07b71ea09930812c72154116a54e3a37d72"
+    )
+    assert FROZEN_PROJECTED_PAYLOAD_HASH == (
+        "ecf90958d519226e280c3f35cfc10bfbed067e068fb5f381b2edb4c343e83844"
     )
     assert TRAIN_SEEDS == (1001, 1002, 1003)
     assert ROLLOUT_SEEDS == (2001, 2002, 2003, 2004, 2005)
@@ -88,6 +189,34 @@ def test_frozen_protocol_materializes_all_clean_final_commands(tmp_path: Path) -
     assert by_id["eval:random_walk:rollout_2001"]["command"][2] == (
         "scenarioflow.benchmark.evaluate_baselines"
     )
+
+
+def test_protocol_rejects_projected_payload_and_per_node_hash_drift(
+    tmp_path: Path,
+) -> None:
+    """A changed projected command, config, or non-node field must fail closed."""
+    original = json.loads(FROZEN_DAG.read_text(encoding="utf-8"))
+
+    command_drift = json.loads(json.dumps(original))
+    command_drift["commands"][0]["command"][-1] = "--not-the-frozen-command"
+    path = tmp_path / "command-drift.json"
+    _write_protocol(path, command_drift)
+    with pytest.raises(ProtocolError, match="command hash drifted"):
+        load_protocol(path)
+
+    configuration_drift = json.loads(json.dumps(original))
+    configuration_drift["commands"][0]["configuration"]["rollout_seed"] = 9999
+    path = tmp_path / "configuration-drift.json"
+    _write_protocol(path, configuration_drift)
+    with pytest.raises(ProtocolError, match="configuration hash drifted"):
+        load_protocol(path)
+
+    payload_drift = json.loads(json.dumps(original))
+    payload_drift["commands"][0]["display_name"] = "Changed label"
+    path = tmp_path / "payload-drift.json"
+    _write_protocol(path, payload_drift)
+    with pytest.raises(ProtocolError, match="projected payload digest drifted"):
+        load_protocol(path)
 
 
 def test_selected_node_includes_dependencies_and_smoke_overrides(
@@ -127,22 +256,91 @@ def test_selected_node_includes_dependencies_and_smoke_overrides(
     assert _option(selected[0]["command"], "--max_train_windows") == "2"
 
 
-def test_resume_requires_loadable_completion_artifacts(tmp_path: Path) -> None:
-    """A truncated or malformed artifact must be rerun instead of silently skipped."""
-    result = tmp_path / "results_current_panel.json"
-    scores = tmp_path / "window_scores.npz"
+def test_resume_requires_schema_identity_and_current_artifact_hashes(
+    tmp_path: Path,
+) -> None:
+    """Weak artifacts or stale node identity must never count as completed."""
+    payload, node, result, scores = _evaluation_completion(tmp_path)
+    result.parent.mkdir(parents=True)
     result.write_text("{}\n", encoding="utf-8")
     np.savez_compressed(scores, schema_version=np.asarray("fmts.window_scores.v1"))
-    assert completion_is_valid([result, scores])
+    _record_completion(node, payload)
+    assert not completion_is_valid(node, payload)
 
-    scores.write_bytes(b"truncated")
-    assert not completion_is_valid([result, scores])
+    _write_valid_evaluation(result, scores)
+    _record_completion(node, payload)
+    assert completion_is_valid(node, payload)
 
-    checkpoint = tmp_path / "best_model.pt"
+    status = Path(node["destination"]) / "status.json"
+    status_payload = json.loads(status.read_text(encoding="utf-8"))
+    status_payload["schema_version"] = "fmts.node_status.obsolete"
+    status.write_text(json.dumps(status_payload) + "\n", encoding="utf-8")
+    assert not completion_is_valid(node, payload)
+
+    _record_completion(node, payload)
+    changed_payload = json.loads(json.dumps(payload))
+    changed_payload["protocol"]["contract"]["mode"] = "wrong-panel"
+    assert not completion_is_valid(node, changed_payload)
+
+    changed = json.loads(result.read_text(encoding="utf-8"))
+    changed["baseline_name"] = "bootstrap"
+    result.write_text(json.dumps(changed) + "\n", encoding="utf-8")
+    assert not completion_is_valid(node, payload)
+
+    _write_valid_evaluation(result, scores)
+    _record_completion(node, payload)
+    status_payload = json.loads(status.read_text(encoding="utf-8"))
+    status_payload["command_sha256"] = "b" * 64
+    status.write_text(json.dumps(status_payload) + "\n", encoding="utf-8")
+    assert not completion_is_valid(node, payload)
+
+
+def test_resume_rejects_weak_checkpoint_schema(tmp_path: Path) -> None:
+    """An empty state dict is not a completed training node."""
+    checkpoint = tmp_path / "train/best_model.pt"
+    checkpoint.parent.mkdir(parents=True)
+    configuration = {
+        "contract": {
+            "mode": "current_realvix_39_state_panel",
+            "n_market_variables": 39,
+            "history_length": 30,
+            "future_length": 30,
+        }
+    }
+    node = {
+        "id": "train:scenarioflow:stage1:1001",
+        "candidate": "scenarioflow",
+        "display_name": "ScenarioFlow",
+        "action": "train",
+        "training_seed": 1001,
+        "rollout_seed": None,
+        "destination": str(checkpoint.parent),
+        "command": [sys.executable, "-c", "pass"],
+        "command_sha256": "c" * 64,
+        "configuration": configuration,
+        "configuration_sha256": "d" * 64,
+        "resume": {"completion_artifacts": [str(checkpoint)]},
+        "sidecar_manifest": {"path": str(checkpoint.parent / "run_manifest.json")},
+    }
+    payload = {
+        "protocol": {
+            "contract": configuration["contract"],
+            "executable_dag_sha256": "e" * 64,
+        }
+    }
     torch.save({"model_state_dict": {}}, checkpoint)
-    assert completion_is_valid([checkpoint])
-    checkpoint.write_bytes(b"")
-    assert not completion_is_valid([checkpoint])
+    _record_completion(node, payload)
+    assert not completion_is_valid(node, payload)
+
+    torch.save(
+        {
+            "model_state_dict": {"weight": torch.ones(1)},
+            "config": {"n_cells": 39, "history_len": 30, "future_len": 30},
+        },
+        checkpoint,
+    )
+    _record_completion(node, payload)
+    assert completion_is_valid(node, payload)
 
 
 def test_resume_skips_loadable_completion_and_persists_exact_protocol(
@@ -155,17 +353,13 @@ def test_resume_skips_loadable_completion_and_persists_exact_protocol(
         result_root=tmp_path / "results",
         device="cpu",
     )
-    completed = tmp_path / "already-complete.json"
-    completed.write_text("{}\n", encoding="utf-8")
-    node = {
-        "id": "test:completed",
-        "depends_on": [],
-        "resume": {"completion_artifacts": [str(completed)]},
-        "command": [sys.executable, "-c", "raise SystemExit(99)"],
-    }
+    resume_payload, node, result, scores = _evaluation_completion(tmp_path)
+    payload["protocol"]["contract"] = resume_payload["protocol"]["contract"]
+    _write_valid_evaluation(result, scores)
+    _record_completion(node, payload)
     assert execute_nodes(payload, [node]) == {
         "completed": [],
-        "skipped": ["test:completed"],
+        "skipped": ["eval:random_walk:rollout_2001"],
     }
 
     manifest = ensure_protocol_manifest(payload)
@@ -175,6 +369,51 @@ def test_resume_skips_loadable_completion_and_persists_exact_protocol(
     changed["command_count"] = 140
     with pytest.raises(BenchmarkExecutionError, match="does not match"):
         ensure_protocol_manifest(changed)
+
+
+@pytest.mark.parametrize(
+    ("root_kind", "protected"),
+    (
+        ("model", "artifacts/scratch-models"),
+        ("result", "results/frozen/scratch-results"),
+        ("model", "data/generated-models"),
+        ("result", "src/generated-results"),
+        ("result", "tests/generated-results"),
+    ),
+)
+def test_output_roots_cannot_overlap_release_authority_or_source_paths(
+    tmp_path: Path, root_kind: str, protected: str
+) -> None:
+    """Benchmark output must not overwrite released evidence, inputs, or code."""
+    model_root = tmp_path / "models"
+    result_root = tmp_path / "results"
+    if root_kind == "model":
+        model_root = ROOT / protected
+    else:
+        result_root = ROOT / protected
+    with pytest.raises(UnsafeOutputRoot, match="overlaps protected"):
+        validate_output_roots(model_root, result_root)
+
+    assert validate_output_roots(
+        tmp_path / "safe-models", tmp_path / "safe-results"
+    ) == (
+        (tmp_path / "safe-models").resolve(),
+        (tmp_path / "safe-results").resolve(),
+    )
+
+
+def test_numbered_experiment_guard_detects_tracked_files(tmp_path: Path) -> None:
+    """A tracked numbered experiment must fail the same guard used by installation."""
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    stale = tmp_path / "experiments/train_999_removed_branch.py"
+    stale.parent.mkdir()
+    stale.write_text("raise SystemExit\n", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", stale.relative_to(tmp_path)], cwd=tmp_path, check=True
+    )
+    assert tracked_numbered_experiments(tmp_path) == [
+        Path("experiments/train_999_removed_branch.py")
+    ]
 
 
 def test_final_baseline_implementations_smoke_on_synthetic_panel() -> None:
@@ -280,6 +519,25 @@ def test_reproduce_launcher_exposes_full_grid_and_selected_dry_runs(
         "eval:deepvar:train_1001:rollout_2001",
     ]
 
+    protected = subprocess.run(
+        [
+            str(launcher),
+            "--dry-run",
+            "--model-root",
+            str(tmp_path / "models"),
+            "--result-root",
+            str(ROOT / "results/frozen/forbidden-replay"),
+            "--device",
+            "cpu",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert protected.returncode != 0
+    assert "overlaps protected" in protected.stderr
+
 
 def test_compact_provenance_pins_final_sources_and_data() -> None:
     """A reproduction claim without protocol/data hashes and the overlay caveat is invalid."""
@@ -297,4 +555,9 @@ def test_compact_provenance_pins_final_sources_and_data() -> None:
     assert provenance["sources"]["scenarioflow_revision"].startswith("5d13f4a")
     assert len(provenance["data_sha256"]) == 5
     assert provenance["limitations"]["window_score_overlay_available"] is False
-    assert set(provenance["implementation_mapping"]) == set(CANDIDATE_IDS)
+    mappings = provenance["implementation_mapping"]
+    assert {mapping["candidate_id"] for mapping in mappings} == set(CANDIDATE_IDS)
+    assert {mapping["display_name"] for mapping in mappings} == set(
+        load_protocol(FROZEN_DAG)["protocol"]["display_names"].values()
+    )
+    assert all(mapping["clean_implementation"] for mapping in mappings)

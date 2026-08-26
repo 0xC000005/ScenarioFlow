@@ -17,6 +17,12 @@ FROZEN_RESULT_ROOT = "frozen-source://results/fmts_multiseed_20260805"
 FROZEN_PROTOCOL_HASH = (
     "c6d570106975a79750d9fc47be96b07b71ea09930812c72154116a54e3a37d72"
 )
+FROZEN_PROJECTED_PAYLOAD_HASH = (
+    "ecf90958d519226e280c3f35cfc10bfbed067e068fb5f381b2edb4c343e83844"
+)
+_HISTORICAL_SOURCE_ROOT = "/" + "/".join(
+    ("home", "max", "Documents", "vol-surface-vae-pub")
+)
 
 TRAIN_SEEDS = (1001, 1002, 1003)
 ROLLOUT_SEEDS = (2001, 2002, 2003, 2004, 2005)
@@ -107,6 +113,47 @@ def executable_dag_sha256(commands: Sequence[Mapping[str, Any]]) -> str:
     return canonical_json_sha256(list(commands))
 
 
+def _historical_hash_value(value: Any) -> Any:
+    """Reverse only the public source-root projection used before node sealing."""
+    if isinstance(value, str):
+        if value == "frozen-source://":
+            return _HISTORICAL_SOURCE_ROOT
+        if value.startswith("frozen-source://"):
+            return (
+                _HISTORICAL_SOURCE_ROOT + "/" + value.removeprefix("frozen-source://")
+            )
+        return value
+    if isinstance(value, list):
+        return [_historical_hash_value(item) for item in value]
+    if isinstance(value, dict):
+        return {
+            _historical_hash_value(key): _historical_hash_value(item)
+            for key, item in value.items()
+        }
+    return value
+
+
+def _validate_frozen_node_hashes(commands: Sequence[Mapping[str, Any]]) -> None:
+    for node in commands:
+        node_id = node.get("id")
+        command = node.get("command")
+        configuration = node.get("configuration")
+        if not isinstance(command, list) or not all(
+            isinstance(item, str) for item in command
+        ):
+            raise ProtocolError(f"node {node_id} has no command list")
+        if not isinstance(configuration, Mapping):
+            raise ProtocolError(f"node {node_id} has no configuration object")
+        if node.get("command_sha256") != canonical_json_sha256(
+            _historical_hash_value(command)
+        ):
+            raise ProtocolError(f"frozen node command hash drifted: {node_id}")
+        if node.get("configuration_sha256") != canonical_json_sha256(
+            _historical_hash_value(dict(configuration))
+        ):
+            raise ProtocolError(f"frozen node configuration hash drifted: {node_id}")
+
+
 def load_protocol(path: str | Path = DEFAULT_PROTOCOL) -> dict[str, Any]:
     """Load and validate the immutable released protocol description."""
     document = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -126,6 +173,9 @@ def load_protocol(path: str | Path = DEFAULT_PROTOCOL) -> dict[str, Any]:
     # so its historical digest authenticates the pre-projection command graph.
     if protocol.get("executable_dag_sha256") != FROZEN_PROTOCOL_HASH:
         raise ProtocolError("frozen executable DAG authority hash drifted")
+    _validate_frozen_node_hashes(commands)
+    if canonical_json_sha256(document) != FROZEN_PROJECTED_PAYLOAD_HASH:
+        raise ProtocolError("frozen projected payload digest drifted")
     return document
 
 

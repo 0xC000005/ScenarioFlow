@@ -62,4 +62,15 @@ for module in \
   "$ROOT_DIR/.venv/bin/python" -c "import scenarioflow.benchmark.$module"
 done
 "$ROOT_DIR/scripts/reproduce.sh" --dry-run --device cpu >/dev/null
+"$ROOT_DIR/.venv/bin/python" - "$ROOT_DIR" <<'PY'
+from pathlib import Path
+import sys
+
+from scenarioflow.benchmark.guard import tracked_numbered_experiments
+
+stale = tracked_numbered_experiments(Path(sys.argv[1]))
+if stale:
+    raise SystemExit(f"tracked numbered experiments are forbidden: {stale}")
+print("tracked numbered experiment guard: ok")
+PY
 echo "public numerical and 141-node benchmark routes: ok"
