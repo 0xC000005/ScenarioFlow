@@ -12,33 +12,6 @@ fi
 BUNDLE_DIR=""
 ARTIFACT_ROOT="$ROOT_DIR/artifacts/cache"
 
-repair_reproduction_data_links() {
-  local expected="../../../data"
-  local snapshot link stored
-  for snapshot in scenarioflow baselines garch_ccc deepvar_sni; do
-    link="$ROOT_DIR/reproduction/source/$snapshot/data"
-    if [[ -L "$link" ]]; then
-      if [[ "$(readlink "$link")" != "$expected" ]]; then
-        echo "Unexpected data link target: $link" >&2
-        return 1
-      fi
-      continue
-    fi
-    if [[ ! -f "$link" ]]; then
-      echo "Missing preserved data link: $link" >&2
-      return 1
-    fi
-    stored="$(<"$link")"
-    if [[ "$stored" != "$expected" ]]; then
-      echo "Refusing to replace unexpected file: $link" >&2
-      return 1
-    fi
-    unlink "$link"
-    ln -s "$expected" "$link"
-    echo "Repaired source-archive data link: $link"
-  done
-}
-
 usage() {
   cat <<'EOF'
 Usage: ./scripts/setup.sh [OPTIONS]
@@ -100,7 +73,6 @@ if [[ -n "$BUNDLE_DIR" && ! -d "$BUNDLE_DIR" ]]; then
   exit 2
 fi
 
-repair_reproduction_data_links
 cd "$ROOT_DIR"
 uv sync --locked
 

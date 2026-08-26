@@ -6,7 +6,7 @@ usage() {
   cat <<'EOF'
 Usage: ./scripts/check_installation.sh
 
-Verify the packaged data, preserved source snapshots, and original command routes.
+Verify the package, data, artifact manifest, and public numerical command routes.
 This check does not train a model or reproduce the paper results.
 
 Options:
@@ -42,18 +42,17 @@ files = (
     "multi_factor_levels.parquet",
     "multi_factor_returns.parquet",
 )
-for snapshot in ("scenarioflow", "baselines", "garch_ccc", "deepvar_sni"):
-    data = root / "reproduction/source" / snapshot / "data"
-    if not data.is_symlink():
-        raise SystemExit(f"preserved data route is not a symlink: {data}")
-    for filename in files:
-        with (data / filename).open("rb") as handle:
-            handle.read(1)
-print("preserved data routes: ok")
+for filename in files:
+    with (root / "data" / filename).open("rb") as handle:
+        handle.read(1)
+if not (root / "data/CHECKSUMS.tsv").is_file():
+    raise SystemExit("missing data checksum manifest")
+if not (root / "artifacts/manifest-v1.tsv").is_file():
+    raise SystemExit("missing artifact manifest")
+print("package, data, and artifact manifest: ok")
 PY
-"$ROOT_DIR/.venv/bin/python" "$ROOT_DIR/scripts/run_reproduction.py" \
-  --verify-sources
-"$ROOT_DIR/.venv/bin/python" "$ROOT_DIR/scripts/run_reproduction.py" \
-  --node-id train:scenarioflow:stage1:1001 \
-  --dry-run >/dev/null
-echo "original reproduction routes: ok"
+for module in train_next_step finetune_rollouts inference; do
+  "$ROOT_DIR/.venv/bin/python" -c "import scenarioflow.reproduction.$module"
+  "$ROOT_DIR/.venv/bin/python" -m "scenarioflow.reproduction.$module" --help >/dev/null
+done
+echo "public numerical routes: ok"

@@ -73,56 +73,31 @@ units, appended to the history, and used to generate the following day.
 
 **Code map:**
 
-- [Core model and temporal prefix encoder](reproduction/source/scenarioflow/diffusion/block_ar/generic_state_aware_normalized_innovation_flow_matching.py#L393)
-- [Conditional velocity network](reproduction/source/scenarioflow/diffusion/block_ar/causal_future_memory_transition_flow_matching.py#L31)
-- [State representation and reconstruction](reproduction/source/scenarioflow/experiments/backfill/block_ar/normalized_innovation_662_utils.py#L93)
-- [Stage 1 next-step training](reproduction/source/scenarioflow/experiments/backfill/block_ar/train_662a_state_aware_normalized_innovation_flow.py)
-- [Stage 2 rollout fine-tuning](reproduction/source/scenarioflow/experiments/backfill/block_ar/train_666a_normalized_innovation_rollout_energy_finetune.py)
-- [Numerical inference](reproduction/source/scenarioflow/experiments/backfill/baselines/evaluate_sni_current_panel_metrics.py#L155)
+- [Core model and temporal prefix encoder](src/scenarioflow/model.py)
+- [Conditional velocity network](src/scenarioflow/_causal.py)
+- [State representation and reconstruction](src/scenarioflow/state.py)
+- [Stage 1 next-step training](src/scenarioflow/reproduction/train_next_step.py)
+- [Stage 2 rollout fine-tuning](src/scenarioflow/reproduction/finetune_rollouts.py)
+- [Numerical inference](src/scenarioflow/reproduction/inference.py)
 
 The natural-language interface adds lightweight alignment modules that supply
 multimodal context to the same frozen ScenarioFlow generator.
 
 [Open the vector architecture diagram](paper_assets/figures/illustrations/scenarioflow-architecture.pdf).
 
-## Reproduce the paper
-
-Generate the numerical plots used in the paper:
-
-```bash
-./scripts/reproduce_paper.sh plots
-```
-
-The numerical tables used in the paper are included under
-`paper_assets/tables/golden/`. After running the training reproduction below,
-regenerate the table outputs with:
-
-```bash
-./scripts/reproduce_paper.sh tables
-```
-
 ## Run training using our data
 
-Train one seed with the original Stage 1 and Stage 2 commands:
+Train the clean numerical core in two stages:
 
 ```bash
-./scripts/train_next_step.sh 1001
-./scripts/finetune_rollouts.sh 1001
+./scripts/train_next_step.sh --seed 1001
+./scripts/finetune_rollouts.sh --seed 1001
 ```
 
-The trained checkpoints are written under `build/reproduction/checkpoints/`.
-To reproduce the complete paper experiment across all training and rollout
-seeds, run:
-
-```bash
-uv sync --locked --extra baseline-classical
-./scripts/reproduce.sh
-```
-
-The complete run uses three training seeds, five rollout seeds, 441 validation
-windows, and 64 paths per window. It requires a CUDA-capable GPU. Outputs are
-written under `build/reproduction/`, and completed jobs are reused when the
-command is resumed.
+Stage 1 writes to `build/training/stage1/`; Stage 2 starts from the released
+Stage 1 checkpoint and writes to `build/training/stage2/`. Pass `--output-dir`
+to either command to override its output location; Stage 2 also accepts
+`--checkpoint` to override its starting checkpoint.
 
 ## Run inference
 
@@ -143,8 +118,10 @@ Generate conditional 30-day joint paths from the numerical histories:
 ./scripts/run_inference.sh
 ```
 
-The command uses the preserved ScenarioFlow sampler and writes its outputs to
-`build/inference/scenarioflow/`. It does not use OpenAI or Codex.
+The command uses the released ScenarioFlow sampler and writes its outputs to
+`build/inference/scenarioflow/`. Pass `--checkpoint` or `--output-dir` to
+override the released Stage 2 checkpoint or output location. It does not use
+OpenAI or Codex.
 
 ### Run multimodal conditional inference
 
@@ -167,10 +144,8 @@ scenario-to-narrative demo describes a numerical scenario. OpenAI and Codex are 
 ## Repository contents
 
 - `data/`: five checksum-pinned processed market-data files.
-- `reproduction/source/`: checksum-pinned copies of the original experiment code.
-- `results/frozen/multiseed/command-dag.json`: the original 3-training-seed and
-  5-rollout-seed command schedule.
-- `src/scenarioflow/`: artifact, setup, and demo support code.
+- `src/scenarioflow/{model,state,reproduction}/`: extracted model, state, and
+  numerical training and inference core.
 - `artifacts/manifest-v1.tsv`: checksums and release paths for large external files.
 - `paper_assets/`: final paper tables and figures, with reproduction modes.
 - `tests/`: data and public-release contract tests.
@@ -204,9 +179,7 @@ docker compose up frontend narrative-to-scenario scenario-to-narrative
 ```
 
 Open `http://127.0.0.1:8766`. Omit either backend from the `docker compose up`
-command when its optional credential is unavailable. For numerical reproduction,
-run `scripts/reproduce.sh` in the runtime container with the repository and output
-directory mounted.
+command when its optional credential is unavailable.
 
 ## Databricks
 

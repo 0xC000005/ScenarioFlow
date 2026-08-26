@@ -1,0 +1,360 @@
+{
+  "array_semantics": {
+    "channel_energy_loss": [
+      "score",
+      "target_distance",
+      "pair_distance"
+    ],
+    "joint_energy_loss": [
+      "score",
+      "target_distance",
+      "pair_distance"
+    ],
+    "metrics": [
+      "crps_overall",
+      "crps_iv",
+      "crps_factor",
+      "energy_overall",
+      "variogram_score",
+      "correlation_score",
+      "factor_ks_mean",
+      "factor_tail_q99_ratio_median"
+    ],
+    "parameter_update_hashes": [
+      "stage1",
+      "stage2"
+    ],
+    "screen_decisions": [
+      "all_values_finite",
+      "all_factor_delta_ks_below_0.20",
+      "all_factor_tail_q99_ratios_between_0.5_and_2.0",
+      "conditional_median_mae_no_worse_than_rolled_history"
+    ],
+    "selected_parameters": [
+      "feature_proj.weight",
+      "memory.layers.0.self_attn.in_proj_weight",
+      "velocity.out.3.weight"
+    ]
+  },
+  "arrays": {
+    "channel_energy_loss": {
+      "dtype": "float32",
+      "sha256": "858e2e420805f40cee98b9cad182d97e63b4a473e405e58c334cc42297c6ff73",
+      "shape": [
+        3
+      ]
+    },
+    "core_velocity": {
+      "dtype": "float32",
+      "sha256": "8bd596e3f931bdbc637df9e7ba8a60f6a02db2011bfa208baf17a5887fb565a2",
+      "shape": [
+        2,
+        39
+      ]
+    },
+    "future_normalized": {
+      "dtype": "float32",
+      "sha256": "89b577bc550add36bc3821ed32df56de808b4a0c13b87776c8867bb1f46f0a4f",
+      "shape": [
+        2,
+        30,
+        39
+      ]
+    },
+    "graph_velocity": {
+      "dtype": "float32",
+      "sha256": "2e094658a8e8fae32f4c61bdd141f9dfe0a34907c4ada6742641afe55288bc58",
+      "shape": [
+        2,
+        39
+      ]
+    },
+    "history_normalized": {
+      "dtype": "float32",
+      "sha256": "f3eeb3328dc095cdae9d8c6cbd32ba8cf4bc47108436dcb033bd9bb242730eec",
+      "shape": [
+        2,
+        30,
+        39
+      ]
+    },
+    "joint_energy_loss": {
+      "dtype": "float32",
+      "sha256": "ce194770f1390d034b50d15e4411f510a53f66fd156c51214428920d8a61e256",
+      "shape": [
+        3
+      ]
+    },
+    "metrics": {
+      "dtype": "float32",
+      "sha256": "df2785eb8149730c43b12baabee6ce92759bda91241cd0270c49c00eb4bfe271",
+      "shape": [
+        8
+      ]
+    },
+    "normalization_center": {
+      "dtype": "float32",
+      "sha256": "6287e17fe5efcb191aec8a2578e685d0a1040a0ab53bd1f02c7f49cc6c8fced7",
+      "shape": [
+        2,
+        39
+      ]
+    },
+    "normalization_scale": {
+      "dtype": "float32",
+      "sha256": "48812857b105f7b69e707310e5f323eb148b3dd881e1870a691d73ea5066c3ff",
+      "shape": [
+        2,
+        39
+      ]
+    },
+    "parameter_update_hashes": {
+      "dtype": "uint8",
+      "sha256": "9df12ec968c8f429760d5c6218c832051dfe4fccfc125f10aca6228f8c02c108",
+      "shape": [
+        2,
+        32
+      ]
+    },
+    "raw_future": {
+      "dtype": "float32",
+      "sha256": "ed74af340948979c0d65a83f02fb76933ecbf18312b83f641aec7b2e3ccf0eb0",
+      "shape": [
+        2,
+        30,
+        39
+      ]
+    },
+    "raw_history": {
+      "dtype": "float32",
+      "sha256": "b407293b8d3c5105da4387aaadb941b4d8910cb38f16c6b4c317a9fbe0cb85d6",
+      "shape": [
+        2,
+        30,
+        39
+      ]
+    },
+    "reconstructed_future": {
+      "dtype": "float32",
+      "sha256": "7136176752b31db3741510a84a4efb6b71fbe49b0e17072c4cd9ea547e879de3",
+      "shape": [
+        2,
+        30,
+        39
+      ]
+    },
+    "rollout": {
+      "dtype": "float32",
+      "sha256": "e37cd660f586bc49922c1696b02e8358fa8399f69deb14539804e61691f46c3a",
+      "shape": [
+        2,
+        2,
+        30,
+        39
+      ]
+    },
+    "screen_decisions": {
+      "dtype": "int8",
+      "sha256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450",
+      "shape": [
+        4
+      ]
+    },
+    "stage1_loss": {
+      "dtype": "float32",
+      "sha256": "c031d406e9145d4454124d5e8e48fc5256f9102d391744c09c17a995c0bfd1bb",
+      "shape": [
+        1
+      ]
+    },
+    "state_encoding": {
+      "dtype": "float32",
+      "sha256": "25f0544ddf4382f2712e55ceccaf64f322eda5efcb6ad622a2e13074efca9465",
+      "shape": [
+        2,
+        60,
+        39
+      ]
+    }
+  },
+  "checkpoints": {
+    "core.adaptive-graph": {
+      "relative_path": "models/core/adaptive_graph/best_model.pt",
+      "sha256": "338f312118f53b24efe01165fa7586c7cadb9be1c44b4dfe7158e9ae0cf03197"
+    },
+    "core.stage1": {
+      "relative_path": "models/core/stage1/best_model.pt",
+      "sha256": "5396090076623f111915804117f2a5799c452246424f76400cc2fbf74a48b335"
+    },
+    "core.stage2": {
+      "relative_path": "models/core/stage2/best_model.pt",
+      "sha256": "35b3c416c89d0d928b2943406e64e0b687a0ded91c6fb379c8b78b5fecdfb217"
+    }
+  },
+  "npz_sha256": "8c826d8826e158f29643a3aad8e1586fc6e2e409b622cdf5f107515d77d5628f",
+  "optimizer_updates": {
+    "stage1": {
+      "clip_grad_norm": 1.0,
+      "learning_rate": 0.0007,
+      "optimizer": "AdamW",
+      "weight_decay": 1e-05
+    },
+    "stage2": {
+      "channel_level_energy_weight": 0.05,
+      "clip_grad_norm": 1.0,
+      "energy_weight": 0.2,
+      "learning_rate": 2e-05,
+      "optimizer": "AdamW",
+      "rollout_flow_steps": 4,
+      "train_sample_count": 2,
+      "weight_decay": 1e-05
+    }
+  },
+  "panel_metadata": {
+    "cleaning_report": {
+      "cleaned_columns": {
+        "factor:copper": 167,
+        "factor:gold": 167,
+        "factor:nikkei": 1,
+        "factor:wheat": 135
+      },
+      "diff_fallback_columns": [
+        "factor:crude_oil"
+      ],
+      "enabled": true,
+      "eps": 1e-08,
+      "n_cleaned_columns": 4,
+      "n_cleaned_values": 470,
+      "n_diff_fallback_columns": 1
+    },
+    "dates_end": "2023-02-24 00:00:00",
+    "dates_start": "2000-01-03 00:00:00",
+    "iv_lower_bound": 0.0001,
+    "iv_transform": "bounded_logit",
+    "iv_upper_bound": 1.0,
+    "positive_level_policy": "reference_based",
+    "source_columns": [
+      "iv:00",
+      "iv:01",
+      "iv:02",
+      "iv:03",
+      "iv:04",
+      "iv:05",
+      "iv:06",
+      "iv:07",
+      "iv:08",
+      "iv:09",
+      "iv:10",
+      "iv:11",
+      "iv:12",
+      "iv:13",
+      "iv:14",
+      "iv:15",
+      "iv:16",
+      "iv:17",
+      "iv:18",
+      "iv:19",
+      "iv:20",
+      "iv:21",
+      "iv:22",
+      "iv:23",
+      "iv:24",
+      "factor:spx",
+      "factor:usdcad",
+      "factor:usdjpy",
+      "factor:dxy",
+      "factor:copper",
+      "factor:wheat",
+      "factor:crude_oil",
+      "factor:us2y",
+      "factor:us10y",
+      "factor:aaa_oas",
+      "factor:bbb_oas",
+      "factor:nikkei",
+      "factor:gold",
+      "factor:vix",
+      "factor:spx_logret",
+      "factor:usdcad_logret",
+      "factor:usdjpy_logret",
+      "factor:dxy_logret",
+      "factor:copper_logret",
+      "factor:wheat_logret",
+      "factor:crude_oil_logret",
+      "factor:us2y_diff",
+      "factor:us10y_diff",
+      "factor:aaa_oas_diff",
+      "factor:bbb_oas_diff",
+      "factor:nikkei_logret",
+      "factor:gold_logret",
+      "factor:vix_logret"
+    ],
+    "train_indices_end": 4009,
+    "train_indices_start": 0,
+    "val_indices_end": 4450,
+    "val_indices_start": 4010
+  },
+  "protocol": {
+    "device": "cpu",
+    "dtype": "float32",
+    "forecast_steps": 30,
+    "generated_paths": 2,
+    "sampling_seed": 2001,
+    "training_seed": 1001,
+    "validation_window_indices": [
+      4010,
+      4011
+    ],
+    "validation_windows": 2
+  },
+  "schema_version": "scenarioflow.reproduction.golden.v1",
+  "sources": [
+    {
+      "path": "diffusion/block_ar/generic_state_aware_normalized_innovation_flow_matching.py",
+      "sha256": "356e4047c3f33500b9194b94258e5ac3a231fb8fbb71ed80e4a271cfa226cacb",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/baselines/evaluate_current_panel_baselines.py",
+      "sha256": "c10d8dc49c740d3d3091e045af7c456d2265be0efc5b382701a718c10e9a56c6",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/block_ar/audit_627a_joint_panel_scenario_quality.py",
+      "sha256": "d4ec34eefe463ed1e611d8a877543015d9e7e1f70221f7380d499571c41b9a69",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/block_ar/increment_coordinate_628_utils.py",
+      "sha256": "b10ff7d2442c59f26f07a79d1ee8e3e6a847ddfbb439ed91873d2b04befc555b",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/block_ar/train_596a_final_path_joint_objective.py",
+      "sha256": "cacc9f4a32802dae719b497d2e3b4cff9fdd82853e567a7698ae4520cb562885",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/block_ar/train_628a_unified_ar_increment_transition_flow.py",
+      "sha256": "1fa156df5d2334738720e86178a6e0ad90f467104a502240dbdfaba457615abc",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/block_ar/train_662a_state_aware_normalized_innovation_flow.py",
+      "sha256": "8463803e4da554b74aa62e1739f32d2e277be9a4508c272e35ee70a45cb2263b",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    },
+    {
+      "path": "experiments/backfill/block_ar/train_666a_normalized_innovation_rollout_energy_finetune.py",
+      "sha256": "c04630686c25e53a189b26e7d289c692126ff3cb47a6e5fb5c5bb52502ba59da",
+      "snapshot": "scenarioflow",
+      "source_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+    }
+  ]
+}

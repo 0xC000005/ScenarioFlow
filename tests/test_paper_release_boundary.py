@@ -75,11 +75,8 @@ def test_paper_asset_guide_gives_copyable_reader_workflows() -> None:
     guide = (PAPER_ASSETS / "README.md").read_text(encoding="utf-8")
     required_text = (
         "ASSETS.tsv",
-        "./scripts/reproduce.sh",
-        "./scripts/reproduce_paper.sh tables",
-        "./scripts/reproduce_paper.sh plots",
-        "generate_fmts_multiseed_appendix.py",
-        "generate_paper_tables.py",
+        "Frozen paper-facing views",
+        "historical experiment tree",
         "Illustrations",
     )
     for text in required_text:
@@ -101,7 +98,7 @@ def test_paper_table_manifest_distinguishes_frozen_views_from_reruns() -> None:
         assert rows[asset_id]["generator"] == ""
 
     guide = (PAPER_ASSETS / "README.md").read_text(encoding="utf-8")
-    assert "Fresh CUDA training can change learned-model values slightly." in guide
+    assert "historical experiment tree" in guide
 
 
 def test_root_readme_links_paper_assets() -> None:
@@ -113,7 +110,6 @@ def test_root_readme_links_paper_assets() -> None:
         "## Quick start",
         "## Example outputs",
         "## Model architecture",
-        "## Reproduce the paper",
         "## Run training using our data",
         "## Run inference",
     )
@@ -123,8 +119,8 @@ def test_root_readme_links_paper_assets() -> None:
     )
     for text in (
         "The released weights are used directly; this does not retrain the model.",
-        "./scripts/train_next_step.sh 1001",
-        "./scripts/finetune_rollouts.sh 1001",
+        "./scripts/train_next_step.sh --seed 1001",
+        "./scripts/finetune_rollouts.sh --seed 1001",
         "### Run ScenarioFlow inference",
         "./scripts/run_inference.sh",
         "### Run multimodal conditional inference",
@@ -144,14 +140,13 @@ def test_root_readme_links_paper_assets() -> None:
         assert text in readme
     assert "ICAIF numerical plots" not in readme
     assert "## Choose a route" not in readme
+    assert "./scripts/check_installation.sh" in readme
     for command in (
-        "./scripts/check_installation.sh",
+        "reproduction/source/",
         "./scripts/reproduce.sh",
         "./scripts/reproduce_paper.sh",
     ):
-        assert command in readme
-    assert "./scripts/reproduce.sh --smoke" not in readme
-    assert "./scripts/reproduce.sh --full" not in readme
+        assert command not in readme
     assert "OpenAI and Codex are used only by" in readme
     assert "the interactive demos" in readme
 
