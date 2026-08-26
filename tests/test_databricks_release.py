@@ -75,7 +75,7 @@ def _write_command(path: Path, label: str) -> None:
     path.chmod(path.stat().st_mode | stat.S_IXUSR)
 
 
-def test_launcher_dispatches_existing_scripts_and_redirects_runtime_state(
+def test_launcher_forwards_seed_to_each_training_stage_and_redirects_runtime_state(
     tmp_path: Path,
 ) -> None:
     release_root = tmp_path / "release"
@@ -118,16 +118,90 @@ def test_launcher_dispatches_existing_scripts_and_redirects_runtime_state(
 
     assert result.returncode == 0, result.stderr
     assert calls.read_text(encoding="utf-8").splitlines() == [
-        "stage1:1002",
-        "stage2:1002",
+        "stage1:--seed 1002",
+        "stage2:--seed 1002",
     ]
     assert (release_root / "build").resolve() == output_root.resolve()
     assert (release_root / "artifacts/cache").resolve() == artifact_root.resolve()
     summary = json.loads(result.stdout)
     assert summary["operation"] == "train"
     assert summary["commands"] == [
-        [str(scripts / "train_next_step.sh"), "1002"],
-        [str(scripts / "finetune_rollouts.sh"), "1002"],
+        [str(scripts / "train_next_step.sh"), "--seed", "1002"],
+        [str(scripts / "finetune_rollouts.sh"), "--seed", "1002"],
+    ]
+
+
+def test_launcher_forwards_seed_to_inference(tmp_path: Path) -> None:
+    release_root = tmp_path / "release"
+    scripts = release_root / "scripts"
+    scripts.mkdir(parents=True)
+    (release_root / "artifacts").mkdir()
+    _write_command(scripts / "run_inference.sh", "inference")
+
+    calls = tmp_path / "calls.txt"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(LAUNCHER),
+            "--operation",
+            "inference",
+            "--seed",
+            "1003",
+            "--artifact-root",
+            str(tmp_path / "artifacts"),
+            "--output-root",
+            str(tmp_path / "outputs"),
+        ],
+        env={
+            **os.environ,
+            "SCENARIOFLOW_ROOT": str(release_root),
+            "SCENARIOFLOW_TEST_CALLS": str(calls),
+        },
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == ["inference:--seed 1003"]
+    assert json.loads(result.stdout)["commands"] == [
+        [str(scripts / "run_inference.sh"), "--seed", "1003"]
+    ]
+
+
+def test_launcher_runs_the_existing_root_reproduction_launcher(tmp_path: Path) -> None:
+    release_root = tmp_path / "release"
+    scripts = release_root / "scripts"
+    scripts.mkdir(parents=True)
+    (release_root / "artifacts").mkdir()
+    _write_command(scripts / "reproduce.sh", "reproduce")
+
+    calls = tmp_path / "calls.txt"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(LAUNCHER),
+            "--operation",
+            "reproduce",
+            "--artifact-root",
+            str(tmp_path / "artifacts"),
+            "--output-root",
+            str(tmp_path / "outputs"),
+        ],
+        env={
+            **os.environ,
+            "SCENARIOFLOW_ROOT": str(release_root),
+            "SCENARIOFLOW_TEST_CALLS": str(calls),
+        },
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == ["reproduce:"]
+    assert json.loads(result.stdout)["commands"] == [
+        [str(scripts / "reproduce.sh")]
     ]
 
 
@@ -139,7 +213,7 @@ def test_databricks_guide_has_copyable_build_deploy_and_run_commands() -> None:
         "docker push \"$IMAGE_URL\"",
         "databricks bundle validate",
         "databricks bundle deploy",
-        "databricks bundle run scenarioflow --params operation=inference",
+        "databricks bundle run scenarioflow --params operation=inference,seed=2001",
         "databricks bundle run scenarioflow --params operation=train,seed=1001",
         "databricks bundle run scenarioflow --params operation=reproduce",
     ):

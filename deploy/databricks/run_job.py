@@ -27,11 +27,11 @@ def _commands(root: Path, operation: str, seed: int) -> list[list[str]]:
     scripts = root / "scripts"
     if operation == "train":
         return [
-            [str(scripts / "train_next_step.sh"), str(seed)],
-            [str(scripts / "finetune_rollouts.sh"), str(seed)],
+            [str(scripts / "train_next_step.sh"), "--seed", str(seed)],
+            [str(scripts / "finetune_rollouts.sh"), "--seed", str(seed)],
         ]
     if operation == "inference":
-        return [[str(scripts / "run_inference.sh")]]
+        return [[str(scripts / "run_inference.sh"), "--seed", str(seed)]]
     return [[str(scripts / "reproduce.sh")]]
 
 

@@ -3,6 +3,13 @@
 Databricks uses a separate numerical image. The local demo image and Compose
 stack are not part of this deployment.
 
+## Prerequisites
+
+Use an authenticated Databricks CLI version 0.218 or newer, and build the
+image from a checkout that includes the root `scripts/reproduce.sh` benchmark
+launcher. The target workspace also needs Databricks Container Services and a
+GPU node type compatible with Databricks Runtime 18.3 LTS.
+
 ## Build and push the image
 
 Choose a registry location and immutable tag:
@@ -34,16 +41,15 @@ databricks bundle validate
 databricks bundle deploy
 ```
 
-The workspace must have Databricks Container Services enabled. The job uses
-dedicated single-node GPU compute and Databricks Runtime 18.3 LTS, matching the
-base image.
+The job uses dedicated single-node GPU compute and Databricks Runtime 18.3 LTS,
+matching the base image.
 
 ## Run the numerical workflows
 
 Run numerical inference with the released Stage 2 weights:
 
 ```bash
-databricks bundle run scenarioflow --params operation=inference
+databricks bundle run scenarioflow --params operation=inference,seed=2001
 ```
 
 Train Stage 1 and Stage 2 for one seed:
@@ -58,5 +64,7 @@ Run the complete multi-seed reproduction:
 databricks bundle run scenarioflow --params operation=reproduce
 ```
 
-All three routes invoke the same scripts used by the native release. Checkpoints
-and results are written to the configured output Volume.
+The reproduction route invokes the root launcher and runs its complete
+multi-seed grid; it does not use the single-seed job parameter. All three routes
+invoke the same scripts used by the native release. Checkpoints and results are
+written to the configured output Volume.
