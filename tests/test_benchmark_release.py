@@ -466,6 +466,17 @@ def test_numbered_experiment_guard_detects_tracked_files(tmp_path: Path) -> None
     ]
 
 
+def test_numbered_experiment_guard_detects_source_archive_files(tmp_path: Path) -> None:
+    """An exported source archive must remain checkable without Git metadata."""
+    stale = tmp_path / "experiments/train_999_removed_branch.py"
+    stale.parent.mkdir()
+    stale.write_text("raise SystemExit\n", encoding="utf-8")
+
+    assert tracked_numbered_experiments(tmp_path) == [
+        Path("experiments/train_999_removed_branch.py")
+    ]
+
+
 def test_final_baseline_implementations_smoke_on_synthetic_panel() -> None:
     """The public classical and deep implementations must generate real trajectories."""
     rng = np.random.default_rng(17)

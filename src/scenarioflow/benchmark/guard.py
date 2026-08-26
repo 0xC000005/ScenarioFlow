@@ -39,9 +39,27 @@ def tracked_numbered_experiments(root: str | Path) -> list[Path]:
         ["git", "ls-files", "-z"],
         cwd=repository,
         capture_output=True,
-        check=True,
+        check=False,
     )
-    paths = [Path(value) for value in completed.stdout.decode().split("\0") if value]
+    if completed.returncode == 0:
+        paths = [
+            Path(value) for value in completed.stdout.decode().split("\0") if value
+        ]
+    else:
+        ignored = {
+            ".git",
+            ".pytest_cache",
+            ".venv",
+            "__pycache__",
+            "build",
+            "dist",
+            "node_modules",
+        }
+        paths = sorted(
+            path.relative_to(repository)
+            for path in repository.rglob("*.py")
+            if not ignored.intersection(path.relative_to(repository).parts)
+        )
     prefixes = ("analyze_", "audit_", "evaluate_", "plot_", "test_", "train_")
     return [
         path
