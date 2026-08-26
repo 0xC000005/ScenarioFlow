@@ -3,12 +3,118 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
+
+import pytest
+
+from scenarioflow.artifacts import ArtifactResolver
+from scenarioflow.paper.tables import (
+    BenchmarkExportError,
+    verify_dollar_liquidity_authorities,
+    verify_preserved_table_views,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPER_ASSETS = ROOT / "paper_assets"
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _write_tsv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle, fieldnames=fieldnames, delimiter="\t", lineterminator="\n"
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _benchmark_contract_root(tmp_path: Path) -> Path:
+    root = tmp_path / "release"
+    for source in (
+        PAPER_ASSETS / "tables" / "golden" / "fmts-benchmark-full.tex",
+        PAPER_ASSETS / "tables" / "golden" / "fmts-benchmark-short.tex",
+        PAPER_ASSETS / "tables" / "golden" / "icaif-benchmark.tex",
+        ROOT
+        / "results"
+        / "frozen"
+        / "benchmark"
+        / "current-panel"
+        / "scenarioflow"
+        / "results.json",
+        ROOT
+        / "results"
+        / "frozen"
+        / "benchmark"
+        / "current-panel"
+        / "scenarioflow-graph"
+        / "results.json",
+        ROOT / "results" / "frozen" / "dollar-liquidity" / "narrative-report.json",
+        ROOT / "results" / "frozen" / "dollar-liquidity" / "start-only-report.json",
+        ROOT
+        / "results"
+        / "frozen"
+        / "dollar-liquidity"
+        / "fixed-start-comparison.json",
+        ROOT / "paper_assets" / "ASSETS.tsv",
+        ROOT / "results" / "FROZEN_AUTHORITY.tsv",
+    ):
+        destination = root / source.relative_to(ROOT)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+    return root
+
+
+def _update_asset_identity(root: Path, asset_id: str, table: Path) -> None:
+    manifest = root / "paper_assets" / "ASSETS.tsv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        fieldnames = list(reader.fieldnames or ())
+        rows = list(reader)
+    row = next(item for item in rows if item["asset_id"] == asset_id)
+    row["bytes"] = str(table.stat().st_size)
+    row["sha256"] = _sha256(table)
+    _write_tsv(manifest, rows, fieldnames)
+
+
+def _update_authority_identity(root: Path, authority_id: str, payload: Path) -> str:
+    manifest = root / "results" / "FROZEN_AUTHORITY.tsv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        fieldnames = list(reader.fieldnames or ())
+        rows = list(reader)
+    row = next(item for item in rows if item["authority_id"] == authority_id)
+    size = str(payload.stat().st_size)
+    digest = _sha256(payload)
+    row["released_bytes"] = size
+    row["released_sha256"] = digest
+    row["frozen_bytes"] = size
+    row["frozen_sha256"] = digest
+    _write_tsv(manifest, rows, fieldnames)
+    return digest
+
+
+def _replace_row_authority_digest(root: Path, authority_id: str, digest: str) -> None:
+    manifest = root / "paper_assets" / "ASSETS.tsv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        fieldnames = list(reader.fieldnames or ())
+        rows = list(reader)
+    marker = f"frozen-row:{authority_id}@"
+    for row in rows:
+        tokens = row["source_authority"].split(";")
+        row["source_authority"] = ";".join(
+            f"{marker}{digest}" if token.startswith(marker) else token
+            for token in tokens
+        )
+    _write_tsv(manifest, rows, fieldnames)
 
 
 def _release_files() -> list[Path]:
@@ -113,6 +219,118 @@ def test_paper_table_manifest_distinguishes_frozen_views_from_reruns() -> None:
 
     guide = (PAPER_ASSETS / "README.md").read_text(encoding="utf-8")
     assert "historical experiment tree" in guide
+
+
+@pytest.mark.parametrize(
+    ("old", "new"),
+    (
+        (r"\scenarioflow{} & \textbf{3.1772}", r"Wrong model & \textbf{3.1772}"),
+        (r"\scenarioflow{} & \textbf{3.1772}", r"\scenarioflow{} & \textbf{9.9999}"),
+    ),
+)
+def test_preserved_benchmark_rejects_a_corrupt_model_row_even_with_new_identity(
+    tmp_path: Path, old: str, new: str
+) -> None:
+    """A rehashed final table must still agree with its surviving result row."""
+    root = _benchmark_contract_root(tmp_path)
+    table = root / "paper_assets" / "tables" / "golden" / "icaif-benchmark.tex"
+    contents = table.read_text(encoding="utf-8")
+    assert old in contents
+    table.write_text(contents.replace(old, new, 1), encoding="utf-8")
+    _update_asset_identity(root, "icaif.benchmark", table)
+
+    with pytest.raises(BenchmarkExportError, match="row contract"):
+        verify_preserved_table_views(root, root / "paper_assets" / "ASSETS.tsv")
+
+
+def test_preserved_benchmark_rejects_a_corrupt_surviving_authority_value(
+    tmp_path: Path,
+) -> None:
+    """The checked paper row must be derived from the authenticated result JSON."""
+    root = _benchmark_contract_root(tmp_path)
+    authority_id = (
+        "release.results.frozen.benchmark.current-panel.scenarioflow.results.json"
+    )
+    result = (
+        root
+        / "results"
+        / "frozen"
+        / "benchmark"
+        / "current-panel"
+        / "scenarioflow"
+        / "results.json"
+    )
+    payload = json.loads(result.read_text(encoding="utf-8"))
+    payload["panel_b_crps"]["overall"] = 9.9999
+    result.write_text(json.dumps(payload), encoding="utf-8")
+    digest = _update_authority_identity(root, authority_id, result)
+    _replace_row_authority_digest(root, authority_id, digest)
+
+    with pytest.raises(BenchmarkExportError, match="row contract"):
+        verify_preserved_table_views(root, root / "paper_assets" / "ASSETS.tsv")
+
+
+def test_preserved_benchmark_rejects_a_changed_declared_provenance(
+    tmp_path: Path,
+) -> None:
+    """The non-mechanical paper-source claim must remain explicitly declared."""
+    root = _benchmark_contract_root(tmp_path)
+    manifest = root / "paper_assets" / "ASSETS.tsv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        fieldnames = list(reader.fieldnames or ())
+        rows = list(reader)
+    row = next(item for item in rows if item["asset_id"] == "icaif.benchmark")
+    row["source_authority"] = "paper-authority:wrong-source"
+    _write_tsv(manifest, rows, fieldnames)
+
+    with pytest.raises(BenchmarkExportError, match="declared provenance"):
+        verify_preserved_table_views(root, manifest)
+
+
+def test_preserved_benchmark_rejects_a_changed_frozen_row_reference(
+    tmp_path: Path,
+) -> None:
+    """The mechanically checked row authority must remain explicit and pinned."""
+    root = _benchmark_contract_root(tmp_path)
+    manifest = root / "paper_assets" / "ASSETS.tsv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        fieldnames = list(reader.fieldnames or ())
+        rows = list(reader)
+    row = next(item for item in rows if item["asset_id"] == "icaif.benchmark")
+    row["source_authority"] = row["source_authority"].replace(
+        "frozen-row:release.results.frozen.benchmark.current-panel."
+        "scenarioflow.results.json@",
+        "frozen-row:release.results.frozen.benchmark.current-panel."
+        "wrong.results.json@",
+    )
+    _write_tsv(manifest, rows, fieldnames)
+
+    with pytest.raises(BenchmarkExportError, match="row authority"):
+        verify_preserved_table_views(root, manifest)
+
+
+def test_dollar_liquidity_rejects_an_incomplete_composite_authority(
+    tmp_path: Path,
+) -> None:
+    """All array and frozen-report inputs must remain declared together."""
+    root = _benchmark_contract_root(tmp_path)
+    manifest = root / "paper_assets" / "ASSETS.tsv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        fieldnames = list(reader.fieldnames or ())
+        rows = list(reader)
+    row = next(item for item in rows if item["asset_id"] == "icaif.dollar-liquidity")
+    tokens = row["source_authority"].split(";")
+    row["source_authority"] = ";".join(
+        token for token in tokens if "fixed-start-comparison" not in token
+    )
+    _write_tsv(manifest, rows, fieldnames)
+    resolver = ArtifactResolver.from_tsv(ROOT / "artifacts" / "manifest-v1.tsv")
+
+    with pytest.raises(BenchmarkExportError, match="authority contract"):
+        verify_dollar_liquidity_authorities(root, manifest, resolver)
 
 
 def test_root_readme_links_paper_assets() -> None:

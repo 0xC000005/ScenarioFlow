@@ -105,9 +105,7 @@ def _paper_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--manifest", type=Path, default=default_manifest_path())
     parser.add_argument("--artifact-root", type=Path, default=Path("artifacts/cache"))
-    parser.add_argument(
-        "--output-dir", type=Path, default=Path("build/paper-reproduction")
-    )
+    parser.add_argument("--output-dir", type=Path, required=True)
     return parser
 
 

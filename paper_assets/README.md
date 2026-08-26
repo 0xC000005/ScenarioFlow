@@ -34,7 +34,8 @@ directory:
 Use `tables` or `plots` in place of `all` to render only one group. These
 commands consume the checksum-pinned released JSON/NPZ evidence and require
 neither an OpenAI API key nor Codex. They never overwrite `paper_assets/` or
-`results/frozen/`.
+`results/frozen/`. `--output-dir` is required: the command never chooses a
+generated destination for the caller.
 
 The byte-identical generated outputs are:
 
@@ -45,10 +46,12 @@ The byte-identical generated outputs are:
 
 The ICAIF nine-panel marginal, cross-cell sensitivity, and joint-factor fan
 figures are deterministic within one installed environment and are
-`verified-from-evidence`. The launcher compares each regenerated PNG with its
-golden using dimensions (at most one pixel of renderer-version drift per axis)
-and a 128 x 128 RGB pixel comparison (normalized mean absolute error at most
-0.045). Golden PNG byte hashes remain pinned in `ASSETS.tsv`; regenerated PNG
+`verified-from-evidence`. The launcher compares every regenerated panel with
+its golden at native resolution and on a 192 x 192 luminance tile. Each panel
+must pass normalized RGB MAE at most 0.12, luminance correlation at least 0.42,
+and a Sobel edge-density ratio from 0.75 through 1.55; dimensions permit at most
+one pixel of renderer-version drift per axis. Golden PNG byte hashes remain
+pinned in `ASSETS.tsv`; regenerated PNG
 byte hashes are not promised across Matplotlib/Pillow versions.
 
 The ICAIF nine-panel marginal is
@@ -60,10 +63,13 @@ claimed as an output of the nine-panel recipe.
 
 The final compact FMTS benchmark tables and the final ICAIF benchmark table do
 not have an exact surviving generator. They remain `preserved-only`: the paper
-command verifies their bytes and declared source relationship but does not copy
-them into the output directory or claim to regenerate their final rows. A fresh
-benchmark aggregate under `scenarioflow.benchmark` is a new result, not a
-byte-exact reconstruction of those final camera-ready views.
+command verifies their exact bytes and checks the surviving ScenarioFlow row
+values against checksum-pinned frozen benchmark results. The relationship to
+the named camera-ready/selected-source file is declared provenance, not a
+mechanically verified source transformation. The command does not copy these
+views into the output directory or claim to regenerate their final rows. A
+fresh benchmark aggregate under `scenarioflow.benchmark` is a new result, not
+a byte-exact reconstruction of those final camera-ready views.
 
 No historical experiment tree, numbered experiment route, LaTeX workspace, or
 checkpoint-driven plot launcher is restored by this workflow.

@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODE="${1:-all}"
 if [[ "$MODE" != "all" && "$MODE" != "tables" && "$MODE" != "plots" ]]; then
-  echo "usage: $0 [all|tables|plots] [--artifact-root PATH] [--output-dir PATH]" >&2
+  echo "usage: $0 [all|tables|plots] --output-dir PATH [--artifact-root PATH]" >&2
   exit 2
 fi
 if [[ $# -gt 0 ]]; then

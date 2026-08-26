@@ -25,6 +25,7 @@ from .plots import (
 from .tables import (
     BenchmarkExportError,
     _write_output_batch,
+    verify_dollar_liquidity_authorities,
     verify_preserved_table_views,
 )
 
@@ -58,14 +59,18 @@ EXACT_OUTPUT_IDENTITIES = {
     ),
 }
 
-FIGURE_GOLDENS = {
-    "iv-marginal-daily-changes.png": "iv-marginal-daily-changes.png",
-    "iv-cross-cell-sensitivity.png": "iv-cross-cell-sensitivity.png",
-    "joint-factor-fans.png": "joint-factor-fans.png",
+FIGURE_PANEL_GRIDS = {
+    "iv-marginal-daily-changes.png": (3, 3),
+    "iv-cross-cell-sensitivity.png": (2, 4),
+    "joint-factor-fans.png": (2, 3),
 }
 FIGURE_DIMENSION_TOLERANCE = 1
-FIGURE_THUMBNAIL_SIZE = (128, 128)
-FIGURE_NORMALIZED_MAE_LIMIT = 0.045
+FIGURE_TILE_SIZE = (192, 192)
+FIGURE_TILE_MAE_LIMIT = 0.12
+FIGURE_TILE_CORRELATION_MIN = 0.42
+FIGURE_EDGE_DENSITY_MIN = 0.75
+FIGURE_EDGE_DENSITY_MAX = 1.55
+FIGURE_EDGE_THRESHOLD = 0.20
 
 
 class PaperRenderError(ValueError):
@@ -121,9 +126,10 @@ def _load_npz(path: Path, *, schema: str, keys: set[str]) -> dict[str, np.ndarra
 
 
 def _verify_figure_content(name: str, rendered: Path, golden: Path) -> None:
-    """Check stable visual content without pinning PNG encoder metadata."""
+    """Check every panel's pixels and edges without pinning PNG metadata."""
     try:
         from PIL import Image
+        from scipy import ndimage
 
         with Image.open(rendered) as rendered_image, Image.open(golden) as golden_image:
             rendered_size = rendered_image.size
@@ -134,38 +140,112 @@ def _verify_figure_content(name: str, rendered: Path, golden: Path) -> None:
             ):
                 raise PaperRenderError(f"rendered figure dimensions changed: {name}")
             resampling = Image.Resampling.LANCZOS
-            current_pixels = np.asarray(
-                rendered_image.convert("RGB").resize(FIGURE_THUMBNAIL_SIZE, resampling),
-                dtype=np.float64,
+            golden_rgb = golden_image.convert("RGB")
+            rendered_rgb = rendered_image.convert("RGB").resize(
+                golden_rgb.size, resampling
             )
-            golden_pixels = np.asarray(
-                golden_image.convert("RGB").resize(FIGURE_THUMBNAIL_SIZE, resampling),
-                dtype=np.float64,
-            )
+            grid = FIGURE_PANEL_GRIDS.get(golden.name)
+            if grid is None:
+                raise PaperRenderError(f"rendered figure has no panel grid: {name}")
+            rows, columns = grid
+            width, height = golden_rgb.size
+            x_edges = [index * width // columns for index in range(columns + 1)]
+            y_edges = [index * height // rows for index in range(rows + 1)]
+            for row in range(rows):
+                for column in range(columns):
+                    box = (
+                        x_edges[column],
+                        y_edges[row],
+                        x_edges[column + 1],
+                        y_edges[row + 1],
+                    )
+                    current_tile = rendered_rgb.crop(box)
+                    golden_tile = golden_rgb.crop(box)
+                    current_native = np.asarray(current_tile, dtype=np.int16)
+                    golden_native = np.asarray(golden_tile, dtype=np.int16)
+                    normalized_mae = float(
+                        np.mean(np.abs(current_native - golden_native)) / 255.0
+                    )
+                    if normalized_mae > FIGURE_TILE_MAE_LIMIT:
+                        raise PaperRenderError(
+                            f"rendered figure tile agreement changed: {name} "
+                            f"tile {row},{column} (MAE {normalized_mae:.4f})"
+                        )
+
+                    current_luminance = (
+                        np.asarray(
+                            current_tile.convert("L").resize(
+                                FIGURE_TILE_SIZE, resampling
+                            ),
+                            dtype=np.float64,
+                        )
+                        / 255.0
+                    )
+                    golden_luminance = (
+                        np.asarray(
+                            golden_tile.convert("L").resize(
+                                FIGURE_TILE_SIZE, resampling
+                            ),
+                            dtype=np.float64,
+                        )
+                        / 255.0
+                    )
+                    current_blurred = ndimage.gaussian_filter(current_luminance, 1.0)
+                    golden_blurred = ndimage.gaussian_filter(golden_luminance, 1.0)
+                    current_edges = np.hypot(
+                        ndimage.sobel(current_blurred, axis=0),
+                        ndimage.sobel(current_blurred, axis=1),
+                    )
+                    golden_edges = np.hypot(
+                        ndimage.sobel(golden_blurred, axis=0),
+                        ndimage.sobel(golden_blurred, axis=1),
+                    )
+                    current_density = float(
+                        np.mean(current_edges > FIGURE_EDGE_THRESHOLD)
+                    )
+                    golden_density = float(
+                        np.mean(golden_edges > FIGURE_EDGE_THRESHOLD)
+                    )
+                    edge_ratio = current_density / max(golden_density, 1e-12)
+                    if not (
+                        FIGURE_EDGE_DENSITY_MIN <= edge_ratio <= FIGURE_EDGE_DENSITY_MAX
+                    ):
+                        raise PaperRenderError(
+                            f"rendered figure edge agreement changed: {name} "
+                            f"tile {row},{column} (density ratio {edge_ratio:.3f})"
+                        )
+
+                    current_centered = current_blurred - current_blurred.mean()
+                    golden_centered = golden_blurred - golden_blurred.mean()
+                    denominator = float(
+                        np.sqrt(
+                            np.sum(current_centered * current_centered)
+                            * np.sum(golden_centered * golden_centered)
+                        )
+                    )
+                    correlation = (
+                        float(np.sum(current_centered * golden_centered) / denominator)
+                        if denominator > 1e-12
+                        else 0.0
+                    )
+                    if correlation < FIGURE_TILE_CORRELATION_MIN:
+                        raise PaperRenderError(
+                            f"rendered figure tile agreement changed: {name} "
+                            f"tile {row},{column} (correlation {correlation:.3f})"
+                        )
     except (ImportError, OSError, ValueError) as error:
         if isinstance(error, PaperRenderError):
             raise
         raise PaperRenderError(f"rendered figure is unreadable: {name}") from error
-    normalized_mae = float(np.mean(np.abs(current_pixels - golden_pixels)) / 255.0)
-    if normalized_mae > FIGURE_NORMALIZED_MAE_LIMIT:
-        raise PaperRenderError(
-            f"rendered figure content changed: {name} "
-            f"(normalized MAE {normalized_mae:.4f})"
-        )
 
 
 def _verify_outputs(paths: dict[str, Path]) -> None:
     for name, path in paths.items():
-        golden_name = FIGURE_GOLDENS.get(path.name)
-        if golden_name is not None:
+        if path.name in FIGURE_PANEL_GRIDS:
             _verify_figure_content(
                 name,
                 path,
-                REPOSITORY_ROOT
-                / "paper_assets"
-                / "figures"
-                / "generated"
-                / golden_name,
+                REPOSITORY_ROOT / "paper_assets" / "figures" / "generated" / path.name,
             )
             continue
         expected = EXACT_OUTPUT_IDENTITIES.get(path.name)
@@ -310,11 +390,17 @@ def render_paper_assets(
     if len(resolved) != len(required):  # pragma: no cover - resolver is fail-closed
         raise PaperRenderError("required released paper evidence is unavailable")
 
-    preserved = verify_preserved_table_views(
-        REPOSITORY_ROOT, REPOSITORY_ROOT / "paper_assets" / "ASSETS.tsv"
-    )
     generated: dict[str, Path] = {}
     try:
+        if mode in {"all", "tables"}:
+            verify_dollar_liquidity_authorities(
+                REPOSITORY_ROOT,
+                REPOSITORY_ROOT / "paper_assets" / "ASSETS.tsv",
+                resolver,
+            )
+        preserved = verify_preserved_table_views(
+            REPOSITORY_ROOT, REPOSITORY_ROOT / "paper_assets" / "ASSETS.tsv"
+        )
         if mode in {"all", "tables"}:
             generated.update(_render_tables(resolver, artifact_root, output))
         if mode in {"all", "plots"}:
@@ -331,7 +417,16 @@ def render_paper_assets(
         "mode": mode,
         "output_dir": str(output),
         "generated": {key: str(path) for key, path in sorted(generated.items())},
-        "preserved_only": {key: str(path) for key, path in sorted(preserved.items())},
+        "preserved_only": {
+            key: {
+                "path": str(path),
+                "verification": (
+                    "exact identity; declared paper-source provenance; "
+                    "frozen benchmark row checked"
+                ),
+            }
+            for key, path in sorted(preserved.items())
+        },
     }
 
 

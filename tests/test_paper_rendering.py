@@ -14,6 +14,7 @@ import numpy as np
 import pytest
 
 from scenarioflow.artifacts import ArtifactResolver
+from scenarioflow.paper.render import PaperRenderError, _verify_figure_content
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "artifacts" / "manifest-v1.tsv"
@@ -156,6 +157,34 @@ def _run_paper(
     )
 
 
+def _mutate_panel_figure(source: Path, destination: Path, mutation: str) -> None:
+    from PIL import Image, ImageChops, ImageDraw
+
+    with Image.open(source) as loaded:
+        image = loaded.convert("RGB")
+    width, height = image.size
+    columns = (0, width // 3, 2 * width // 3, width)
+    rows = (0, height // 3, 2 * height // 3, height)
+    center = (columns[1], rows[1], columns[2], rows[2])
+    if mutation == "erase-center-panel":
+        ImageDraw.Draw(image).rectangle(center, fill="white")
+    elif mutation == "swap-panels":
+        left = (columns[0], rows[1], columns[1], rows[2])
+        right = (columns[2], rows[1], columns[3], rows[2])
+        left_panel = image.crop(left)
+        right_panel = image.crop(right).resize(left_panel.size)
+        image.paste(right_panel, left)
+        image.paste(
+            left_panel.resize((right[2] - right[0], right[3] - right[1])), right
+        )
+    elif mutation == "alter-one-panel":
+        panel = image.crop(center)
+        image.paste(ImageChops.invert(panel), center)
+    else:  # pragma: no cover - test helper contract
+        raise AssertionError(mutation)
+    image.save(destination)
+
+
 def test_public_launcher_validates_released_numerical_outputs(tmp_path: Path) -> None:
     """Wrong recipes, inputs, or formatting must fail published output identities."""
     completed = _run_paper("all", _artifact_root(), tmp_path / "paper")
@@ -164,6 +193,10 @@ def test_public_launcher_validates_released_numerical_outputs(tmp_path: Path) ->
     report = json.loads(completed.stdout)
     assert report["mode"] == "all"
     assert set(report["preserved_only"]) == set(PRESERVED_BENCHMARK_IDENTITIES)
+    assert {entry["verification"] for entry in report["preserved_only"].values()} == {
+        "exact identity; declared paper-source provenance; "
+        "frozen benchmark row checked"
+    }
     for directory, identities in (
         (tmp_path / "paper" / "plots", EXACT_PLOT_IDENTITIES),
         (tmp_path / "paper" / "tables", TABLE_IDENTITIES),
@@ -177,6 +210,28 @@ def test_public_launcher_validates_released_numerical_outputs(tmp_path: Path) ->
             tmp_path / "paper" / "plots" / name,
             ROOT / "paper_assets" / "figures" / "generated" / name,
         )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ("erase-center-panel", "swap-panels", "alter-one-panel"),
+)
+def test_visual_gate_rejects_localized_panel_corruption(
+    tmp_path: Path, mutation: str
+) -> None:
+    """A local or structural panel failure must not hide in a global average."""
+    golden = (
+        ROOT
+        / "paper_assets"
+        / "figures"
+        / "generated"
+        / "iv-marginal-daily-changes.png"
+    )
+    changed = tmp_path / f"{mutation}.png"
+    _mutate_panel_figure(golden, changed, mutation)
+
+    with pytest.raises(PaperRenderError, match="figure (tile|edge) agreement changed"):
+        _verify_figure_content("icaif.iv-marginal", changed, golden)
 
 
 def test_tables_and_plots_modes_are_deterministic_for_the_same_evidence(
@@ -232,6 +287,32 @@ def test_plot_mode_reports_a_missing_released_array_without_a_traceback(
     assert not (tmp_path / "output").exists()
 
 
+def test_paper_command_requires_a_caller_selected_output_directory(
+    tmp_path: Path,
+) -> None:
+    """The public command must not silently choose a generated destination."""
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scenarioflow.cli",
+            "paper",
+            "plots",
+            "--artifact-root",
+            str(_artifact_root()),
+        ],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert completed.returncode == 2
+    assert "--output-dir" in completed.stderr
+    assert "required" in completed.stderr
+    assert not (tmp_path / "build" / "paper-reproduction").exists()
+
+
 def test_asset_ledger_covers_exact_bytes_and_honest_reproduction_modes() -> None:
     """Preserved outputs must never advertise a generator command."""
     rows = _asset_rows()
@@ -279,6 +360,32 @@ def test_asset_ledger_covers_exact_bytes_and_honest_reproduction_modes() -> None
         "icaif.joint-factor-fans",
     ):
         assert rows[asset_id]["mode"] == "verified-from-evidence"
+
+    dollar_inputs = {
+        "artifact:evidence.nl.dollar-liquidity-cohesive",
+        "artifact:evidence.nl.dollar-liquidity-start-only",
+        (
+            "frozen:release.results.frozen.dollar-liquidity."
+            "narrative-report.json@"
+            "a2bee8502f6538e0a4649c1f10e24e3bec052f52ac1cc02ab8c26883c7155008"
+        ),
+        (
+            "frozen:release.results.frozen.dollar-liquidity."
+            "start-only-report.json@"
+            "46fe2b8fd4363ea37a4aaa0f2377455ff13510ab601bd29a3d767c86feec24e3"
+        ),
+        (
+            "frozen:release.results.frozen.dollar-liquidity."
+            "fixed-start-comparison.json@"
+            "102e92b16579b2b185ac17b8eb0818517047619aee07ec5416da26678d284e8d"
+        ),
+    }
+    for asset_id in (
+        "fmts.dollar-liquidity-full",
+        "fmts.dollar-liquidity-short",
+        "icaif.dollar-liquidity",
+    ):
+        assert set(rows[asset_id]["source_authority"].split(";")) == dollar_inputs
 
     for asset_id, identity in PRESERVED_BENCHMARK_IDENTITIES.items():
         assert rows[asset_id]["mode"] == "preserved-only"
