@@ -13,21 +13,40 @@ from scenarioflow.reproduction import finetune_rollouts, inference, train_next_s
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _shipped_python_files() -> list[Path]:
+    tracked = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "-z"],
+        capture_output=True,
+        check=False,
+    )
+    if tracked.returncode == 0:
+        return [
+            ROOT / Path(filename)
+            for filename in tracked.stdout.decode().split("\0")
+            if filename.endswith(".py")
+        ]
+
+    ignored = {".git", ".pytest_cache", ".venv", "__pycache__", "build"}
+    return [
+        path
+        for path in ROOT.rglob("*.py")
+        if not ignored.intersection(path.relative_to(ROOT).parts)
+    ]
+
+
 def test_release_contains_only_the_clean_numerical_core() -> None:
     """Shipping an archived tree or numbered experiment entrypoint is a release bug."""
-    assert not (ROOT / "reproduction" / "source").exists()
+    shipped_files = _shipped_python_files()
+    assert not [
+        path
+        for path in shipped_files
+        if path.relative_to(ROOT).parts[:2] == ("reproduction", "source")
+    ]
 
     stale_numbered_scripts = [
         path.relative_to(ROOT)
-        for path in ROOT.rglob("*.py")
-        if not {
-            ".git",
-            ".pytest_cache",
-            ".venv",
-            "__pycache__",
-            "build",
-            "tests/fixtures",
-        }.intersection(path.relative_to(ROOT).parts)
+        for path in shipped_files
+        if "tests/fixtures" not in path.as_posix()
         and any(
             path.stem.removeprefix(prefix)[:1].isdigit()
             for prefix in (

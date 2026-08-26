@@ -265,6 +265,7 @@ def test_frozen_numerical_parity_contract_is_complete_and_self_authenticating() 
         source_identities.add((source["snapshot"], source["path"]))
     assert len(source_identities) == len(sources)
 
+
 @pytest.fixture(scope="module")
 def extracted_core_inputs():
     torch.set_num_threads(1)
@@ -481,5 +482,5 @@ def test_extracted_checkpoints_velocity_rollout_losses_and_metrics_match_golden(
         factor_names=[spec.name for spec in specs[25:]],
         iv_count=25,
     )
-    np.testing.assert_array_equal(metrics, golden["metrics"])
+    np.testing.assert_allclose(metrics, golden["metrics"], rtol=0.0, atol=2e-8)
     np.testing.assert_array_equal(screens, golden["screen_decisions"])

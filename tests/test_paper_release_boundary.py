@@ -5,12 +5,25 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPER_ASSETS = ROOT / "paper_assets"
 
 
 def _release_files() -> list[Path]:
+    tracked = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "-z"],
+        capture_output=True,
+        check=False,
+    )
+    if tracked.returncode == 0:
+        return [
+            ROOT / Path(filename)
+            for filename in tracked.stdout.decode().split("\0")
+            if filename and (ROOT / filename).is_file()
+        ]
+
     ignored = {
         ".git",
         ".pytest_cache",
@@ -85,13 +98,8 @@ def test_paper_asset_guide_gives_copyable_reader_workflows() -> None:
 
 def test_paper_table_manifest_distinguishes_frozen_views_from_reruns() -> None:
     """Fresh training must not be presented as a byte-exact table rebuild."""
-    with (PAPER_ASSETS / "ASSETS.tsv").open(
-        encoding="utf-8", newline=""
-    ) as handle:
-        rows = {
-            row["asset_id"]: row
-            for row in csv.DictReader(handle, delimiter="\t")
-        }
+    with (PAPER_ASSETS / "ASSETS.tsv").open(encoding="utf-8", newline="") as handle:
+        rows = {row["asset_id"]: row for row in csv.DictReader(handle, delimiter="\t")}
 
     for asset_id in ("fmts.multiseed", "icaif.benchmark"):
         assert rows[asset_id]["mode"] == "frozen-paper-view"
