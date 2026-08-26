@@ -295,17 +295,43 @@ def test_resume_requires_schema_identity_and_current_artifact_hashes(
     assert not completion_is_valid(node, payload)
 
 
+@pytest.mark.parametrize(
+    "field",
+    (
+        "coverage_levels",
+        "iv_history_activity",
+        "iv_deck_width",
+        "full_panel_history_activity",
+        "full_panel_deck_width",
+    ),
+)
+def test_resume_rejects_incomplete_required_npz_shapes(
+    tmp_path: Path, field: str
+) -> None:
+    """Every required window-score field must carry its exact released shape."""
+    payload, node, result, scores = _evaluation_completion(tmp_path)
+    _write_valid_evaluation(result, scores)
+    with np.load(scores, allow_pickle=False) as loaded:
+        artifact = {name: loaded[name] for name in loaded.files}
+    artifact[field] = np.zeros(2)
+    np.savez_compressed(scores, **artifact)
+    _record_completion(node, payload)
+    assert not completion_is_valid(node, payload)
+
+
 def test_resume_rejects_weak_checkpoint_schema(tmp_path: Path) -> None:
     """An empty state dict is not a completed training node."""
     checkpoint = tmp_path / "train/best_model.pt"
     checkpoint.parent.mkdir(parents=True)
     configuration = {
+        "implementation_name": "scenarioflow",
+        "stage": "stage1",
         "contract": {
             "mode": "current_realvix_39_state_panel",
             "n_market_variables": 39,
             "history_length": 30,
             "future_length": 30,
-        }
+        },
     }
     node = {
         "id": "train:scenarioflow:stage1:1001",
@@ -334,8 +360,32 @@ def test_resume_rejects_weak_checkpoint_schema(tmp_path: Path) -> None:
 
     torch.save(
         {
+            "model_type": "deepvar",
             "model_state_dict": {"weight": torch.ones(1)},
-            "config": {"n_cells": 39, "history_len": 30, "future_len": 30},
+            "config": {"input_dim": 39, "history_len": 30, "future_len": 30},
+        },
+        checkpoint,
+    )
+    _record_completion(node, payload)
+    assert not completion_is_valid(node, payload)
+
+    torch.save(
+        {
+            "model_state_dict": {"weight": torch.ones(1)},
+            "config": {
+                "n_cells": 39,
+                "history_len": 30,
+                "future_len": 30,
+                "conditioning_mode": "prefix",
+            },
+            "state_scope": "joint38",
+            "model_coordinate": "state_aware_normalized_innovation",
+            "normalization": {
+                "coordinate": "encoded_increment",
+                "innovation_coordinate": "normalized",
+            },
+            "state_specs": [{"name": f"state:{index}"} for index in range(39)],
+            "training_objective": {"name": "next_step_flow_matching"},
         },
         checkpoint,
     )

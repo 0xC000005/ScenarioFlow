@@ -113,6 +113,7 @@ def _valid_window_scores(path: Path, node: Mapping[str, Any]) -> bool:
     )
     expected_variables = int(contract.get("n_market_variables", 0))
     expected_horizons = np.asarray([1, 7, 14, 30], dtype=np.int64)
+    expected_coverage_levels = np.asarray([0.5, 0.8, 0.9, 0.95])
     required = {
         "schema_version",
         "window_indices",
@@ -143,8 +144,59 @@ def _valid_window_scores(path: Path, node: Mapping[str, Any]) -> bool:
             and document["energy_contributions"].shape
             == (expected_windows, len(expected_horizons))
             and document["variogram_h30_contributions"].shape == (expected_windows,)
+            and document["coverage_levels"].shape == (4,)
+            and np.array_equal(document["coverage_levels"], expected_coverage_levels)
             and document["coverage_by_window"].shape == (expected_windows, 4)
+            and document["iv_history_activity"].shape == (expected_windows,)
+            and document["iv_deck_width"].shape == (expected_windows,)
+            and document["full_panel_history_activity"].shape == (expected_windows,)
+            and document["full_panel_deck_width"].shape == (expected_windows,)
         )
+
+
+def _valid_scenarioflow_checkpoint(
+    document: Mapping[str, Any],
+    node: Mapping[str, Any],
+    config: Mapping[str, Any],
+    expected_variables: int,
+) -> bool:
+    configuration = node.get("configuration")
+    if not isinstance(configuration, Mapping):
+        return False
+    normalization = document.get("normalization")
+    state_specs = document.get("state_specs")
+    model_type = document.get("model_type")
+    if (
+        model_type not in {None, "scenarioflow"}
+        or configuration.get("implementation_name") != node.get("candidate")
+        or config.get("conditioning_mode") != "prefix"
+        or document.get("model_coordinate") != "state_aware_normalized_innovation"
+        or document.get("state_scope")
+        != (_command_option(node, "--state_scope") or "joint38")
+        or not isinstance(normalization, Mapping)
+        or normalization.get("coordinate") != "encoded_increment"
+        or normalization.get("innovation_coordinate") != "normalized"
+        or not isinstance(state_specs, list)
+        or len(state_specs) != expected_variables
+    ):
+        return False
+    stage = configuration.get("stage")
+    if stage == "stage1":
+        objective = document.get("training_objective")
+        return isinstance(objective, Mapping) and bool(objective)
+    objective = document.get("finetune_objective")
+    if not isinstance(objective, Mapping) or not objective:
+        return False
+    if not isinstance(document.get("source_checkpoint"), str):
+        return False
+    if stage == "stage2":
+        return node.get("candidate") == "scenarioflow"
+    if stage == "graph":
+        return (
+            node.get("candidate") == "scenarioflow_graph"
+            and config.get("velocity_mixer_mode") == "adaptive_graph_residual"
+        )
+    return False
 
 
 def _valid_checkpoint(path: Path, node: Mapping[str, Any]) -> bool:
@@ -156,8 +208,9 @@ def _valid_checkpoint(path: Path, node: Mapping[str, Any]) -> bool:
     contract = _node_contract(node)
     if not isinstance(state, Mapping) or not state or not isinstance(config, Mapping):
         return False
+    expected_variables = int(contract.get("n_market_variables", 0))
     dimension = config.get("input_dim", config.get("n_cells"))
-    if int(dimension or 0) != int(contract.get("n_market_variables", 0)):
+    if int(dimension or 0) != expected_variables:
         return False
     if int(config.get("history_len", 0)) != int(contract.get("history_length", 0)):
         return False
@@ -169,9 +222,13 @@ def _valid_checkpoint(path: Path, node: Mapping[str, Any]) -> bool:
         "path_diffusion": "path_diffusion",
         "deepvar_sni": "deepvar",
     }.get(str(node.get("candidate")))
-    return (
-        expected_model_type is None or document.get("model_type") == expected_model_type
-    )
+    if expected_model_type is not None:
+        return document.get("model_type") == expected_model_type
+    if node.get("candidate") in {"scenarioflow", "scenarioflow_graph"}:
+        return _valid_scenarioflow_checkpoint(
+            document, node, config, expected_variables
+        )
+    return False
 
 
 def _valid_artifact(path: Path, node: Mapping[str, Any]) -> bool:
