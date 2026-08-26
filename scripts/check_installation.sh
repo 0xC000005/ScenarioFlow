@@ -55,4 +55,11 @@ for module in train_next_step finetune_rollouts inference; do
   "$ROOT_DIR/.venv/bin/python" -c "import scenarioflow.reproduction.$module"
   "$ROOT_DIR/.venv/bin/python" -m "scenarioflow.reproduction.$module" --help >/dev/null
 done
-echo "public numerical routes: ok"
+for module in \
+  protocol executor guard window_scores aggregate reporting \
+  train_baselines evaluate_baselines train_deepvar_sni \
+  evaluate_deepvar_sni evaluate_scenarioflow; do
+  "$ROOT_DIR/.venv/bin/python" -c "import scenarioflow.benchmark.$module"
+done
+"$ROOT_DIR/scripts/reproduce.sh" --dry-run --device cpu >/dev/null
+echo "public numerical and 141-node benchmark routes: ok"

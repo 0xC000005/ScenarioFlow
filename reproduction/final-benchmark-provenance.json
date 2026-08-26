@@ -1,0 +1,44 @@
+{
+  "schema_version": "scenarioflow.final-benchmark-provenance.v1",
+  "protocol": {
+    "released_path": "results/frozen/multiseed/command-dag.json",
+    "command_count": 141,
+    "executable_dag_sha256": "c6d570106975a79750d9fc47be96b07b71ea09930812c72154116a54e3a37d72",
+    "training_seeds": [1001, 1002, 1003],
+    "sampling_seeds": [2001, 2002, 2003, 2004, 2005]
+  },
+  "sources": {
+    "pre_cleanup_release_revision": "51781d8",
+    "clean_core_revision": "70d818e",
+    "paper_baselines_revision": "25b962389835378d7d35c4f8c7a7cf25e198afbe",
+    "gaussian_ccc_revision": "da91172a5449aa91a7f5a44c52b06f94dc5d4bf0",
+    "gaussian_ccc_blob": "bca996a09b40795db04df57d6eb726bb42c6dbc6",
+    "scenarioflow_revision": "5d13f4a08f7f5592f203e223c87985a74cdc3df2"
+  },
+  "data_sha256": {
+    "multi_factor_data.npz": "fcb34d7d0fdc9a874e06c95649f0ba93f7e203afb0e9690901cf8f67ebba5991",
+    "multi_factor_levels.parquet": "3ac3aeb04fd227fb471bc026f5f4191f5655c4cf3e09443b102e4d6d0019c75f",
+    "multi_factor_returns.parquet": "77970f0b506c1ea6bd0ab45b539c621e2cc4199b10b223f2a07c6d4a2003f21d",
+    "spx_vol_surface_history_full_data_fixed.parquet": "d657a9cf50ba513fa1806aaf8b1a30a7646438bda09ebeabc5f6804f6e0f704a",
+    "vol_surface_with_ret.npz": "3e5d05a4cc72cfbd60646aab6f491aac763d4667144409dd72f7969e40b4d50f"
+  },
+  "limitations": {
+    "window_score_overlay_available": false,
+    "unavailable_window_score_helper_sha256": "287a5df95bfc30e53db386b830b8d407fe9c4dfadfdf1cdc9faef035d7600d49",
+    "claim": "Reruns use the released semantic contract but are not promised byte-identical to historical result bytes."
+  },
+  "implementation_mapping": {
+    "scenarioflow": "scenarioflow.reproduction train_next_step, finetune_rollouts; scenarioflow.benchmark.evaluate_scenarioflow",
+    "scenarioflow_graph": "scenarioflow.reproduction finetune_rollouts adaptive graph; scenarioflow.benchmark.evaluate_scenarioflow",
+    "random_walk": "scenarioflow.benchmark.baselines.classical.JointRandomWalk",
+    "bootstrap": "scenarioflow.benchmark.baselines.classical.JointBootstrap",
+    "historical_sim": "scenarioflow.benchmark.baselines.classical.WindowHistoricalSimulation",
+    "pca_var": "scenarioflow.benchmark.baselines.classical.JointPCAVAR",
+    "garch_ccc": "scenarioflow.benchmark.baselines.classical.JointGaussianGARCHCCC",
+    "filtered_hs": "scenarioflow.benchmark.baselines.classical.JointFilteredHistoricalSimulation",
+    "deepvar": "scenarioflow.benchmark.baselines.deep.CurrentPanelDeepVAR",
+    "timegrad": "scenarioflow.benchmark.baselines.deep.CurrentPanelTimeGrad",
+    "path_diffusion": "scenarioflow.benchmark.baselines.deep.CurrentPanelPathDiffusion",
+    "deepvar_sni": "scenarioflow.benchmark.baselines.deepvar_sni.DeepVARSNIInterfaceBaseline"
+  }
+}

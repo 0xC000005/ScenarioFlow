@@ -18,6 +18,10 @@ Usage: ./scripts/setup.sh [OPTIONS]
 
 Install ScenarioFlow and fetch a checksum-verified artifact profile.
 
+This installs the numerical core used for training, released-checkpoint replay,
+and benchmark planning. Full multi-seed reproduction additionally requires:
+  uv sync --locked --extra baseline-classical
+
 Options:
   --profile NAME       Artifact profile to fetch (default: core)
   --base-url URL       Override the GitHub Release URL

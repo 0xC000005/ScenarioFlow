@@ -99,6 +99,9 @@ Stage 1 checkpoint and writes to `build/training/stage2/`. Pass `--output-dir`
 to either command to override its output location; Stage 2 also accepts
 `--checkpoint` to override its starting checkpoint.
 
+This is a single-seed model-training route. It is separate from both released-
+checkpoint replay and the paper's full multi-seed benchmark below.
+
 ## Run inference
 
 ### Run ScenarioFlow inference
@@ -123,6 +126,50 @@ The command uses the released ScenarioFlow sampler and writes its outputs to
 override the released Stage 2 checkpoint or output location. It does not use
 OpenAI or Codex.
 
+This is released-checkpoint replay: it does not retrain ScenarioFlow or any
+comparison baseline.
+
+## Reproduce the final multi-seed benchmark
+
+The paper benchmark is a separate 141-node grid: three training seeds
+(`1001`–`1003`), five sampling seeds (`2001`–`2005`), and the 12 final
+candidates only. Install the optional GARCH dependency, then inspect the full
+grid without launching compute:
+
+```bash
+uv sync --locked --extra baseline-classical
+./scripts/reproduce.sh --dry-run --device cpu
+```
+
+Run one node together with its dependencies, or resume every incomplete node:
+
+```bash
+./scripts/reproduce.sh \
+  --node-id eval:deepvar:train_1001:rollout_2001 \
+  --model-root build/reproduction/models \
+  --result-root build/reproduction/results \
+  --device cuda
+
+./scripts/reproduce.sh --resume-all \
+  --model-root build/reproduction/models \
+  --result-root build/reproduction/results \
+  --device cuda
+```
+
+For a bounded local check, pass explicit limits such as
+`--smoke-max-windows 1`, `--smoke-samples 2`, `--smoke-epochs 1`,
+`--smoke-max-train-windows 2`, and `--smoke-max-val-windows 1`. These limits
+change the workload and are not paper-result settings. Resume skips a node only
+when every declared checkpoint/JSON/NPZ completion artifact can be loaded.
+
+The command graph comes from
+`results/frozen/multiseed/command-dag.json`; clean commands dispatch installed
+`scenarioflow` modules and never require the removed numbered experiment tree.
+The original uncommitted window-score overlay is unavailable, so new runs are
+semantically faithful but are not promised byte-identical to the historical
+result bytes. See `reproduction/final-benchmark-provenance.json` for revisions,
+data hashes, the protocol hash, and paper-name mappings.
+
 ### Run multimodal conditional inference
 
 The narrative interface requires the language runtime and the same final Stage
@@ -146,6 +193,8 @@ scenario-to-narrative demo describes a numerical scenario. OpenAI and Codex are 
 - `data/`: five checksum-pinned processed market-data files.
 - `src/scenarioflow/{model,state,reproduction}/`: extracted model, state, and
   numerical training and inference core.
+- `src/scenarioflow/benchmark/`: compact final baseline, evaluation, execution,
+  aggregation, and reporting layer.
 - `artifacts/manifest-v1.tsv`: checksums and release paths for large external files.
 - `paper_assets/`: final paper tables and figures, with reproduction modes.
 - `tests/`: data and public-release contract tests.

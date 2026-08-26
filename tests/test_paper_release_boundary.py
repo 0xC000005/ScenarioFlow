@@ -149,9 +149,9 @@ def test_root_readme_links_paper_assets() -> None:
     assert "ICAIF numerical plots" not in readme
     assert "## Choose a route" not in readme
     assert "./scripts/check_installation.sh" in readme
+    assert "./scripts/reproduce.sh" in readme
     for command in (
         "reproduction/source/",
-        "./scripts/reproduce.sh",
         "./scripts/reproduce_paper.sh",
     ):
         assert command not in readme
