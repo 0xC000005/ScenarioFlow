@@ -22,9 +22,9 @@ docker build -f deploy/databricks/Dockerfile -t "$IMAGE_URL" .
 docker push "$IMAGE_URL"
 ```
 
-The image contains the processed data, preserved experiment source, and the
-existing numerical scripts. It does not contain the released weights. Copy the
-artifact bundle to a Databricks Volume so that the artifact root contains
+The image contains the processed data and ScenarioFlow numerical code. It does
+not contain the released weights. Copy the artifact bundle to a Databricks
+Volume so that the artifact root contains
 `models/core/stage2/best_model.pt`.
 
 ## Configure and deploy the job
