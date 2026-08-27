@@ -43,14 +43,6 @@ CLASSICAL_CANDIDATES = (
 LEARNED_CANDIDATES = tuple(
     candidate for candidate in CANDIDATE_IDS if candidate not in CLASSICAL_CANDIDATES
 )
-PROPER_WINDOW_METRICS = ("CRPS", "Energy Score", "Variogram")
-PAIRED_COMPARISONS = (
-    ("deepvar_vs_deepvar_support", "deepvar", "deepvar_sni"),
-    ("scenarioflow_vs_graph", "scenarioflow", "scenarioflow_graph"),
-)
-DEFAULT_BLOCK_LENGTH = 30
-DEFAULT_N_BOOTSTRAP = 10_000
-DEFAULT_BOOTSTRAP_SEED = 20260805
 DEFAULT_CI_LEVEL = 0.95
 
 
@@ -105,54 +97,6 @@ def _student_t_summary(
         }
     )
     return result
-
-
-def moving_block_bootstrap_mean(
-    values: np.ndarray,
-    *,
-    block_length: int = DEFAULT_BLOCK_LENGTH,
-    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
-    seed: int = DEFAULT_BOOTSTRAP_SEED,
-    ci_level: float = DEFAULT_CI_LEVEL,
-) -> dict[str, Any]:
-    """Summarize one chronological paired series with moving blocks."""
-    series = np.asarray(values, dtype=np.float64).reshape(-1)
-    if series.size < 1 or not np.isfinite(series).all():
-        raise AggregationContractError("bootstrap values must be finite and non-empty")
-    if block_length < 1 or n_bootstrap < 1:
-        raise AggregationContractError(
-            "block length and bootstrap count must be positive"
-        )
-    if not 0.0 < ci_level < 1.0:
-        raise AggregationContractError(
-            "ci_level must lie strictly between zero and one"
-        )
-    effective_length = min(int(block_length), int(series.size))
-    block_count = int(math.ceil(series.size / effective_length))
-    generator = np.random.default_rng(int(seed))
-    starts = generator.integers(
-        0,
-        series.size - effective_length + 1,
-        size=(int(n_bootstrap), block_count),
-    )
-    offsets = np.arange(effective_length, dtype=np.int64)
-    draws = series[(starts[:, :, None] + offsets[None, None, :])].reshape(
-        int(n_bootstrap), -1
-    )[:, : series.size]
-    means = draws.mean(axis=1)
-    alpha = (1.0 - ci_level) / 2.0
-    low, high = np.quantile(means, [alpha, 1.0 - alpha])
-    return {
-        "n_windows": int(series.size),
-        "mean_delta": float(series.mean()),
-        "ci_level": float(ci_level),
-        "ci_low": float(low),
-        "ci_high": float(high),
-        "ci_excludes_zero": bool(low > 0.0 or high < 0.0),
-        "block_length": effective_length,
-        "n_bootstrap": int(n_bootstrap),
-        "bootstrap_seed": int(seed),
-    }
 
 
 def _expected_evaluation_keys() -> set[tuple[str, int | None, int]]:
@@ -497,102 +441,6 @@ def _candidate_summary(
     return common
 
 
-def _window_series(run: Mapping[str, Any], metric: str) -> np.ndarray:
-    artifact = run["_window_scores"]
-    if metric == "CRPS":
-        return np.asarray(artifact["crps_contributions"], dtype=np.float64).mean(
-            axis=(1, 2)
-        )
-    if metric == "Energy Score":
-        return np.asarray(artifact["energy_contributions"], dtype=np.float64).mean(
-            axis=1
-        )
-    if metric == "Variogram":
-        return np.asarray(artifact["variogram_h30_contributions"], dtype=np.float64)
-    raise AggregationContractError(f"no per-window evidence for {metric}")
-
-
-def _paired_comparison(
-    *,
-    name: str,
-    left_candidate: str,
-    right_candidate: str,
-    runs_by_candidate: Mapping[str, Sequence[Mapping[str, Any]]],
-    block_length: int,
-    n_bootstrap: int,
-    bootstrap_seed: int,
-    ci_level: float,
-) -> dict[str, Any]:
-    def key(run: Mapping[str, Any]) -> tuple[int, int]:
-        return int(run["training_seed"]), int(run["rollout_seed"])
-
-    left = {key(run): run for run in runs_by_candidate[left_candidate]}
-    right = {key(run): run for run in runs_by_candidate[right_candidate]}
-    expected = {
-        (training_seed, rollout_seed)
-        for training_seed in TRAIN_SEEDS
-        for rollout_seed in ROLLOUT_SEEDS
-    }
-    if set(left) != expected or set(right) != expected:
-        raise AggregationContractError(f"{name} does not have all paired seed runs")
-    ordered_keys = sorted(expected)
-    run_deltas = {
-        metric: _descriptive_stats(
-            right[seed_pair]["metrics"][metric] - left[seed_pair]["metrics"][metric]
-            for seed_pair in ordered_keys
-        )
-        for metric, _path in METRIC_PATHS
-    }
-    window_uncertainty = {}
-    for metric in PROPER_WINDOW_METRICS:
-        paired_window_deltas = []
-        reference_indices: np.ndarray | None = None
-        for seed_pair in ordered_keys:
-            left_indices = np.asarray(
-                left[seed_pair]["_window_scores"]["window_indices"]
-            )
-            right_indices = np.asarray(
-                right[seed_pair]["_window_scores"]["window_indices"]
-            )
-            if not np.array_equal(left_indices, right_indices):
-                raise AggregationContractError(
-                    f"{name} window indices differ for seed pair {seed_pair}"
-                )
-            if reference_indices is None:
-                reference_indices = left_indices
-            elif not np.array_equal(reference_indices, left_indices):
-                raise AggregationContractError(
-                    f"{name} window schedule differs across seed pairs"
-                )
-            paired_window_deltas.append(
-                _window_series(right[seed_pair], metric)
-                - _window_series(left[seed_pair], metric)
-            )
-        seed_averaged = np.mean(np.stack(paired_window_deltas, axis=0), axis=0)
-        window_uncertainty[metric] = moving_block_bootstrap_mean(
-            seed_averaged,
-            block_length=block_length,
-            n_bootstrap=n_bootstrap,
-            seed=bootstrap_seed,
-            ci_level=ci_level,
-        )
-    return {
-        "name": name,
-        "left_candidate": left_candidate,
-        "right_candidate": right_candidate,
-        "delta_orientation": "right_minus_left",
-        "n_seed_pairs": len(ordered_keys),
-        "paired_training_seeds": list(TRAIN_SEEDS),
-        "paired_rollout_seeds": list(ROLLOUT_SEEDS),
-        "run_level_metric_deltas": run_deltas,
-        "run_level_breach_count_delta": _descriptive_stats(
-            right[seed_pair]["breach_count"] - left[seed_pair]["breach_count"]
-            for seed_pair in ordered_keys
-        ),
-        "window_uncertainty": window_uncertainty,
-    }
-
-
 def _serializable_run(run: Mapping[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in run.items() if not key.startswith("_")}
 
@@ -704,40 +552,6 @@ def _metric_summary_rows(summaries: Mapping[str, Any]) -> Iterable[dict[str, Any
                 }
 
 
-def _paired_rows(comparisons: Mapping[str, Any]) -> Iterable[dict[str, Any]]:
-    for name, comparison in comparisons.items():
-        for metric, stats in comparison["run_level_metric_deltas"].items():
-            yield {
-                "comparison": name,
-                "level": "paired_run_seed_pairs_descriptive",
-                "metric": metric,
-                "mean_delta": stats["mean"],
-                "std_delta": stats["std"],
-                "min_delta": stats["min"],
-                "max_delta": stats["max"],
-                "ci_low": "",
-                "ci_high": "",
-                "n": stats["n"],
-                "block_length": "",
-                "bootstrap_seed": "",
-            }
-        for metric, interval in comparison["window_uncertainty"].items():
-            yield {
-                "comparison": name,
-                "level": "paired_window_bootstrap",
-                "metric": metric,
-                "mean_delta": interval["mean_delta"],
-                "std_delta": "",
-                "min_delta": "",
-                "max_delta": "",
-                "ci_low": interval["ci_low"],
-                "ci_high": interval["ci_high"],
-                "n": interval["n_windows"],
-                "block_length": interval["block_length"],
-                "bootstrap_seed": interval["bootstrap_seed"],
-            }
-
-
 def _candidate_inference_stats(summary: Mapping[str, Any]) -> Mapping[str, Any]:
     if summary["variation_type"] == "rollout_sampling_sensitivity":
         return summary["sampling_sensitivity"]["metrics"]["CRPS"]
@@ -746,7 +560,7 @@ def _candidate_inference_stats(summary: Mapping[str, Any]) -> Mapping[str, Any]:
 
 def _render_markdown(summary: Mapping[str, Any]) -> str:
     ci_percent = _confidence_level_percent(
-        float(summary["bootstrap_contract"]["ci_level"])
+        float(summary["methodology_contract"]["ci_level"])
     )
     lines = [
         "# ScenarioFlow final multi-seed semantic rerun aggregate",
@@ -769,25 +583,6 @@ def _render_markdown(summary: Mapping[str, Any]) -> str:
             f"{stats['mean']:.6g} | [{stats['ci_low']:.6g}, {stats['ci_high']:.6g}] | "
             f"{profile['pass_all_rate']:.1%} |"
         )
-    lines.extend(["", "## Paired controls", ""])
-    for name, comparison in summary["paired_comparisons"].items():
-        lines.extend(
-            [
-                f"### {name}",
-                "",
-                "Deltas are right minus left and use paired window evidence.",
-                "",
-                f"| Proper score | Mean delta | {ci_percent}% moving-block interval |",
-                "| --- | ---: | ---: |",
-            ]
-        )
-        for metric in PROPER_WINDOW_METRICS:
-            interval = comparison["window_uncertainty"][metric]
-            lines.append(
-                f"| {metric} | {interval['mean_delta']:.6g} | "
-                f"[{interval['ci_low']:.6g}, {interval['ci_high']:.6g}] |"
-            )
-        lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -850,42 +645,17 @@ def _write_outputs(output_dir: Path, summary: Mapping[str, Any]) -> None:
         ),
         _metric_summary_rows(summary["candidate_summaries"]),
     )
-    _write_csv_atomic(
-        output_dir / "paired-comparisons.csv",
-        (
-            "comparison",
-            "level",
-            "metric",
-            "mean_delta",
-            "std_delta",
-            "min_delta",
-            "max_delta",
-            "ci_low",
-            "ci_high",
-            "n",
-            "block_length",
-            "bootstrap_seed",
-        ),
-        _paired_rows(summary["paired_comparisons"]),
-    )
 
 
 def aggregate_study(
     *,
     protocol_manifest: str | Path,
     output_dir: str | Path,
-    block_length: int = DEFAULT_BLOCK_LENGTH,
-    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
-    bootstrap_seed: int = DEFAULT_BOOTSTRAP_SEED,
     ci_level: float = DEFAULT_CI_LEVEL,
 ) -> dict[str, Any]:
     """Validate the complete grid and write stable semantic-rerun artifacts."""
     protocol_path = Path(protocol_manifest).expanduser().resolve()
     output = Path(output_dir).expanduser().resolve()
-    if block_length != DEFAULT_BLOCK_LENGTH:
-        raise AggregationContractError("the frozen block length is 30 windows")
-    if n_bootstrap < 1:
-        raise AggregationContractError("n_bootstrap must be positive")
     if not 0.0 < ci_level < 1.0:
         raise AggregationContractError(
             "ci_level must lie strictly between zero and one"
@@ -918,19 +688,6 @@ def aggregate_study(
         )
         for candidate in CANDIDATE_IDS
     }
-    comparisons = {
-        name: _paired_comparison(
-            name=name,
-            left_candidate=left,
-            right_candidate=right,
-            runs_by_candidate=runs_by_candidate,
-            block_length=block_length,
-            n_bootstrap=n_bootstrap,
-            bootstrap_seed=bootstrap_seed,
-            ci_level=ci_level,
-        )
-        for name, left, right in PAIRED_COMPARISONS
-    }
     summary: dict[str, Any] = {
         "schema_version": SUMMARY_SCHEMA,
         "artifact_kind": ARTIFACT_KIND,
@@ -949,18 +706,10 @@ def aggregate_study(
             "classical_model_independent_unit": "sampling_seed",
             "classical_model_unit_count": 5,
             "confidence_interval": f"two_sided_{_confidence_level_percent(ci_level)}_percent_student_t",
-            "paired_window_method": "moving_block_bootstrap_of_seed_averaged_paired_differences",
-        },
-        "bootstrap_contract": {
-            "method": "paired_moving_block_bootstrap_of_seed_averaged_window_differences",
-            "block_length": block_length,
-            "n_bootstrap": n_bootstrap,
-            "bootstrap_seed": bootstrap_seed,
             "ci_level": ci_level,
         },
         "per_runs": [_serializable_run(run) for run in runs],
         "candidate_summaries": summaries,
-        "paired_comparisons": comparisons,
     }
     _write_outputs(output, summary)
     return summary
@@ -970,17 +719,11 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol-manifest", required=True)
     parser.add_argument("--output-dir", required=True)
-    parser.add_argument("--block-length", type=int, default=DEFAULT_BLOCK_LENGTH)
-    parser.add_argument("--n-bootstrap", type=int, default=DEFAULT_N_BOOTSTRAP)
-    parser.add_argument("--bootstrap-seed", type=int, default=DEFAULT_BOOTSTRAP_SEED)
     parser.add_argument("--ci-level", type=float, default=DEFAULT_CI_LEVEL)
     args = parser.parse_args(argv)
     aggregate_study(
         protocol_manifest=args.protocol_manifest,
         output_dir=args.output_dir,
-        block_length=args.block_length,
-        n_bootstrap=args.n_bootstrap,
-        bootstrap_seed=args.bootstrap_seed,
         ci_level=args.ci_level,
     )
 

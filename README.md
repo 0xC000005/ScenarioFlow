@@ -167,10 +167,8 @@ artifacts are aggregated under `build/reproduction/results/aggregate`. The
 completion JSON names that directory. This semantic rerun output is not a
 historical byte-identical artifact. Learned-model intervals use three trained
 model means (each averaged across five sampling seeds), classical intervals use
-five sampling-seed values, and paired proper-score comparisons use chronological
-window evidence. The stable outputs are `summary.json`, `summary.md`,
-`per-run-metrics.csv`, `per-run-thresholds.csv`, `metric-summaries.csv`, and
-`paired-comparisons.csv`.
+five sampling-seed values. The stable outputs are `summary.json`, `summary.md`,
+`per-run-metrics.csv`, `per-run-thresholds.csv`, and `metric-summaries.csv`.
 
 The command graph comes from
 `results/frozen/multiseed/command-dag.json`; clean commands dispatch installed

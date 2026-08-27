@@ -229,7 +229,7 @@ def completed_grid(tmp_path: Path) -> tuple[dict, Path, Path, Path]:
     return _completed_grid(tmp_path)
 
 
-def test_semantic_aggregate_uses_independent_seed_units_and_paired_windows(
+def test_semantic_aggregate_uses_independent_seed_units(
     completed_grid: tuple[dict, Path, Path, Path],
 ) -> None:
     payload, _model_root, result_root, manifest = completed_grid
@@ -238,7 +238,6 @@ def test_semantic_aggregate_uses_independent_seed_units_and_paired_windows(
     summary = aggregate_study(
         protocol_manifest=manifest,
         output_dir=output,
-        n_bootstrap=128,
     )
 
     assert summary["artifact_kind"] == "semantic_rerun_output"
@@ -249,7 +248,6 @@ def test_semantic_aggregate_uses_independent_seed_units_and_paired_windows(
         "per-run-metrics.csv",
         "per-run-thresholds.csv",
         "metric-summaries.csv",
-        "paired-comparisons.csv",
     }
 
     learned = summary["candidate_summaries"]["scenarioflow"]
@@ -285,14 +283,6 @@ def test_semantic_aggregate_uses_independent_seed_units_and_paired_windows(
         }
     )
 
-    paired = summary["paired_comparisons"]["scenarioflow_vs_graph"]
-    interval = paired["window_uncertainty"]["CRPS"]
-    assert interval["mean_delta"] == pytest.approx(1.0)
-    assert interval["n_windows"] == 2
-    assert interval["block_length"] == 2
-    assert interval["ci_low"] == pytest.approx(1.0)
-    assert interval["ci_high"] == pytest.approx(1.0)
-
     with (output / "metric-summaries.csv").open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     row = next(
@@ -319,7 +309,6 @@ def test_semantic_aggregate_labels_the_requested_confidence_level(
     summary = aggregate_study(
         protocol_manifest=manifest,
         output_dir=output,
-        n_bootstrap=32,
         ci_level=0.90,
     )
 
@@ -328,7 +317,7 @@ def test_semantic_aggregate_labels_the_requested_confidence_level(
     )
     markdown = (output / "summary.md").read_text(encoding="utf-8")
     assert "90% Student-t interval" in markdown
-    assert "90% moving-block interval" in markdown
+    assert "moving-block" not in markdown
     assert "95%" not in markdown
 
 
@@ -353,7 +342,6 @@ def test_aggregate_rejects_noncurrent_executor_completions(
         aggregate_study(
             protocol_manifest=manifest,
             output_dir=result_root / "aggregate",
-            n_bootstrap=16,
         )
     assert not (result_root / "aggregate").exists()
 
@@ -379,7 +367,6 @@ def test_aggregate_rejects_hashed_npz_that_disagrees_with_result_contract(
         aggregate_study(
             protocol_manifest=manifest,
             output_dir=result_root / "aggregate",
-            n_bootstrap=16,
         )
     assert not (result_root / "aggregate").exists()
 
