@@ -310,6 +310,28 @@ def test_semantic_aggregate_uses_independent_seed_units_and_paired_windows(
     )
 
 
+def test_semantic_aggregate_labels_the_requested_confidence_level(
+    completed_grid: tuple[dict, Path, Path, Path],
+) -> None:
+    _payload, _model_root, result_root, manifest = completed_grid
+    output = result_root / "aggregate"
+
+    summary = aggregate_study(
+        protocol_manifest=manifest,
+        output_dir=output,
+        n_bootstrap=32,
+        ci_level=0.90,
+    )
+
+    assert summary["methodology_contract"]["confidence_interval"] == (
+        "two_sided_90_percent_student_t"
+    )
+    markdown = (output / "summary.md").read_text(encoding="utf-8")
+    assert "90% Student-t interval" in markdown
+    assert "90% moving-block interval" in markdown
+    assert "95%" not in markdown
+
+
 @pytest.mark.parametrize("tamper", ("missing_sidecar", "stale_hash"))
 def test_aggregate_rejects_noncurrent_executor_completions(
     completed_grid: tuple[dict, Path, Path, Path], tamper: str

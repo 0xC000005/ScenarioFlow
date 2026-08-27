@@ -58,6 +58,10 @@ class AggregationContractError(ValueError):
     """Raised before output when the completed grid violates its contract."""
 
 
+def _confidence_level_percent(ci_level: float) -> str:
+    return f"{100.0 * ci_level:.12g}"
+
+
 def _read_json(path: Path, label: str) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -741,6 +745,9 @@ def _candidate_inference_stats(summary: Mapping[str, Any]) -> Mapping[str, Any]:
 
 
 def _render_markdown(summary: Mapping[str, Any]) -> str:
+    ci_percent = _confidence_level_percent(
+        float(summary["bootstrap_contract"]["ci_level"])
+    )
     lines = [
         "# ScenarioFlow final multi-seed semantic rerun aggregate",
         "",
@@ -750,7 +757,7 @@ def _render_markdown(summary: Mapping[str, Any]) -> str:
         "",
         "## Candidate sensitivity",
         "",
-        "| Candidate | Independent units | CRPS mean | 95% Student-t interval | Pass rate |",
+        f"| Candidate | Independent units | CRPS mean | {ci_percent}% Student-t interval | Pass rate |",
         "| --- | ---: | ---: | ---: | ---: |",
     ]
     for candidate in CANDIDATE_IDS:
@@ -770,7 +777,7 @@ def _render_markdown(summary: Mapping[str, Any]) -> str:
                 "",
                 "Deltas are right minus left and use paired window evidence.",
                 "",
-                "| Proper score | Mean delta | 95% moving-block interval |",
+                f"| Proper score | Mean delta | {ci_percent}% moving-block interval |",
                 "| --- | ---: | ---: |",
             ]
         )
@@ -941,7 +948,7 @@ def aggregate_study(
             "learned_model_unit_count": 3,
             "classical_model_independent_unit": "sampling_seed",
             "classical_model_unit_count": 5,
-            "confidence_interval": "two_sided_95_percent_student_t",
+            "confidence_interval": f"two_sided_{_confidence_level_percent(ci_level)}_percent_student_t",
             "paired_window_method": "moving_block_bootstrap_of_seed_averaged_paired_differences",
         },
         "bootstrap_contract": {
