@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import json
 import math
-from pathlib import Path
 from typing import Any, Mapping
 
 TABLE_THRESHOLD_RULES: dict[str, dict[str, float | str]] = {
@@ -67,61 +65,3 @@ def threshold_status(value: float, rule: Mapping[str, Any]) -> bool:
     if kind == "band":
         return float(rule["lo"]) <= value <= float(rule["hi"])
     raise ValueError(f"unknown threshold kind {kind!r}")
-
-
-def compare_reproduction_runs(
-    canonical: Mapping[str, Any], replay: Mapping[str, Any]
-) -> dict[str, Any]:
-    """Compare two explicitly supplied result objects without guessing paths."""
-    canonical_metrics = metric_values(canonical)
-    replay_metrics = metric_values(replay)
-    rows = []
-    for name in canonical_metrics:
-        left = canonical_metrics[name]
-        right = replay_metrics[name]
-        rows.append(
-            {
-                "metric": name,
-                "canonical": left,
-                "replay": right,
-                "absolute_difference": abs(right - left),
-                "relative_difference": abs(right - left) / max(abs(left), 1e-12),
-            }
-        )
-    return {
-        "schema_version": "scenarioflow.reproduction-comparison.v1",
-        "structural_invariants": {
-            "mode": canonical.get("mode") == replay.get("mode"),
-            "n_windows": canonical.get("n_windows") == replay.get("n_windows"),
-            "n_samples": canonical.get("n_samples") == replay.get("n_samples"),
-            "state_specs": canonical.get("state_specs") == replay.get("state_specs"),
-        },
-        "metrics": rows,
-    }
-
-
-def write_reproduction_report(
-    report: Mapping[str, Any], output_dir: str | Path
-) -> None:
-    output = Path(output_dir)
-    output.mkdir(parents=True, exist_ok=True)
-    (output / "reproduction_report.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
-    lines = ["# Reproduction comparison", ""]
-    for name, passed in report["structural_invariants"].items():
-        lines.append(f"- {name}: {'PASS' if passed else 'FAIL'}")
-    lines.extend(
-        [
-            "",
-            "| Metric | Canonical | Replay | Relative difference |",
-            "| --- | ---: | ---: | ---: |",
-        ]
-    )
-    for row in report["metrics"]:
-        lines.append(
-            f"| {row['metric']} | {row['canonical']:.6g} | {row['replay']:.6g} | {row['relative_difference']:.3%} |"
-        )
-    (output / "reproduction_report.md").write_text(
-        "\n".join(lines) + "\n", encoding="utf-8"
-    )
