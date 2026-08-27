@@ -65,6 +65,28 @@ def _fixture_manifest(path: Path, payload: bytes = b"fixture") -> Path:
     return path
 
 
+def _fixture_data_dir(path: Path) -> Path:
+    path.mkdir()
+    fields = ("path", "bytes", "sha256")
+    rows: list[dict[str, str | int]] = []
+    for index in range(5):
+        filename = f"dataset-{index}.bin"
+        payload = f"dataset-{index}".encode()
+        (path / filename).write_bytes(payload)
+        rows.append(
+            {
+                "path": f"data/{filename}",
+                "bytes": len(payload),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            }
+        )
+    with (path / "CHECKSUMS.tsv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, delimiter="\t")
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
+
+
 @pytest.mark.parametrize(
     ("arguments", "needle"),
     [
@@ -109,6 +131,60 @@ def test_setup_check_reports_missing_data_without_a_traceback(tmp_path: Path) ->
     assert result.returncode == 1
     assert json.loads(result.stdout)["processed_data"] == "invalid"
     assert "Traceback" not in result.stderr
+
+
+def test_setup_check_ignores_unrelated_files_in_the_data_directory(
+    tmp_path: Path,
+) -> None:
+    """An extra download-metadata file must not invalidate checksum-pinned data."""
+    data_dir = _fixture_data_dir(tmp_path / "data")
+    (data_dir / "dataset-0.bin:Zone.Identifier").write_text(
+        "[ZoneTransfer]\nZoneId=3\n", encoding="utf-8"
+    )
+
+    assert cli._check_processed_data(data_dir)
+
+
+def test_setup_check_requires_every_artifact_in_the_selected_profile(
+    tmp_path: Path,
+) -> None:
+    """Valid data alone must not report a ready core installation."""
+    payload = b"fixture"
+    manifest = _fixture_manifest(tmp_path / "manifest.tsv", payload)
+    data_dir = _fixture_data_dir(tmp_path / "data")
+    artifact_root = tmp_path / "cache"
+    arguments = (
+        "setup",
+        "--check",
+        "--data-dir",
+        str(data_dir),
+        "--manifest",
+        str(manifest),
+        "--artifact-root",
+        str(artifact_root),
+        "--profile",
+        "core",
+        "--json",
+    )
+
+    missing = _run(*arguments)
+    assert missing.returncode == 1
+    assert json.loads(missing.stdout)["required_artifacts"] == {
+        "present": 0,
+        "profile": "core",
+        "total": 1,
+    }
+
+    installed = artifact_root / "models/core/fixture/best_model.pt"
+    installed.parent.mkdir(parents=True)
+    installed.write_bytes(payload)
+    present = _run(*arguments)
+    assert present.returncode == 0, present.stderr
+    assert json.loads(present.stdout)["required_artifacts"] == {
+        "present": 1,
+        "profile": "core",
+        "total": 1,
+    }
 
 
 def test_fetch_without_source_explains_release_url_or_bundle(tmp_path: Path) -> None:

@@ -68,6 +68,7 @@ def _verify_parser() -> argparse.ArgumentParser:
 def _setup_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="scenarioflow setup")
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--profile", default="core")
     parser.add_argument("--data-dir", type=Path, default=_repository_root() / "data")
     parser.add_argument("--manifest", type=Path, default=default_manifest_path())
     parser.add_argument("--artifact-root", type=Path, default=Path("artifacts/cache"))
@@ -139,10 +140,7 @@ def _check_processed_data(data_dir: Path) -> bool:
     if len(rows) != 5:
         return False
     expected_names = {Path(row["path"]).name for row in rows}
-    actual_names = {
-        path.name for path in data_dir.iterdir() if path.is_file() and path != checksums
-    }
-    if actual_names != expected_names:
+    if len(expected_names) != len(rows):
         return False
     for row in rows:
         path = data_dir / Path(row["path"]).name
@@ -162,13 +160,23 @@ def _run_setup(arguments: list[str]) -> int:
     if not args.check:
         parser.error("setup is non-mutating; use --check")
     resolver = ArtifactResolver.from_tsv(args.manifest)
+    required_records = resolver.for_profile(args.profile)
     statuses = resolver.verify(
         [record.artifact_id for record in resolver.records], args.artifact_root
     )
+    statuses_by_id = {status.artifact_id: status for status in statuses}
+    required_statuses = [
+        statuses_by_id[record.artifact_id] for record in required_records
+    ]
     document = {
         "package": "ok",
         "processed_data": "ok" if _check_processed_data(args.data_dir) else "invalid",
         "artifact_manifest": "ok",
+        "required_artifacts": {
+            "profile": args.profile,
+            "present": sum(status.state == "present" for status in required_statuses),
+            "total": len(required_statuses),
+        },
         "external_artifacts": {
             "present": sum(status.state == "present" for status in statuses),
             "total": len(statuses),
@@ -181,10 +189,21 @@ def _run_setup(arguments: list[str]) -> int:
         print(f"processed data: {document['processed_data']}")
         print(f"artifact manifest: {document['artifact_manifest']}")
         print(
+            f"required artifacts ({args.profile}): "
+            f"{document['required_artifacts']['present']}/"
+            f"{document['required_artifacts']['total']} present"
+        )
+        print(
             "external artifacts: "
             f"{document['external_artifacts']['present']}/{document['external_artifacts']['total']} present"
         )
-    return 0 if document["processed_data"] == "ok" else 1
+    return (
+        0
+        if document["processed_data"] == "ok"
+        and document["required_artifacts"]["present"]
+        == document["required_artifacts"]["total"]
+        else 1
+    )
 
 
 def _run_fetch(arguments: list[str]) -> int:

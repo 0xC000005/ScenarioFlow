@@ -107,4 +107,7 @@ EOF
   fi
   exit 1
 fi
-uv run scenarioflow setup --check --artifact-root "$ARTIFACT_ROOT"
+uv run scenarioflow setup \
+  --check \
+  --profile "$PROFILE" \
+  --artifact-root "$ARTIFACT_ROOT"

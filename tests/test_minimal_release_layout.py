@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -136,4 +137,56 @@ def test_public_wrappers_forward_custom_inference_without_default_checkpoint(
         "-m scenarioflow.reproduction.finetune_rollouts --output-dir custom/stage2",
         "-m scenarioflow.reproduction.inference "
         "--checkpoint custom/stage2.pt --output-dir custom/inference",
+    ]
+
+
+def test_setup_wrapper_checks_the_profile_it_just_fetched(tmp_path: Path) -> None:
+    """A successful full fetch must not finish with a core-only readiness check."""
+    release = tmp_path / "release"
+    scripts = release / "scripts"
+    scripts.mkdir(parents=True)
+    shutil.copy2(ROOT / "scripts/setup.sh", scripts / "setup.sh")
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    artifact_root = tmp_path / "artifacts"
+    calls = tmp_path / "uv-calls.txt"
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    uv = fake_bin / "uv"
+    uv.write_text(
+        "#!/usr/bin/env bash\n" 'printf \'%s\\n\' "$*" >> "$SCENARIOFLOW_TEST_CALLS"\n',
+        encoding="utf-8",
+    )
+    uv.chmod(0o755)
+    environment = {
+        **os.environ,
+        "PATH": f"{fake_bin}:{os.environ['PATH']}",
+        "SCENARIOFLOW_TEST_CALLS": str(calls),
+    }
+
+    result = subprocess.run(
+        [
+            "bash",
+            str(scripts / "setup.sh"),
+            "--profile",
+            "all",
+            "--bundle-dir",
+            str(bundle),
+            "--artifact-root",
+            str(artifact_root),
+        ],
+        cwd=release,
+        env=environment,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == [
+        "sync --locked",
+        "run scenarioflow fetch "
+        f"--profile all --bundle-dir {bundle} --artifact-root {artifact_root}",
+        "run scenarioflow setup --check "
+        f"--profile all --artifact-root {artifact_root}",
     ]
