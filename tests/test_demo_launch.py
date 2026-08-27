@@ -46,6 +46,7 @@ def test_launch_demo_builds_only_the_selected_backend(
         data_dir=tmp_path / "data",
         host="127.0.0.1",
         port=port,
+        root_path="/demo",
     )
 
     assert result == 0
@@ -63,6 +64,7 @@ def test_launch_demo_builds_only_the_selected_backend(
         {
             "server_name": "127.0.0.1",
             "server_port": port,
+            "root_path": "/demo",
             "share": False,
             "show_error": False,
         }

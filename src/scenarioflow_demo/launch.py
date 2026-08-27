@@ -51,6 +51,7 @@ def launch_demo(
     data_dir: str | Path,
     host: str,
     port: int,
+    root_path: str | None = None,
 ) -> int:
     """Build one backend lazily and serve it without creating a public tunnel."""
     builders = {
@@ -69,6 +70,7 @@ def launch_demo(
     app.launch(
         server_name=host,
         server_port=int(port),
+        root_path=root_path,
         share=False,
         show_error=False,
     )

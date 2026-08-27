@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_IMAGE = "scenarioflow-narrative-to-scenario"
 FRONTEND_IMAGE = "scenarioflow-frontend"
 PUBLISH_WORKFLOW = ROOT / ".github" / "workflows" / "publish-container.yml"
+NGINX_CONFIG = ROOT / "deploy" / "nginx.conf"
 
 
 def _compose_config() -> dict[str, object]:
@@ -77,6 +78,8 @@ def test_compose_uses_native_demo_commands_and_separate_build_targets() -> None:
         "0.0.0.0",
         "--port",
         "7860",
+        "--root-path",
+        "/g1",
     ]
     assert second["command"] == [
         "scenarioflow",
@@ -87,6 +90,8 @@ def test_compose_uses_native_demo_commands_and_separate_build_targets() -> None:
         "0.0.0.0",
         "--port",
         "7861",
+        "--root-path",
+        "/g2",
     ]
 
 
@@ -104,7 +109,12 @@ def test_compose_mounts_runtime_inputs_without_writable_data_or_artifacts() -> N
     codex = _volume_by_target(
         services["scenario-to-narrative"], "/run/scenarioflow/codex"
     )
-    assert codex["type"] == "bind" and codex["read_only"] is True
+    assert codex["type"] == "bind" and codex.get("read_only", False) is False
+
+
+def test_nginx_preserves_the_external_host_and_port() -> None:
+    config = NGINX_CONFIG.read_text(encoding="utf-8")
+    assert "proxy_set_header Host $http_host;" in config
 
 
 def _require_built_runtime() -> None:

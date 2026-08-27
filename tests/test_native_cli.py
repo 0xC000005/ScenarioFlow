@@ -286,6 +286,8 @@ def test_demo_launch_forwards_reader_facing_arguments(
             "127.0.0.1",
             "--port",
             "9010",
+            "--root-path",
+            "/g1",
         ]
     )
 
@@ -298,6 +300,7 @@ def test_demo_launch_forwards_reader_facing_arguments(
             "data_dir": tmp_path / "data",
             "host": "127.0.0.1",
             "port": 9010,
+            "root_path": "/g1",
         }
     ]
 

@@ -96,6 +96,7 @@ def _launch_parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-dir", type=Path, default=_repository_root() / "data")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int)
+    parser.add_argument("--root-path")
     return parser
 
 
@@ -284,6 +285,7 @@ def _run_demo(arguments: list[str]) -> int:
                 if args.port is not None
                 else 7860 if args.demo == "narrative-to-scenario" else 7861
             ),
+            root_path=args.root_path,
         )
     raise ArtifactError(f"unknown demo command: {arguments[0]}")
 
