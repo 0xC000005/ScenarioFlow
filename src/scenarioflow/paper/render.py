@@ -25,6 +25,7 @@ from .plots import (
 from .tables import (
     BenchmarkExportError,
     _write_output_batch,
+    materialize_preserved_table_views,
     verify_dollar_liquidity_authorities,
     verify_preserved_table_views,
 )
@@ -391,6 +392,7 @@ def render_paper_assets(
         raise PaperRenderError("required released paper evidence is unavailable")
 
     generated: dict[str, Path] = {}
+    materialized_preserved: dict[str, Path] = {}
     try:
         if mode in {"all", "tables"}:
             verify_dollar_liquidity_authorities(
@@ -402,6 +404,11 @@ def render_paper_assets(
             REPOSITORY_ROOT, REPOSITORY_ROOT / "paper_assets" / "ASSETS.tsv"
         )
         if mode in {"all", "tables"}:
+            materialized_preserved = materialize_preserved_table_views(
+                REPOSITORY_ROOT,
+                REPOSITORY_ROOT / "paper_assets" / "ASSETS.tsv",
+                output / "tables",
+            )
             generated.update(_render_tables(resolver, artifact_root, output))
         if mode in {"all", "plots"}:
             generated.update(_render_plots(resolver, artifact_root, output))
@@ -417,6 +424,9 @@ def render_paper_assets(
         "mode": mode,
         "output_dir": str(output),
         "generated": {key: str(path) for key, path in sorted(generated.items())},
+        "materialized_preserved": {
+            key: str(path) for key, path in sorted(materialized_preserved.items())
+        },
         "preserved_only": {
             key: {
                 "path": str(path),

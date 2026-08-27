@@ -42,7 +42,25 @@ EXACT_PLOT_IDENTITIES = {
     ),
 }
 
+PRESERVED_BENCHMARK_IDENTITIES = {
+    "fmts.benchmark-full": (
+        5_436,
+        "521f596246bbd74b9ed2b2735977d6ba606b4bc91f36cdfba8b2d06baf9492fb",
+    ),
+    "fmts.benchmark-short": (
+        4_231,
+        "b505c03adbc507c01b8d0fffb1444ab4a0b85a06b32a73998d0a2dbae27c5e0d",
+    ),
+    "icaif.benchmark": (
+        4_212,
+        "915f6a3cafd464b9d0e911fdb77a5530044dc09a9f29f44b485ebdddafb54943",
+    ),
+}
+
 TABLE_IDENTITIES = {
+    "fmts-benchmark-full.tex": PRESERVED_BENCHMARK_IDENTITIES["fmts.benchmark-full"],
+    "fmts-benchmark-short.tex": PRESERVED_BENCHMARK_IDENTITIES["fmts.benchmark-short"],
+    "icaif-benchmark.tex": PRESERVED_BENCHMARK_IDENTITIES["icaif.benchmark"],
     "fmts-multiseed.tex": (
         7_398,
         "a04e9cdf9fc8c0cb36e1606e479d894b7255c91311ae678e257e690546878192",
@@ -58,21 +76,6 @@ TABLE_IDENTITIES = {
     "icaif-dollar-liquidity.tex": (
         2_422,
         "a49f1a6a9c2e0363d0ef86e30198ed909166dfd8fbf0a80cde9b8c22941bc767",
-    ),
-}
-
-PRESERVED_BENCHMARK_IDENTITIES = {
-    "fmts.benchmark-full": (
-        5_436,
-        "521f596246bbd74b9ed2b2735977d6ba606b4bc91f36cdfba8b2d06baf9492fb",
-    ),
-    "fmts.benchmark-short": (
-        4_231,
-        "b505c03adbc507c01b8d0fffb1444ab4a0b85a06b32a73998d0a2dbae27c5e0d",
-    ),
-    "icaif.benchmark": (
-        4_212,
-        "915f6a3cafd464b9d0e911fdb77a5530044dc09a9f29f44b485ebdddafb54943",
     ),
 }
 
@@ -193,6 +196,9 @@ def test_public_launcher_validates_released_numerical_outputs(tmp_path: Path) ->
     report = json.loads(completed.stdout)
     assert report["mode"] == "all"
     assert set(report["preserved_only"]) == set(PRESERVED_BENCHMARK_IDENTITIES)
+    assert set(report["materialized_preserved"]) == set(
+        PRESERVED_BENCHMARK_IDENTITIES
+    )
     assert {entry["verification"] for entry in report["preserved_only"].values()} == {
         "exact identity; declared paper-source provenance; "
         "frozen benchmark row checked"

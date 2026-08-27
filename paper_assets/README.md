@@ -44,6 +44,9 @@ The byte-identical generated outputs are:
   narrative/start-only arrays;
 - the joint-factor fan-selection JSON.
 
+The same command also places the exact checksum-verified ICAIF benchmark table
+and both FMTS benchmark table views in the output directory.
+
 The ICAIF nine-panel marginal, cross-cell sensitivity, and joint-factor fan
 figures are deterministic within one installed environment and are
 `verified-from-evidence`. The launcher compares every regenerated panel with
@@ -63,13 +66,13 @@ claimed as an output of the nine-panel recipe.
 
 The final compact FMTS benchmark tables and the final ICAIF benchmark table do
 not have an exact surviving generator. They remain `preserved-only`: the paper
-command verifies their exact bytes and checks the surviving ScenarioFlow row
-values against checksum-pinned frozen benchmark results. The relationship to
-the named camera-ready/selected-source file is declared provenance, not a
-mechanically verified source transformation. The command does not copy these
-views into the output directory or claim to regenerate their final rows. A
-fresh benchmark aggregate under `scenarioflow.benchmark` is a new result, not
-a byte-exact reconstruction of those final camera-ready views.
+command verifies their exact bytes, checks the surviving ScenarioFlow row
+values against checksum-pinned frozen benchmark results, and places the
+verified tables in the caller's output directory. The relationship to the
+named camera-ready/selected-source file is declared provenance, not a
+mechanically verified source transformation. A fresh benchmark aggregate under
+`scenarioflow.benchmark` is a new result, not a byte-exact reconstruction of
+those final camera-ready views.
 
 No historical experiment tree, numbered experiment route, LaTeX workspace, or
 checkpoint-driven plot launcher is restored by this workflow.

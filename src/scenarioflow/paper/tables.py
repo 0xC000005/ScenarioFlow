@@ -405,3 +405,21 @@ def verify_preserved_table_views(
             ) from error
         verified[asset_id] = path
     return verified
+
+
+def materialize_preserved_table_views(
+    repository_root: Path, asset_manifest: Path, output_dir: Path
+) -> dict[str, Path]:
+    """Place the verified camera-ready benchmark views in a caller-owned directory."""
+    verified = verify_preserved_table_views(repository_root, asset_manifest)
+    destination = Path(output_dir)
+    outputs = {
+        asset_id: destination / source.name for asset_id, source in verified.items()
+    }
+    _write_output_batch(
+        {
+            outputs[asset_id]: source.read_bytes()
+            for asset_id, source in verified.items()
+        }
+    )
+    return outputs
