@@ -65,6 +65,12 @@ _ENTRYPOINTS = {
     ),
 }
 
+
+def _active_python() -> str:
+    venv_python = Path(sys.prefix) / "bin" / "python"
+    return str(venv_python if venv_python.is_file() else Path(sys.executable))
+
+
 _OBSOLETE_OPTIONS = {
     "scenarioflow.reproduction.train_next_step": {
         "--sample_windows",
@@ -267,7 +273,7 @@ def _materialize_node(
         _replace_frozen_path(str(value), model_root, result_root)
         for value in frozen_command[2:]
     ]
-    command = [sys.executable, "-m", module, *tail]
+    command = [_active_python(), "-m", module, *tail]
     command = _remove_options(command, _OBSOLETE_OPTIONS.get(module, set()))
     if module == "scenarioflow.benchmark.evaluate_scenarioflow":
         _replace_option(command, "--candidate", node["candidate"])

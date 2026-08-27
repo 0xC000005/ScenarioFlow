@@ -165,7 +165,9 @@ def test_frozen_protocol_materializes_all_clean_final_commands(tmp_path: Path) -
 
     for node in materialized["commands"]:
         command = node["command"]
-        assert command[:2] == [sys.executable, "-m"]
+        assert Path(command[0]).name == "python"
+        assert Path(command[0]).samefile(sys.executable)
+        assert command[1] == "-m"
         assert "experiments/" not in " ".join(command)
         assert "frozen-source://" not in " ".join(command)
         assert _option(command, "--device") == "cpu"
