@@ -143,6 +143,7 @@ def evaluate_samples(
     validation_block: Any,
     sample_raw: np.ndarray,
     output_dir: Path,
+    artifact_dir: Path | None = None,
     save_window_scores: bool,
 ) -> dict[str, Any]:
     raw_history = validation_block.history_state.astype(np.float32)
@@ -192,7 +193,7 @@ def evaluate_samples(
             sample_delta, truth_delta, factor_names, iv_count=25
         ),
     }
-    candidate_dir = output_dir / candidate
+    candidate_dir = artifact_dir if artifact_dir is not None else output_dir / candidate
     candidate_dir.mkdir(parents=True, exist_ok=True)
     maybe_write_window_score_artifact(
         enabled=save_window_scores,

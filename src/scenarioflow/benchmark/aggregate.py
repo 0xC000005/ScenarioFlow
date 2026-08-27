@@ -236,7 +236,8 @@ def _load_window_scores(
         "Variogram": float(np.asarray(arrays["variogram_h30_contributions"]).mean()),
     }
     for metric, actual in checks.items():
-        if not math.isclose(actual, metrics[metric], rel_tol=1e-6, abs_tol=1e-8):
+        # Window contributions are recomputed in float64 from float32 evaluator arrays.
+        if not math.isclose(actual, metrics[metric], rel_tol=1e-4, abs_tol=1e-8):
             raise AggregationContractError(
                 f"window-score {metric} does not match result JSON: {path}"
             )

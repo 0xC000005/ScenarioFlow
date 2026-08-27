@@ -371,6 +371,31 @@ def test_aggregate_rejects_hashed_npz_that_disagrees_with_result_contract(
     assert not (result_root / "aggregate").exists()
 
 
+def test_aggregate_accepts_float_recomputation_rounding(
+    completed_grid: tuple[dict, Path, Path, Path],
+) -> None:
+    payload, _model_root, result_root, manifest = completed_grid
+    node = next(
+        item
+        for item in payload["commands"]
+        if item["id"] == "eval:random_walk:rollout_2001"
+    )
+    scores = _artifact(node, "window_scores.npz")
+    with np.load(scores, allow_pickle=False) as loaded:
+        arrays = {name: loaded[name] for name in loaded.files}
+    arrays["energy_contributions"] *= 1.0 + 5e-5
+    arrays["variogram_h30_contributions"] *= 1.0 - 5e-5
+    np.savez_compressed(scores, **arrays)
+    _record_completion(node, payload)
+
+    summary = aggregate_study(
+        protocol_manifest=manifest,
+        output_dir=result_root / "aggregate",
+    )
+
+    assert summary["artifact_kind"] == "semantic_rerun_output"
+
+
 def test_resume_all_skips_complete_fixture_and_writes_stable_aggregate(
     completed_grid: tuple[dict, Path, Path, Path],
 ) -> None:

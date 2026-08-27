@@ -138,6 +138,7 @@ def main(argv: list[str] | None = None) -> None:
         validation_block=validation_block,
         sample_raw=sample_raw,
         output_dir=args.output_dir,
+        artifact_dir=args.output_dir,
         save_window_scores=args.save_window_scores,
     )
 
