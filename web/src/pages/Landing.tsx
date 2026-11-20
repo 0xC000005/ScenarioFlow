@@ -1,222 +1,288 @@
-import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { FactorGrid } from "@/components/FactorGrid";
-import PipelineSchematic from "@/components/PipelineSchematic";
+import { motion, useReducedMotion } from "framer-motion";
+import ScenarioToNarrative from "@/components/vg/ScenarioToNarrative";
+import HeroCrude from "@/components/vg/landing/HeroCrude";
+import BeforeAfterGrid from "@/components/vg/landing/BeforeAfterGrid";
+import EmbeddingMap from "@/components/vg/landing/EmbeddingMap";
+import ScrollStory from "@/components/vg/story/ScrollStory";
+import Footer from "@/components/vg/Footer";
 
-function WorkflowComparison() {
-  const imageRef = useRef<HTMLVideoElement>(null);
-  const marketRef = useRef<HTMLVideoElement>(null);
-  const comparisonRef = useRef<HTMLDivElement>(null);
-  const endedVideos = useRef(new Set<HTMLVideoElement>());
-  const inView = useInView(comparisonRef, { amount: 0.25 });
-  const reduced = useReducedMotion() ?? false;
+const POSTER_PDF = "/poster/ScenarioFlow_FMTS2026_poster_61x85cm.pdf";
+const PAPER_PDF = "/paper/ScenarioFlow_FMTS2026_paper.pdf"; // the camera-ready version
+const heroLink = "inline-flex min-h-11 items-center text-vg-white underline decoration-vg-red decoration-2 underline-offset-[6px] transition-colors hover:text-vg-red";
 
-  useEffect(() => {
-    const videos = [imageRef.current, marketRef.current].filter((video): video is HTMLVideoElement => Boolean(video));
-    if (reduced) {
-      videos.forEach((video) => {
-        video.pause();
-        if (Number.isFinite(video.duration)) video.currentTime = Math.max(0, video.duration - 0.04);
-      });
-      return;
-    }
-    if (!inView) {
-      videos.forEach((video) => video.pause());
-      return;
-    }
-    videos.forEach((video) => {
-      if (!endedVideos.current.has(video)) void video.play().catch(() => undefined);
-    });
-  }, [inView, reduced]);
+const btnRed =
+  "inline-flex min-h-12 items-center bg-vg-red px-6 text-[16px] font-semibold text-vg-white transition-colors hover:bg-vg-red-deep";
+const btnOutlineWhite =
+  "inline-flex min-h-12 items-center border-2 border-vg-white px-6 text-[16px] font-semibold text-vg-white transition-colors hover:bg-vg-white hover:text-vg-black";
+const btnBlack =
+  "inline-flex min-h-12 items-center bg-vg-black px-6 text-[16px] font-semibold text-vg-white transition-colors hover:bg-vg-red";
 
-  const handleEnded = (video: HTMLVideoElement) => {
-    endedVideos.current.add(video);
-  };
-
-  const replay = () => {
-    if (reduced) return;
-    const videos = [imageRef.current, marketRef.current].filter((video): video is HTMLVideoElement => Boolean(video));
-    videos.forEach((video) => {
-      video.pause();
-      video.currentTime = 0;
-    });
-    endedVideos.current.clear();
-    if (inView) videos.forEach((video) => void video.play().catch(() => undefined));
-  };
-
-  const videoProps = {
-    muted: true,
-    playsInline: true,
-    preload: "auto" as const,
-    className: "w-full rounded-lg border border-border bg-white",
-  };
-
+/**
+ * The constructivist wedge from the explainer's closing card: a red right triangle cut into a band's top-right
+ * corner. One per band, the site's single recurring diagonal outside the story stage.
+ */
+function Wedge({ className = "" }: { className?: string }) {
   return (
-    <div ref={comparisonRef}>
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
-        <Card className="flex items-center justify-center p-4 sm:p-6">
-          <video
-            ref={imageRef}
-            src="/anim/image_gen.mp4"
-            {...videoProps}
-            onEnded={(event) => handleEnded(event.currentTarget)}
-            onLoadedMetadata={(event) => {
-              if (reduced) event.currentTarget.currentTime = Math.max(0, event.currentTarget.duration - 0.04);
-            }}
-          />
-        </Card>
-        <Card className="flex items-center justify-center p-4 sm:p-6">
-          <video
-            ref={marketRef}
-            src="/anim/market_gen.mp4"
-            {...videoProps}
-            onEnded={(event) => handleEnded(event.currentTarget)}
-            onLoadedMetadata={(event) => {
-              if (reduced) event.currentTarget.currentTime = Math.max(0, event.currentTarget.duration - 0.04);
-            }}
-          />
-        </Card>
-      </div>
-      <div className="mt-3 flex justify-center">
-        <button
-          type="button"
-          onClick={replay}
-          disabled={reduced}
-          className="inline-flex min-h-9 items-center rounded-full border border-border bg-background/70 px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-default disabled:opacity-45"
-          aria-label="Replay image and market generation comparison"
-        >
-          ↻&nbsp; Replay comparison
-        </button>
-      </div>
-    </div>
+    <span
+      aria-hidden
+      className={"pointer-events-none absolute right-0 top-0 block h-[clamp(48px,11vw,168px)] w-[clamp(72px,16vw,248px)] bg-vg-red " + className}
+      style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%)" }}
+    />
   );
 }
 
-function PlotLegend() {
-  const items = [
-    { label: "History", color: "#1d1d1f", width: 1.5, dashed: false },
-    { label: "Generated paths", color: "#0071e3", width: 0.8, dashed: false },
-    { label: "Median", color: "#0071e3", width: 2, dashed: false },
-    { label: "Realized path", color: "#1d1d1f", width: 1.4, dashed: true },
-  ];
+/** Short red vertical bar: the accent mark used for every section kicker. */
+function Kicker({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
-    <div className="mb-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground" aria-label="Chart legend">
-      {items.map((item) => (
-        <span key={item.label} className="inline-flex items-center gap-1.5">
-          <svg width="25" height="8" viewBox="0 0 25 8" aria-hidden>
-            <line x1="1" y1="4" x2="24" y2="4" stroke={item.color} strokeWidth={item.width} strokeDasharray={item.dashed ? "3 2" : undefined} />
+    <p className={"flex items-center gap-3 text-[15px] font-semibold " + (dark ? "text-vg-soft" : "text-vg-mute")}>
+      <span aria-hidden className="block h-5 w-[6px] bg-vg-red" />
+      {children}
+    </p>
+  );
+}
+
+function Hero() {
+  const reduced = useReducedMotion() ?? false;
+  const line = (delay: number) =>
+    reduced
+      ? { initial: false as const }
+      : {
+          initial: { y: "105%" },
+          animate: { y: 0 },
+          transition: { duration: 0.75, delay, ease: [0.2, 0.75, 0.15, 1] as const },
+        };
+  const fade = (delay: number) =>
+    reduced
+      ? { initial: false as const }
+      : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4, delay } };
+
+  return (
+    <section className="bg-vg-black text-vg-white" aria-labelledby="hero-h">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 pb-12 pt-12 sm:px-8 md:pt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-14 lg:pb-16 lg:pt-20">
+        <div className="flex flex-col">
+          <h1 id="hero-h" className="text-vg-h1 lg:text-[clamp(3.5rem,5.5vw,5.75rem)]">
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="block" {...line(0.05)}>Describe the market in words.</motion.span>
+            </span>
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="block text-vg-red" {...line(0.22)}>See its future distribution.</motion.span>
+            </span>
+          </h1>
+          <motion.div {...fade(0.55)}>
+            <div aria-hidden className="mt-8 h-2 w-24 bg-vg-white" />
+            <p className="mt-8 max-w-[34rem] text-[19px] leading-relaxed text-vg-soft">
+              Give ScenarioFlow a market&rsquo;s recent history, and optionally a plain-language description of the
+              conditions, and it generates a conditional distribution of joint, multi-day paths across equities, rates,
+              credit, volatility, FX and commodities.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link to="/demo1" className={btnRed}>Narrative → Scenario</Link>
+              <Link to="/demo2" className={btnOutlineWhite}>Scenario → Narrative</Link>
+            </div>
+            {/* paper and poster up front, so nobody has to scroll to the end for them */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-semibold">
+              <span className="text-vg-grey">FMTS @ NeurIPS 2026 workshop</span>
+              <a href={PAPER_PDF} target="_blank" rel="noopener" className={heroLink}>Paper (PDF)</a>
+              <a href={POSTER_PDF} target="_blank" rel="noopener" className={heroLink}>Poster (PDF)</a>
+              <a href="https://github.com/0xC000005/ScenarioFlow" target="_blank" rel="noopener" className={heroLink}>Code (GitHub)</a>
+            </div>
+          </motion.div>
+        </div>
+        <motion.div {...fade(0.35)}>
+          <HeroCrude />
+        </motion.div>
+      </div>
+      <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-8">
+        <div className="flex items-center gap-4 border-t-2 border-white/20 pt-4 text-[14px] font-semibold text-vg-soft">
+          <span aria-hidden className="block h-5 w-[6px] bg-vg-red" />
+          <span>Keep scrolling: the explainer plays as you scroll, drawn live from the same model output.</span>
+          <svg width="14" height="18" viewBox="0 0 14 18" aria-hidden className="ml-auto shrink-0 text-vg-red">
+            <path d="M7 0v15M1 10l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2.5" />
           </svg>
-          {item.label}
-        </span>
-      ))}
-    </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WorkflowBand({
+  id,
+  dark,
+  paper = false,
+  kicker,
+  title,
+  body,
+  to,
+  cta,
+  children,
+}: {
+  id?: string;
+  dark: boolean;
+  paper?: boolean;
+  kicker: string;
+  title: ReactNode;
+  body: ReactNode;
+  to: string;
+  cta: string;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} className={"relative scroll-mt-14 overflow-hidden " + (dark ? "bg-vg-black text-vg-white" : paper ? "bg-vg-paper text-vg-black" : "bg-vg-white text-vg-black")}>
+      <Wedge />
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 md:py-24">
+        <div className={"border-t-8 pt-8 " + (dark ? "border-vg-white" : "border-vg-black")}>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+            <div>
+              <Kicker dark={dark}>{kicker}</Kicker>
+              <h2 className="mt-4 text-vg-h2">{title}</h2>
+            </div>
+            <div className="lg:pt-10">
+              <p className={"max-w-xl text-[18px] leading-relaxed " + (dark ? "text-vg-soft" : "text-vg-mute")}>{body}</p>
+              <Link to={to} className={"mt-7 " + (dark ? btnRed : btnBlack)}>
+                {cta}
+              </Link>
+            </div>
+          </div>
+          <div className="mt-12">{children}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PaperPoster() {
+  return (
+    <section id="paper" className="relative scroll-mt-14 overflow-hidden bg-vg-paper text-vg-black" aria-labelledby="paper-h">
+      <Wedge className="hidden md:block" />
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-16 md:py-24">
+        <a
+          href={POSTER_PDF}
+          target="_blank"
+          rel="noopener"
+          className="group block border-[6px] border-vg-black bg-vg-white"
+          aria-label="Open the conference poster (PDF, new tab)"
+        >
+          <img
+            src="/poster/poster_preview.png"
+            alt="ScenarioFlow conference poster for FMTS at NeurIPS 2026"
+            width={807}
+            height={1124}
+            loading="lazy"
+            className="block aspect-[807/1124] h-auto w-full transition-opacity group-hover:opacity-90"
+          />
+        </a>
+        <div className="flex flex-col md:pt-4">
+          <Kicker>Paper and poster</Kicker>
+          <h2 id="paper-h" className="mt-4 text-vg-h2">
+            ScenarioFlow: multimodal market conditioning for heterogeneous multivariate time-series simulation
+          </h2>
+          <div className="mt-8 flex">
+            <span aria-hidden className="w-[10px] shrink-0 bg-vg-red" />
+            <p className="bg-vg-black px-4 py-3 text-[16px] font-semibold text-vg-white">FMTS @ NeurIPS 2026 workshop</p>
+          </div>
+          <p className="mt-8 max-w-xl text-[18px] leading-relaxed text-vg-mute">
+            The paper describes the generator behind both demos: one model that conditions on recent market history, and
+            optionally on a plain-language description of the conditions, and returns a distribution of joint paths rather
+            than a single forecast.
+          </p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <a
+              href={PAPER_PDF}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-12 items-center bg-vg-black px-6 text-[16px] font-semibold text-vg-white transition-colors hover:bg-vg-red"
+            >
+              Read the paper
+            </a>
+            <a
+              href={POSTER_PDF}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-12 items-center border-2 border-vg-black px-6 text-[16px] font-semibold transition-colors hover:bg-vg-black hover:text-vg-white"
+            >
+              Poster PDF
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
 export default function Landing() {
-  const reduced = useReducedMotion() ?? false;
-  const heroInitial = reduced ? false : { opacity: 0, y: 8 };
-  const heroTransition = reduced ? { duration: 0 } : { duration: 0.22, ease: "easeOut" as const };
-
   return (
     <main>
-      {/* HERO — foundation, video analogy */}
-      <section className="mx-auto max-w-6xl px-6 pb-20 pt-28 text-center">
-        <motion.h1 initial={heroInitial} animate={{ opacity: 1, y: 0 }} transition={heroTransition} className="mx-auto mt-4 max-w-3xl text-[2.5rem] font-semibold leading-[1.06] tracking-tight sm:text-5xl">
-          ScenarioFlow: A Temporal Foundation Model with Multimodal Market Conditioning
-        </motion.h1>
-        <motion.p initial={heroInitial} animate={{ opacity: 1, y: 0 }} transition={{ ...heroTransition, delay: reduced ? 0 : 0.035 }} className="mx-auto mt-5 max-w-2xl text-xl leading-relaxed text-muted-foreground">
-          Given numerical history or a natural-language description, ScenarioFlow generates a conditional distribution
-          of joint, multi-day paths across many variables. The resulting scenarios achieve state-of-the-art fidelity and
-          realism.
-        </motion.p>
-        <motion.div initial={heroInitial} animate={{ opacity: 1, y: 0 }} transition={{ ...heroTransition, delay: reduced ? 0 : 0.07 }} className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/demo1" className="flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--primary)_40%,var(--border))] bg-[color-mix(in_oklab,var(--primary)_8%,white)] px-5 py-3 text-[17px] font-medium text-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary)_15%,white)]">
-            <span className="rounded-full bg-[color-mix(in_oklab,var(--primary)_12%,white)] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">Demo</span>
-            Narrative → Scenario
-          </Link>
-          <Link to="/demo2" className="flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--primary)_40%,var(--border))] bg-[color-mix(in_oklab,var(--primary)_8%,white)] px-5 py-3 text-[17px] font-medium text-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--primary)_15%,white)]">
-            <span className="rounded-full bg-[color-mix(in_oklab,var(--primary)_12%,white)] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">Demo</span>
-            Scenario → Narrative
-          </Link>
-        </motion.div>
-      </section>
+      <Hero />
+      <ScrollStory />
 
-      {/* FOUNDATION — generating scenarios */}
-      <section className="border-y border-border bg-secondary/40 py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-center text-3xl font-semibold tracking-tight">From Images to Market Time Series</h2>
-          <p className="mx-auto mt-3 max-w-3xl text-center text-lg leading-relaxed text-muted-foreground">
-            Nano Banana generates images, Sora generates videos, and ScenarioFlow applies the same generative idea to
-            markets. A market snapshot is like a frame, and a multi-day scenario is a sequence of connected frames.
-          </p>
-          <WorkflowComparison />
-          <p className="mx-auto mt-5 max-w-3xl text-center text-base leading-relaxed text-muted-foreground">
-            Autoregressive conditional flow matching transforms Gaussian noise into the next joint market state and
-            repeats this process to build a complete time series. Through self-supervised training, ScenarioFlow learns
-            how markets move together across variables and through time, rather than prescribing separate dynamics asset
-            by asset.
-          </p>
+      <WorkflowBand
+        id="explore"
+        dark={false}
+        kicker="Before and after your words · Narrative → Scenario"
+        title="Same market state. Add the words. Every range changes."
+        body={
+          <>
+            Grey is each market&rsquo;s 30-day range from market state alone; red is the same state plus the words of the
+            20 January 2016 query. The words widen some ranges and narrow others, by drawing on related past periods.
+            They change the conditional distribution of outcomes; they are not a forecast of where a market goes.
+          </>
+        }
+        to="/demo1"
+        cta="Try your own words"
+      >
+        <BeforeAfterGrid />
+      </WorkflowBand>
 
-          <div className="mt-12">
-            <div className="text-center text-xl font-semibold">One Joint Scenario Distribution Across Markets</div>
-            <p className="mx-auto mt-1.5 mb-6 max-w-2xl text-center text-[15px] leading-relaxed text-muted-foreground">
-              The panels show equities, rates, credit, volatility, FX, and commodities evolving together within the same
-              generated scenario.
-            </p>
-            <PlotLegend />
-            <Card className="p-4 sm:p-6"><FactorGrid src="/data/panel_startonly.json" /></Card>
-          </div>
-        </div>
-      </section>
+      <WorkflowBand
+        id="map"
+        paper
+        dark={false}
+        kicker="Where your words land"
+        title="Your words become a point among 4,010 past markets."
+        body={
+          <>
+            The model keeps a memory of every past 30-day market. Your words are placed on the same map, and the closest
+            past markets are the ones it draws on: the same three dates as above. It is the map from the story&rsquo;s
+            chapter{" "}
+            <a
+              href="#story"
+              onClick={(e) => {
+                e.preventDefault();
+                window.dispatchEvent(new CustomEvent("sf:story-goto", { detail: { i: 5, t: 59.6 } }));
+              }}
+              className="font-semibold text-vg-black underline decoration-vg-red decoration-2 underline-offset-4 hover:text-vg-red"
+            >
+              &ldquo;What the model remembers&rdquo;
+            </a>
+            .
+          </>
+        }
+        to="/demo1"
+        cta="Open the narrative demo"
+      >
+        <EmbeddingMap />
+      </WorkflowBand>
 
-      {/* APPLICATIONS — what you can do with it */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Built on the foundation</p>
-        <h2 className="mt-3 text-center text-3xl font-semibold tracking-tight">What you can do with it</h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-lg text-muted-foreground">
-          Generate market scenarios from language, or summarize an observed market episode.
-        </p>
+      <WorkflowBand
+        dark
+        kicker="The other direction · Scenario → Narrative"
+        title="Paths in. A plain-language account out."
+        body={
+          <>
+            Choose an observed 30-day market episode. A language model reads the joint moves across markets and writes
+            them up in plain language, so a scenario can be discussed in the words a risk committee already uses.
+          </>
+        }
+        to="/demo2"
+        cta="Open the episode demo"
+      >
+        <ScenarioToNarrative />
+      </WorkflowBand>
 
-        <div className="mt-10 grid gap-6">
-          <Card className="flex flex-col p-6">
-            <div className="text-lg font-semibold">Narrative → Scenario</div>
-            <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">
-              Describe a market condition and generate its conditional distribution.
-            </p>
-            <div className="my-5"><PipelineSchematic direction="narrative-to-scenario" /></div>
-            <motion.div whileTap={reduced ? undefined : { opacity: 0.72 }} transition={{ duration: 0.18 }} className="mt-auto">
-              <Link to="/demo1" className="group inline-flex min-h-11 items-center rounded-lg px-1 text-[15px] font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-                Open the demo <span className="ml-1 transition-transform duration-[180ms] group-hover:translate-x-[3px] group-focus-visible:translate-x-[3px]">›</span>
-              </Link>
-            </motion.div>
-          </Card>
-          <Card className="flex flex-col p-6">
-            <div className="text-lg font-semibold">Scenario → Narrative</div>
-            <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">
-              Choose an observed market episode and summarize its movements in plain language.
-            </p>
-            <div className="my-5"><PipelineSchematic direction="scenario-to-narrative" /></div>
-            <motion.div whileTap={reduced ? undefined : { opacity: 0.72 }} transition={{ duration: 0.18 }} className="mt-auto">
-              <Link to="/demo2" className="group inline-flex min-h-11 items-center rounded-lg px-1 text-[15px] font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-                Open the demo <span className="ml-1 transition-transform duration-[180ms] group-hover:translate-x-[3px] group-focus-visible:translate-x-[3px]">›</span>
-              </Link>
-            </motion.div>
-          </Card>
-        </div>
-      </section>
-
-      <footer className="border-t border-border py-10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-sm text-muted-foreground">
-          <span>ScenarioFlow</span>
-          <span className="flex gap-5">
-            <a href="#" title="placeholder" className="hover:text-foreground">Paper</a>
-            <a href="#" title="placeholder" className="hover:text-foreground">GitHub</a>
-          </span>
-        </div>
-      </footer>
+      <PaperPoster />
+      <Footer />
     </main>
   );
 }

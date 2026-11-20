@@ -16,7 +16,7 @@ def _sha256(path: Path) -> str:
 
 
 def test_reviewed_web_snapshot_is_complete_and_byte_exact() -> None:
-    """All 41 reviewed frontend files must match the frozen source authority."""
+    """All 70 released frontend files must match the frozen source authority."""
     with AUTHORITY.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
         assert tuple(reader.fieldnames or ()) == (
@@ -29,8 +29,8 @@ def test_reviewed_web_snapshot_is_complete_and_byte_exact() -> None:
         )
         rows = list(reader)
 
-    assert len(rows) == 41
-    assert len({row["path"] for row in rows}) == 41
+    assert len(rows) == 70
+    assert len({row["path"] for row in rows}) == 70
     for row in rows:
         assert row["path"].startswith("web/")
         path = ROOT / row["path"]
@@ -41,8 +41,8 @@ def test_reviewed_web_snapshot_is_complete_and_byte_exact() -> None:
         assert _sha256(path) == row["released_sha256"]
         assert row["transformation"] in {
             "identity",
-            "lint-only-v1",
-            "security-lock-v1",
+            "public-release-v1",
+            "camera-ready-paper-v1",
         }
 
     ignored = {"node_modules", "dist"}
@@ -56,8 +56,31 @@ def test_reviewed_web_snapshot_is_complete_and_byte_exact() -> None:
     assert actual == {row["path"] for row in rows}
     changed = [row for row in rows if row["transformation"] != "identity"]
     assert [row["path"] for row in changed] == [
+        "web/.gitignore",
+        "web/eslint.config.js",
         "web/package-lock.json",
-        "web/src/components/ui/badge.tsx",
+        "web/package.json",
+        "web/public/data/memory_map_story.json",
+        "web/public/data/narrative_shift_2016-01-20.json",
+        "web/public/data/vg/scenario_to_narrative_2008-10-31.json",
+        "web/public/paper/ScenarioFlow_FMTS2026_paper.pdf",
+        "web/public/story/engine.js",
+        "web/src/components/ScenarioComparisonTable.tsx",
+        "web/src/components/ScenarioFan.tsx",
+        "web/src/components/Sparkline.tsx",
+        "web/src/components/vg/ExplainerVideo.tsx",
+        "web/src/components/vg/Footer.tsx",
+        "web/src/components/vg/Hatch.tsx",
+        "web/src/components/vg/ScenarioToNarrative.tsx",
+        "web/src/components/vg/anim/chart.ts",
+        "web/src/components/vg/landing/BeforeAfterGrid.tsx",
+        "web/src/components/vg/landing/EmbeddingMap.tsx",
+        "web/src/components/vg/landing/HeroCrude.tsx",
+        "web/src/components/vg/story/ScrollStory.tsx",
+        "web/src/data/narratives.ts",
+        "web/src/index.css",
+        "web/src/lib/palette.ts",
+        "web/src/pages/Landing.tsx",
     ]
 
 

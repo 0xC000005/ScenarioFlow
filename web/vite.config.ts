@@ -10,6 +10,8 @@ import path from 'path'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    port: 5180,
+    strictPort: true,
     proxy: {
       '/g1': {
         target: 'http://127.0.0.1:7860',

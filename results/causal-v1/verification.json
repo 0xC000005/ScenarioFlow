@@ -1,0 +1,105 @@
+{
+  "observed_at_utc": "2026-10-02T20:42:09.738208+00:00",
+  "plan_sha256": "5e367444665f6f634c534aff01ea4945e3a36044bdd33ff827119b3cc6bfc15f",
+  "independently_recomputed_checks": [
+    {
+      "candidate": "random_walk",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "bootstrap",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "historical_sim",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "pca_var",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "garch_ccc_gaussian",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "filtered_hs",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "scenarioflow",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "deepvar",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "timegrad",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "path_diffusion",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    },
+    {
+      "candidate": "moirai_1_1_finetuned",
+      "per_window_means_reconciled": true,
+      "origin_indices_reconciled": true,
+      "coverage_reconciled": true,
+      "screen_decisions_recomputed_from_pinned_rules": true
+    }
+  ],
+  "paired_mean_deltas_reconciled": true,
+  "toto_retained_as_failed_without_scores": true,
+  "moirai_energy_concentration": {
+    "top_five_origins": [
+      4184,
+      4127,
+      4186,
+      4430,
+      4139
+    ],
+    "top_five_energy": [
+      23600.21021818742,
+      20969.52106585633,
+      610.2896386012435,
+      134.6948178038001,
+      16.058157975785434
+    ],
+    "top_two_share_of_energy_sum": 0.9470583296783739,
+    "top_five_share_of_energy_sum": 0.9632296577619158
+  },
+  "tests": "21 passed: test_fmts_causal_aggregate.py and test_causal_benchmark_artifacts.py",
+  "limits": "Checks recompute aggregates from saved score contributions, not from regenerated model paths; intervals remain conditional on the selected block and single seed chain."
+}

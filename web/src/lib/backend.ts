@@ -67,7 +67,7 @@ export async function generateScenario(story: string, windowIndex: number): Prom
   const sel: any[] = g?.posterior_ensemble?.selected_support ?? [];
   const analogues: Analogue[] = sel
     .map((s) => ({
-      label: String(s.history_start_date ?? s.window_id ?? "").slice(0, 10),
+      label: String(s.history_end_date ?? s.history_start_date ?? s.window_id ?? "").slice(0, 10), // window end date, as on the landing page
       weight: Number(s.base_support_weight ?? 0),
       cosine: Number(s.memory_support_cosine ?? 0),
       pathCount: Number(s.component_sample_count ?? 0),

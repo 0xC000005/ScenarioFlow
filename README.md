@@ -5,7 +5,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/downloads/)
 [![Ubuntu](https://img.shields.io/badge/platform-Ubuntu-E95420.svg?logo=ubuntu&logoColor=white)](#quick-start)
 [![GHCR](https://img.shields.io/badge/container-GHCR%20v1.0.0-2496ED.svg?logo=docker&logoColor=white)](https://github.com/users/0xC000005/packages/container/package/scenarioflow)
-[![Live demo](https://img.shields.io/badge/live_demo-open-16A34A.svg)](http://138.28.239.185:8766/)
+[![Live demo](https://img.shields.io/badge/live_demo-open-16A34A.svg)](http://138.28.239.185:8767/)
 
 ScenarioFlow is a temporal foundation model for generating conditional,
 multivariate time series. Given numerical market history—or a natural-language
@@ -16,7 +16,42 @@ ScenarioFlow uses autoregressive flow matching to learn how variables evolve
 together across time. This repository includes the model, adaptive-graph variant,
 baselines, processed data, paper results, and two interactive demos.
 
-**Live demo:** [http://138.28.239.185:8766/](http://138.28.239.185:8766/)
+**Live demo:** [http://138.28.239.185:8767/](http://138.28.239.185:8767/)
+
+## Paper
+
+**ScenarioFlow: Multimodal Market Conditioning for Heterogeneous Multivariate
+Time-Series Simulation.** Jingwei Zhang, Patrick Ng, and Michael Andrushchenko.
+NeurIPS 2026 Workshop on Foundation Models for Temporal Systems (FMTS).
+
+- Paper: [camera-ready PDF](web/public/paper/ScenarioFlow_FMTS2026_paper.pdf)
+- Code and results: this repository
+- Archived copy of the code and model files: [OSF](https://osf.io/ywpc5/)
+
+```bibtex
+@inproceedings{zhang2026scenarioflow,
+  title     = {ScenarioFlow: Multimodal Market Conditioning for Heterogeneous
+               Multivariate Time-Series Simulation},
+  author    = {Zhang, Jingwei and Ng, Patrick and Andrushchenko, Michael},
+  booktitle = {NeurIPS 2026 Workshop on Foundation Models for Temporal Systems},
+  year      = {2026}
+}
+```
+
+Version 1.1.0 of this repository accompanies the camera-ready paper. It updates
+the code, results, documentation, and website. The model weights and the
+container image are unchanged from the
+[v1.0.0 release](https://github.com/0xC000005/ScenarioFlow/releases/tag/v1.0.0),
+which is where the setup script downloads them from.
+
+## Requirements
+
+- Linux with [uv](https://docs.astral.sh/uv/) and Python 3.11 or newer.
+  `./scripts/setup.sh` creates the environment and downloads the released
+  weights (about 11 MB for the core model).
+- A GPU is optional. Inference and the checks below run on CPU.
+- The interactive demo additionally needs Docker, an `OPENAI_API_KEY`, and a
+  signed-in Codex CLI.
 
 ## How ScenarioFlow works
 
@@ -37,6 +72,34 @@ Install the environment and fetch the released weights:
 The released weights are used directly; this does not retrain the model. The
 Stage 2 checkpoint is installed at
 `artifacts/cache/models/core/stage2/best_model.pt`.
+
+The first command takes a few minutes on a fresh machine. To draw a small set of
+scenarios right away:
+
+```bash
+./scripts/run_inference.sh --max-windows 4 --samples 8
+```
+
+This writes `build/inference/scenarioflow/scenarios.npz`. Its `scenarios` array
+has shape `(windows, samples, 30 days, 39 variables)` in market units, and its
+`variables` array names the 39 columns: the 25 implied-volatility surface cells
+followed by the 14 other market series.
+
+To use the model from Python:
+
+```python
+import torch
+from scenarioflow import load_model
+
+model, checkpoint = load_model(
+    "artifacts/cache/models/core/stage2/best_model.pt", torch.device("cpu")
+)
+print(model.cfg.history_len, model.cfg.future_len, model.cfg.n_cells)
+```
+
+[`src/scenarioflow/reproduction/inference.py`](src/scenarioflow/reproduction/inference.py)
+shows the remaining steps: building the conditioning history from `data/`,
+sampling, and converting the samples back to market units.
 
 If automatic artifact download is unavailable, download
 `scenarioflow-core-v1.0.0.zip` from the v1.0.0 release, extract it, and run:
@@ -126,6 +189,12 @@ The command uses the released ScenarioFlow sampler and writes its outputs to
 override the released Stage 2 checkpoint or output location. It does not use
 OpenAI or Codex.
 
+With no options the command scores all 441 validation windows with 64 samples
+each, which takes more than ten minutes on CPU and prints nothing until it
+finishes. Pass `--device cuda` to use a GPU, or `--max-windows` and `--samples`
+for a smaller run. `summary.json` lists the variable, metric, and screen names
+alongside their values.
+
 This is released-checkpoint replay: it does not retrain ScenarioFlow or any
 comparison baseline.
 
@@ -196,6 +265,23 @@ Then open `http://127.0.0.1:8766`. The narrative-to-scenario demo turns a
 natural-language condition into a conditional distribution. The
 scenario-to-narrative demo describes a numerical scenario. OpenAI and Codex are used only by the interactive demos.
 
+## Paper results in this repository
+
+| Paper item | Where it lives |
+| --- | --- |
+| Table 1, benchmark on 39 variables | `paper_assets/tables/golden/fmts-benchmark-*.tex`, from `results/frozen/benchmark/` |
+| Table 2, dollar-liquidity example | `paper_assets/tables/golden/fmts-dollar-liquidity-*.tex`, from `results/frozen/dollar-liquidity/` |
+| Multi-seed table (Appendix C.2) | `paper_assets/tables/golden/fmts-multiseed.tex`, from `results/frozen/multiseed/` |
+| Target-disjoint rerun (Appendix C.3) | `paper_assets/tables/golden/fmts-causal-v1.tex`, from [`results/causal-v1/`](results/causal-v1/README.md) |
+| Figures | `paper_assets/figures/` |
+
+The tables and figures are stored as frozen results with checksums.
+[Paper assets](paper_assets/README.md) explains how to verify them and how to
+regenerate the ones that have a surviving generator. The benchmark can be rerun
+from scratch with the commands in the previous section. The target-disjoint
+rerun is released as results only; its data split and checkpoints are not part
+of this release.
+
 ## Repository contents
 
 - `data/`: five checksum-pinned processed market-data files.
@@ -205,19 +291,29 @@ scenario-to-narrative demo describes a numerical scenario. OpenAI and Codex are 
   aggregation, and reporting layer.
 - `artifacts/manifest-v1.tsv`: checksums and release paths for large external files.
 - `paper_assets/`: final paper tables and figures, with reproduction modes.
+- `results/`: frozen numerical results behind the paper tables.
+- `web/`: source of the project website and interactive demo. To work on it
+  outside Docker, run `npm ci` and `npm run dev` in `web/` (Node 22); the dev
+  server proxies `/g1` and `/g2` to the two demo backends on ports 7860 and
+  7861.
 - `tests/`: data and public-release contract tests.
 - `scripts/check_release.py`: secret, host-path, and file-size release checks.
 
 ## Verify the release contract
 
 ```bash
-uv run pytest -q tests/test_release_contract.py
+uv sync --locked --all-extras
+uv run --all-extras pytest -q
 uv run python scripts/check_release.py --all
 ```
 
+Tests that replay the released checkpoints are skipped until
+`./scripts/setup.sh` has fetched them.
+
 ## Docker
 
-The published runtime image supports `linux/amd64` and `linux/arm64`:
+The published runtime image was built from the v1.0.0 release and supports
+`linux/amd64` and `linux/arm64`:
 
 ```bash
 docker pull ghcr.io/0xc000005/scenarioflow:v1.0.0
@@ -251,6 +347,18 @@ The image runs the same training, inference, and reproduction scripts as the
 native release. See the [Databricks deployment note](deploy/databricks/README.md)
 for the push, deployment, and run commands.
 
-See [DATA_SOURCES.md](DATA_SOURCES.md) for the processed-data provenance and
-[Paper assets](paper_assets/README.md) for table and figure reproduction, and
-[LICENSE](LICENSE) for the repository license.
+## Licences
+
+The code in this repository is released under the [MIT License](LICENSE). The
+data and some model files come with their own terms:
+
+- The files in `data/` are provided for research reproduction and remain
+  subject to their providers' terms. See [DATA_SOURCES.md](DATA_SOURCES.md).
+- The fine-tuned Moirai checkpoint and its sample arrays derive from a model
+  released for non-commercial use only. See
+  [THIRD_PARTY.md](THIRD_PARTY.md).
+- The paper, poster, and explainer video under `web/public/` are copyright
+  their authors and are not covered by the MIT License. The institutional
+  logos shown in the website's story are trademarks of their owners.
+
+See [Paper assets](paper_assets/README.md) for table and figure reproduction.

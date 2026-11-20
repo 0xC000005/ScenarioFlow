@@ -8,11 +8,21 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error: E
   render() {
     if (this.state.error) {
       return (
-        <main className="mx-auto max-w-xl px-6 py-24 text-center">
-          <h1 className="text-2xl font-semibold">Something went wrong rendering this view.</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{String(this.state.error.message || this.state.error)}</p>
-          <button onClick={() => { this.setState({ error: null }); location.reload(); }}
-            className="mt-5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">Reload</button>
+        <main className="min-h-[70vh] bg-vg-black text-vg-white">
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-8 sm:py-28">
+            <span aria-hidden className="block h-10 w-2.5 bg-vg-red" />
+            <h1 className="mt-6 max-w-3xl text-vg-h1">Something went wrong rendering this view.</h1>
+            <p className="mt-5 max-w-2xl border-l-2 border-vg-mute pl-4 text-[15px] leading-relaxed text-vg-soft">
+              {String(this.state.error.message || this.state.error)}
+            </p>
+            <button
+              type="button"
+              onClick={() => { this.setState({ error: null }); location.reload(); }}
+              className="mt-8 min-h-12 bg-vg-red px-7 text-[15px] font-bold text-vg-white transition-colors hover:bg-vg-red-deep"
+            >
+              Reload
+            </button>
+          </div>
         </main>
       );
     }

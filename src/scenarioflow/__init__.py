@@ -7,7 +7,7 @@ from .model import (
     save_checkpoint,
 )
 
-__version__ = "0.1.0"
+__version__ = "1.1.0"
 
 __all__ = [
     "GenericStateAwareNormalizedInnovationFMConfig",

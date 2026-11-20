@@ -27,7 +27,7 @@ import sys
 import scenarioflow_demo
 blocked = {'gradio', 'openai', 'plotly', 'torch'} & set(sys.modules)
 assert not blocked, blocked
-assert scenarioflow_demo.__version__ == '0.1.0'
+assert scenarioflow_demo.__version__ == '1.1.0'
 """
     result = subprocess.run(
         [sys.executable, "-c", script],

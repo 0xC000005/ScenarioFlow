@@ -241,6 +241,24 @@ def summarize_joint_quality(
     }
 
 
+METRIC_NAMES = (
+    "crps",
+    "iv_crps",
+    "factor_crps",
+    "energy_score",
+    "variogram_score",
+    "correlation_score",
+    "factor_ks_mean",
+    "factor_tail_q99_ratio_median",
+)
+SCREEN_NAMES = (
+    "all_values_finite",
+    "all_factor_ks_below_0.20",
+    "all_factor_tail_q99_ratios_in_0.5_to_2.0",
+    "conditional_median_mae_not_above_rolled",
+)
+
+
 def evaluate_deck(
     *,
     raw_history: np.ndarray,

@@ -1,0 +1,4707 @@
+{
+  "all_evaluations_complete": false,
+  "candidates": {
+    "bootstrap": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9761919139542717,
+              "mean": 0.9761919139542717,
+              "min": 0.9761919139542717,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.3582311893723977,
+              "mean": 3.3582311893723977,
+              "min": 3.3582311893723977,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.24647753422356594,
+              "mean": 0.24647753422356594,
+              "min": 0.24647753422356594,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.6075283526587225,
+              "mean": 0.6075283526587225,
+              "min": 0.6075283526587225,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.973817082388511,
+              "mean": 0.973817082388511,
+              "min": 0.973817082388511,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 0.8191060190414716,
+              "mean": 0.8191060190414716,
+              "min": 0.8191060190414716,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.8500132353917236,
+              "mean": 3.8500132353917236,
+              "min": 3.8500132353917236,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.330180537613618,
+              "mean": 9.330180537613618,
+              "min": 9.330180537613618,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.08095499608573588,
+              "mean": 0.08095499608573588,
+              "min": 0.08095499608573588,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.013939554357313887,
+              "mean": 0.013939554357313887,
+              "min": 0.013939554357313887,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.3292517006802721,
+              "mean": 0.3292517006802721,
+              "min": 0.3292517006802721,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.9156086149201194,
+              "mean": 0.9156086149201194,
+              "min": 0.9156086149201194,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.19176114890400608,
+              "mean": 0.19176114890400608,
+              "min": 0.19176114890400608,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.017097221943962584,
+              "mean": 0.017097221943962584,
+              "min": 0.017097221943962584,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.048450491307634125,
+              "mean": 0.048450491307634125,
+              "min": 0.048450491307634125,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.5488235979543203,
+              "mean": 1.5488235979543203,
+              "min": 1.5488235979543203,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.20297634601593018,
+              "mean": 0.20297634601593018,
+              "min": 0.20297634601593018,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.1465821293552386,
+              "mean": 0.1465821293552386,
+              "min": 0.1465821293552386,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "deterministic_fit_or_resampling"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9761919139542717,
+          "mean": 0.9761919139542717,
+          "min": 0.9761919139542717,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.3582311893723977,
+          "mean": 3.3582311893723977,
+          "min": 3.3582311893723977,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.24647753422356594,
+          "mean": 0.24647753422356594,
+          "min": 0.24647753422356594,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.6075283526587225,
+          "mean": 0.6075283526587225,
+          "min": 0.6075283526587225,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.973817082388511,
+          "mean": 0.973817082388511,
+          "min": 0.973817082388511,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 0.8191060190414716,
+          "mean": 0.8191060190414716,
+          "min": 0.8191060190414716,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.8500132353917236,
+          "mean": 3.8500132353917236,
+          "min": 3.8500132353917236,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.330180537613618,
+          "mean": 9.330180537613618,
+          "min": 9.330180537613618,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.08095499608573588,
+          "mean": 0.08095499608573588,
+          "min": 0.08095499608573588,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.013939554357313887,
+          "mean": 0.013939554357313887,
+          "min": 0.013939554357313887,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.3292517006802721,
+          "mean": 0.3292517006802721,
+          "min": 0.3292517006802721,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.9156086149201194,
+          "mean": 0.9156086149201194,
+          "min": 0.9156086149201194,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.19176114890400608,
+          "mean": 0.19176114890400608,
+          "min": 0.19176114890400608,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.017097221943962584,
+          "mean": 0.017097221943962584,
+          "min": 0.017097221943962584,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.048450491307634125,
+          "mean": 0.048450491307634125,
+          "min": 0.048450491307634125,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.5488235979543203,
+          "mean": 1.5488235979543203,
+          "min": 1.5488235979543203,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.20297634601593018,
+          "mean": 0.20297634601593018,
+          "min": 0.20297634601593018,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.1465821293552386,
+          "mean": 0.1465821293552386,
+          "min": 0.1465821293552386,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "deepvar": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9752091573895982,
+              "mean": 0.9752091573895982,
+              "min": 0.9752091573895982,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.3187789009990296,
+              "mean": 3.3187789009990296,
+              "min": 3.3187789009990296,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.20263777609809355,
+              "mean": 0.20263777609809355,
+              "min": 0.20263777609809355,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.7010264205078058,
+              "mean": 0.7010264205078058,
+              "min": 0.7010264205078058,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.971848828420257,
+              "mean": 0.971848828420257,
+              "min": 0.971848828420257,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 0.8896240116185251,
+              "mean": 0.8896240116185251,
+              "min": 0.8896240116185251,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.850109520421074,
+              "mean": 3.850109520421074,
+              "min": 3.850109520421074,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.220265365541406,
+              "mean": 9.220265365541406,
+              "min": 9.220265365541406,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.14161309861246088,
+              "mean": 0.14161309861246088,
+              "min": 0.14161309861246088,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.013946480855298751,
+              "mean": 0.013946480855298751,
+              "min": 0.013946480855298751,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.5963718820861678,
+              "mean": 0.5963718820861678,
+              "min": 0.5963718820861678,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.5167467652644794,
+              "mean": 0.5167467652644794,
+              "min": 0.5167467652644794,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.18409674981103552,
+              "mean": 0.18409674981103552,
+              "min": 0.18409674981103552,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.13732367697752276,
+              "mean": 0.13732367697752276,
+              "min": 0.13732367697752276,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.06855631141345431,
+              "mean": 0.06855631141345431,
+              "min": 0.06855631141345431,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.048762875781804,
+              "mean": 1.048762875781804,
+              "min": 1.048762875781804,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.19366788864135742,
+              "mean": 0.19366788864135742,
+              "min": 0.19366788864135742,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.3065845918787095,
+              "mean": 0.3065845918787095,
+              "min": 0.3065845918787095,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "train:deepvar:774=774"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9752091573895982,
+          "mean": 0.9752091573895982,
+          "min": 0.9752091573895982,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.3187789009990296,
+          "mean": 3.3187789009990296,
+          "min": 3.3187789009990296,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.20263777609809355,
+          "mean": 0.20263777609809355,
+          "min": 0.20263777609809355,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.7010264205078058,
+          "mean": 0.7010264205078058,
+          "min": 0.7010264205078058,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.971848828420257,
+          "mean": 0.971848828420257,
+          "min": 0.971848828420257,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 0.8896240116185251,
+          "mean": 0.8896240116185251,
+          "min": 0.8896240116185251,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.850109520421074,
+          "mean": 3.850109520421074,
+          "min": 3.850109520421074,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.220265365541406,
+          "mean": 9.220265365541406,
+          "min": 9.220265365541406,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.14161309861246088,
+          "mean": 0.14161309861246088,
+          "min": 0.14161309861246088,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.013946480855298751,
+          "mean": 0.013946480855298751,
+          "min": 0.013946480855298751,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.5963718820861678,
+          "mean": 0.5963718820861678,
+          "min": 0.5963718820861678,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.5167467652644794,
+          "mean": 0.5167467652644794,
+          "min": 0.5167467652644794,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.18409674981103552,
+          "mean": 0.18409674981103552,
+          "min": 0.18409674981103552,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.13732367697752276,
+          "mean": 0.13732367697752276,
+          "min": 0.13732367697752276,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.06855631141345431,
+          "mean": 0.06855631141345431,
+          "min": 0.06855631141345431,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.048762875781804,
+          "mean": 1.048762875781804,
+          "min": 1.048762875781804,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.19366788864135742,
+          "mean": 0.19366788864135742,
+          "min": 0.19366788864135742,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.3065845918787095,
+          "mean": 0.3065845918787095,
+          "min": 0.3065845918787095,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "filtered_hs": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9757979279131379,
+              "mean": 0.9757979279131379,
+              "min": 0.9757979279131379,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.2709807793435646,
+              "mean": 3.2709807793435646,
+              "min": 3.2709807793435646,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.19222272612748803,
+              "mean": 0.19222272612748803,
+              "min": 0.19222272612748803,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.6136487865354845,
+              "mean": 0.6136487865354845,
+              "min": 0.6136487865354845,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.9738019652305366,
+              "mean": 0.9738019652305366,
+              "min": 0.9738019652305366,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 0.9467484266580604,
+              "mean": 0.9467484266580604,
+              "min": 0.9467484266580604,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.8498181973535424,
+              "mean": 3.8498181973535424,
+              "min": 3.8498181973535424,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.087770735910876,
+              "mean": 9.087770735910876,
+              "min": 9.087770735910876,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.10426148634056798,
+              "mean": 0.10426148634056798,
+              "min": 0.10426148634056798,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.0135784036658697,
+              "mean": 0.0135784036658697,
+              "min": 0.0135784036658697,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.42517006802721086,
+              "mean": 0.42517006802721086,
+              "min": 0.42517006802721086,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 1.1705029088414518,
+              "mean": 1.1705029088414518,
+              "min": 1.1705029088414518,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.15811035525321238,
+              "mean": 0.15811035525321238,
+              "min": 0.15811035525321238,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.10313608594423856,
+              "mean": 0.10313608594423856,
+              "min": 0.10313608594423856,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.05086923658352227,
+              "mean": 0.05086923658352227,
+              "min": 0.05086923658352227,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.219053274741674,
+              "mean": 1.219053274741674,
+              "min": 1.219053274741674,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.1891852468252182,
+              "mean": 0.1891852468252182,
+              "min": 0.1891852468252182,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.3215109820151837,
+              "mean": 0.3215109820151837,
+              "min": 0.3215109820151837,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "deterministic_fit_or_resampling"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9757979279131379,
+          "mean": 0.9757979279131379,
+          "min": 0.9757979279131379,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.2709807793435646,
+          "mean": 3.2709807793435646,
+          "min": 3.2709807793435646,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.19222272612748803,
+          "mean": 0.19222272612748803,
+          "min": 0.19222272612748803,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.6136487865354845,
+          "mean": 0.6136487865354845,
+          "min": 0.6136487865354845,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.9738019652305366,
+          "mean": 0.9738019652305366,
+          "min": 0.9738019652305366,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 0.9467484266580604,
+          "mean": 0.9467484266580604,
+          "min": 0.9467484266580604,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.8498181973535424,
+          "mean": 3.8498181973535424,
+          "min": 3.8498181973535424,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.087770735910876,
+          "mean": 9.087770735910876,
+          "min": 9.087770735910876,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.10426148634056798,
+          "mean": 0.10426148634056798,
+          "min": 0.10426148634056798,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.0135784036658697,
+          "mean": 0.0135784036658697,
+          "min": 0.0135784036658697,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.42517006802721086,
+          "mean": 0.42517006802721086,
+          "min": 0.42517006802721086,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 1.1705029088414518,
+          "mean": 1.1705029088414518,
+          "min": 1.1705029088414518,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.15811035525321238,
+          "mean": 0.15811035525321238,
+          "min": 0.15811035525321238,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.10313608594423856,
+          "mean": 0.10313608594423856,
+          "min": 0.10313608594423856,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.05086923658352227,
+          "mean": 0.05086923658352227,
+          "min": 0.05086923658352227,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.219053274741674,
+          "mean": 1.219053274741674,
+          "min": 1.219053274741674,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.1891852468252182,
+          "mean": 0.1891852468252182,
+          "min": 0.1891852468252182,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.3215109820151837,
+          "mean": 0.3215109820151837,
+          "min": 0.3215109820151837,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "garch_ccc_gaussian": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.977278634956813,
+              "mean": 0.977278634956813,
+              "min": 0.977278634956813,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.3266980407661606,
+              "mean": 3.3266980407661606,
+              "min": 3.3266980407661606,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.20592155874695556,
+              "mean": 0.20592155874695556,
+              "min": 0.20592155874695556,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.6499310779723156,
+              "mean": 0.6499310779723156,
+              "min": 0.6499310779723156,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.9729705215419501,
+              "mean": 0.9729705215419501,
+              "min": 0.9729705215419501,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 1.0091979990317896,
+              "mean": 1.0091979990317896,
+              "min": 1.0091979990317896,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.8913337589904686,
+              "mean": 3.8913337589904686,
+              "min": 3.8913337589904686,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.242694329061559,
+              "mean": 9.242694329061559,
+              "min": 9.242694329061559,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.1256602789925494,
+              "mean": 0.1256602789925494,
+              "min": 0.1256602789925494,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.013740119320739099,
+              "mean": 0.013740119320739099,
+              "min": 0.013740119320739099,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.507482993197279,
+              "mean": 0.507482993197279,
+              "min": 0.507482993197279,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.9332751092016821,
+              "mean": 0.9332751092016821,
+              "min": 0.9332751092016821,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.1767498110355253,
+              "mean": 0.1767498110355253,
+              "min": 0.1767498110355253,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.14347737006522526,
+              "mean": 0.14347737006522526,
+              "min": 0.14347737006522526,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.06575963718820865,
+              "mean": 0.06575963718820865,
+              "min": 0.06575963718820865,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.0764957411246652,
+              "mean": 1.0764957411246652,
+              "min": 1.0764957411246652,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.20406121015548706,
+              "mean": 0.20406121015548706,
+              "min": 0.20406121015548706,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.2886763096847131,
+              "mean": 0.2886763096847131,
+              "min": 0.2886763096847131,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "deterministic_fit_or_resampling"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.977278634956813,
+          "mean": 0.977278634956813,
+          "min": 0.977278634956813,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.3266980407661606,
+          "mean": 3.3266980407661606,
+          "min": 3.3266980407661606,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.20592155874695556,
+          "mean": 0.20592155874695556,
+          "min": 0.20592155874695556,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.6499310779723156,
+          "mean": 0.6499310779723156,
+          "min": 0.6499310779723156,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.9729705215419501,
+          "mean": 0.9729705215419501,
+          "min": 0.9729705215419501,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 1.0091979990317896,
+          "mean": 1.0091979990317896,
+          "min": 1.0091979990317896,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.8913337589904686,
+          "mean": 3.8913337589904686,
+          "min": 3.8913337589904686,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.242694329061559,
+          "mean": 9.242694329061559,
+          "min": 9.242694329061559,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.1256602789925494,
+          "mean": 0.1256602789925494,
+          "min": 0.1256602789925494,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.013740119320739099,
+          "mean": 0.013740119320739099,
+          "min": 0.013740119320739099,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.507482993197279,
+          "mean": 0.507482993197279,
+          "min": 0.507482993197279,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.9332751092016821,
+          "mean": 0.9332751092016821,
+          "min": 0.9332751092016821,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.1767498110355253,
+          "mean": 0.1767498110355253,
+          "min": 0.1767498110355253,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.14347737006522526,
+          "mean": 0.14347737006522526,
+          "min": 0.14347737006522526,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.06575963718820865,
+          "mean": 0.06575963718820865,
+          "min": 0.06575963718820865,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.0764957411246652,
+          "mean": 1.0764957411246652,
+          "min": 1.0764957411246652,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.20406121015548706,
+          "mean": 0.20406121015548706,
+          "min": 0.20406121015548706,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.2886763096847131,
+          "mean": 0.2886763096847131,
+          "min": 0.2886763096847131,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "historical_sim": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9792436666738715,
+              "mean": 0.9792436666738715,
+              "min": 0.9792436666738715,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.2807162590744774,
+              "mean": 3.2807162590744774,
+              "min": 3.2807162590744774,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.0249782480893592,
+              "mean": 0.0249782480893592,
+              "min": 0.0249782480893592,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.6725195483973228,
+              "mean": 0.6725195483973228,
+              "min": 0.6725195483973228,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.8984126984126984,
+              "mean": 0.8984126984126984,
+              "min": 0.8984126984126984,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 1.317895756010973,
+              "mean": 1.317895756010973,
+              "min": 1.317895756010973,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.8396531579564086,
+              "mean": 3.8396531579564086,
+              "min": 3.8396531579564086,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.114485868355699,
+              "mean": 9.114485868355699,
+              "min": 9.114485868355699,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.07159475893532018,
+              "mean": 0.07159475893532018,
+              "min": 0.07159475893532018,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.013805277876993195,
+              "mean": 0.013805277876993195,
+              "min": 0.013805277876993195,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.3573696145124717,
+              "mean": 0.3573696145124717,
+              "min": 0.3573696145124717,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.6819297464537857,
+              "mean": 0.6819297464537857,
+              "min": 0.6819297464537857,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.13083900226757372,
+              "mean": 0.13083900226757372,
+              "min": 0.13083900226757372,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.009334378754530678,
+              "mean": 0.009334378754530678,
+              "min": 0.009334378754530678,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.06477702191987911,
+              "mean": 0.06477702191987911,
+              "min": 0.06477702191987911,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.2483592308646088,
+              "mean": 1.2483592308646088,
+              "min": 1.2483592308646088,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.19658483564853668,
+              "mean": 0.19658483564853668,
+              "min": 0.19658483564853668,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.24277067470344782,
+              "mean": 0.24277067470344782,
+              "min": 0.24277067470344782,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "deterministic_fit_or_resampling"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9792436666738715,
+          "mean": 0.9792436666738715,
+          "min": 0.9792436666738715,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.2807162590744774,
+          "mean": 3.2807162590744774,
+          "min": 3.2807162590744774,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.0249782480893592,
+          "mean": 0.0249782480893592,
+          "min": 0.0249782480893592,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.6725195483973228,
+          "mean": 0.6725195483973228,
+          "min": 0.6725195483973228,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.8984126984126984,
+          "mean": 0.8984126984126984,
+          "min": 0.8984126984126984,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 1.317895756010973,
+          "mean": 1.317895756010973,
+          "min": 1.317895756010973,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.8396531579564086,
+          "mean": 3.8396531579564086,
+          "min": 3.8396531579564086,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.114485868355699,
+          "mean": 9.114485868355699,
+          "min": 9.114485868355699,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.07159475893532018,
+          "mean": 0.07159475893532018,
+          "min": 0.07159475893532018,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.013805277876993195,
+          "mean": 0.013805277876993195,
+          "min": 0.013805277876993195,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.3573696145124717,
+          "mean": 0.3573696145124717,
+          "min": 0.3573696145124717,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.6819297464537857,
+          "mean": 0.6819297464537857,
+          "min": 0.6819297464537857,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.13083900226757372,
+          "mean": 0.13083900226757372,
+          "min": 0.13083900226757372,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.009334378754530678,
+          "mean": 0.009334378754530678,
+          "min": 0.009334378754530678,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.06477702191987911,
+          "mean": 0.06477702191987911,
+          "min": 0.06477702191987911,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.2483592308646088,
+          "mean": 1.2483592308646088,
+          "min": 1.2483592308646088,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.19658483564853668,
+          "mean": 0.19658483564853668,
+          "min": 0.19658483564853668,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.24277067470344782,
+          "mean": 0.24277067470344782,
+          "min": 0.24277067470344782,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "moirai_1_1_finetuned": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.978751791510213,
+              "mean": 0.978751791510213,
+              "min": 0.978751791510213,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 7.846068938350168,
+              "mean": 7.846068938350168,
+              "min": 7.846068938350168,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.08384244562022339,
+              "mean": 0.08384244562022339,
+              "min": 0.08384244562022339,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.2939184350618206,
+              "mean": 0.2939184350618206,
+              "min": 0.2939184350618206,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.9378170823885109,
+              "mean": 0.9378170823885109,
+              "min": 0.9378170823885109,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 0.6015814103598516,
+              "mean": 0.6015814103598516,
+              "min": 0.6015814103598516,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 106.71481062658133,
+              "mean": 106.71481062658133,
+              "min": 106.71481062658133,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 21.832515767882764,
+              "mean": 21.832515767882764,
+              "min": 21.832515767882764,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.08275302680596046,
+              "mean": 0.08275302680596046,
+              "min": 0.08275302680596046,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.013658713811913515,
+              "mean": 0.013658713811913515,
+              "min": 0.013658713811913515,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.22108843537414966,
+              "mean": 0.22108843537414966,
+              "min": 0.22108843537414966,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 1.7364084165365397,
+              "mean": 1.7364084165365397,
+              "min": 1.7364084165365397,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.16453514739229025,
+              "mean": 0.16453514739229025,
+              "min": 0.16453514739229025,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.029329644286151507,
+              "mean": 0.029329644286151507,
+              "min": 0.029329644286151507,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.021844293272864745,
+              "mean": 0.021844293272864745,
+              "min": 0.021844293272864745,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.6532912311357106,
+              "mean": 1.6532912311357106,
+              "min": 1.6532912311357106,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 5.5152668952941895,
+              "mean": 5.5152668952941895,
+              "min": 5.5152668952941895,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.21612589091580686,
+              "mean": 0.21612589091580686,
+              "min": 0.21612589091580686,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "train:moirai:774=774"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.978751791510213,
+          "mean": 0.978751791510213,
+          "min": 0.978751791510213,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 7.846068938350168,
+          "mean": 7.846068938350168,
+          "min": 7.846068938350168,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.08384244562022339,
+          "mean": 0.08384244562022339,
+          "min": 0.08384244562022339,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.2939184350618206,
+          "mean": 0.2939184350618206,
+          "min": 0.2939184350618206,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.9378170823885109,
+          "mean": 0.9378170823885109,
+          "min": 0.9378170823885109,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 0.6015814103598516,
+          "mean": 0.6015814103598516,
+          "min": 0.6015814103598516,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 106.71481062658133,
+          "mean": 106.71481062658133,
+          "min": 106.71481062658133,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 21.832515767882764,
+          "mean": 21.832515767882764,
+          "min": 21.832515767882764,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.08275302680596046,
+          "mean": 0.08275302680596046,
+          "min": 0.08275302680596046,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.013658713811913515,
+          "mean": 0.013658713811913515,
+          "min": 0.013658713811913515,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.22108843537414966,
+          "mean": 0.22108843537414966,
+          "min": 0.22108843537414966,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 1.7364084165365397,
+          "mean": 1.7364084165365397,
+          "min": 1.7364084165365397,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.16453514739229025,
+          "mean": 0.16453514739229025,
+          "min": 0.16453514739229025,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.029329644286151507,
+          "mean": 0.029329644286151507,
+          "min": 0.029329644286151507,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.021844293272864745,
+          "mean": 0.021844293272864745,
+          "min": 0.021844293272864745,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.6532912311357106,
+          "mean": 1.6532912311357106,
+          "min": 1.6532912311357106,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 5.5152668952941895,
+          "mean": 5.5152668952941895,
+          "min": 5.5152668952941895,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.21612589091580686,
+          "mean": 0.21612589091580686,
+          "min": 0.21612589091580686,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "path_diffusion": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9764228163680274,
+              "mean": 0.9764228163680274,
+              "min": 0.9764228163680274,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.8133151040476663,
+              "mean": 3.8133151040476663,
+              "min": 3.8133151040476663,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.31625094482237337,
+              "mean": 0.31625094482237337,
+              "min": 0.31625094482237337,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.285603254260701,
+              "mean": 0.285603254260701,
+              "min": 0.285603254260701,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.9849433106575963,
+              "mean": 0.9849433106575963,
+              "min": 0.9849433106575963,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 1.0175891560432466,
+              "mean": 1.0175891560432466,
+              "min": 1.0175891560432466,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 4.219403234464613,
+              "mean": 4.219403234464613,
+              "min": 4.219403234464613,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 10.59372613781459,
+              "mean": 10.59372613781459,
+              "min": 10.59372613781459,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.1975357007882518,
+              "mean": 0.1975357007882518,
+              "min": 0.1975357007882518,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.016284925138188733,
+              "mean": 0.016284925138188733,
+              "min": 0.016284925138188733,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.5653061224489796,
+              "mean": 0.5653061224489796,
+              "min": 0.5653061224489796,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.24513927447007747,
+              "mean": 0.24513927447007747,
+              "min": 0.24513927447007747,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.2734996220710506,
+              "mean": 0.2734996220710506,
+              "min": 0.2734996220710506,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": -0.03531339979242425,
+              "mean": -0.03531339979242425,
+              "min": -0.03531339979242425,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.04572940287226002,
+              "mean": 0.04572940287226002,
+              "min": 0.04572940287226002,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.4995636858685455,
+              "mean": 1.4995636858685455,
+              "min": 1.4995636858685455,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.34415876865386963,
+              "mean": 0.34415876865386963,
+              "min": 0.34415876865386963,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.2203320489034775,
+              "mean": 0.2203320489034775,
+              "min": 0.2203320489034775,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "train:path_diffusion:774=774"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9764228163680274,
+          "mean": 0.9764228163680274,
+          "min": 0.9764228163680274,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.8133151040476663,
+          "mean": 3.8133151040476663,
+          "min": 3.8133151040476663,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.31625094482237337,
+          "mean": 0.31625094482237337,
+          "min": 0.31625094482237337,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.285603254260701,
+          "mean": 0.285603254260701,
+          "min": 0.285603254260701,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.9849433106575963,
+          "mean": 0.9849433106575963,
+          "min": 0.9849433106575963,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 1.0175891560432466,
+          "mean": 1.0175891560432466,
+          "min": 1.0175891560432466,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 4.219403234464613,
+          "mean": 4.219403234464613,
+          "min": 4.219403234464613,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 10.59372613781459,
+          "mean": 10.59372613781459,
+          "min": 10.59372613781459,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.1975357007882518,
+          "mean": 0.1975357007882518,
+          "min": 0.1975357007882518,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.016284925138188733,
+          "mean": 0.016284925138188733,
+          "min": 0.016284925138188733,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.5653061224489796,
+          "mean": 0.5653061224489796,
+          "min": 0.5653061224489796,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.24513927447007747,
+          "mean": 0.24513927447007747,
+          "min": 0.24513927447007747,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.2734996220710506,
+          "mean": 0.2734996220710506,
+          "min": 0.2734996220710506,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": -0.03531339979242425,
+          "mean": -0.03531339979242425,
+          "min": -0.03531339979242425,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.04572940287226002,
+          "mean": 0.04572940287226002,
+          "min": 0.04572940287226002,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.4995636858685455,
+          "mean": 1.4995636858685455,
+          "min": 1.4995636858685455,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.34415876865386963,
+          "mean": 0.34415876865386963,
+          "min": 0.34415876865386963,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.2203320489034775,
+          "mean": 0.2203320489034775,
+          "min": 0.2203320489034775,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "pca_var": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.977259702303526,
+              "mean": 0.977259702303526,
+              "min": 0.977259702303526,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.299613006353038,
+              "mean": 3.299613006353038,
+              "min": 3.299613006353038,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.18712925170068026,
+              "mean": 0.18712925170068026,
+              "min": 0.18712925170068026,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.20470112886939495,
+              "mean": 0.20470112886939495,
+              "min": 0.20470112886939495,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.948520030234316,
+              "mean": 0.948520030234316,
+              "min": 0.948520030234316,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 1.0358237857027595,
+              "mean": 1.0358237857027595,
+              "min": 1.0358237857027595,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.848249342700133,
+              "mean": 3.848249342700133,
+              "min": 3.848249342700133,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.166259274086114,
+              "mean": 9.166259274086114,
+              "min": 9.166259274086114,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.11124903830579849,
+              "mean": 0.11124903830579849,
+              "min": 0.11124903830579849,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.014291096422515779,
+              "mean": 0.014291096422515779,
+              "min": 0.014291096422515779,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.654875283446712,
+              "mean": 0.654875283446712,
+              "min": 0.654875283446712,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.37636642438745654,
+              "mean": 0.37636642438745654,
+              "min": 0.37636642438745654,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.18108843537414968,
+              "mean": 0.18108843537414968,
+              "min": 0.18108843537414968,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.18204695966793188,
+              "mean": 0.18204695966793188,
+              "min": 0.18204695966793188,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.04134542705971278,
+              "mean": 0.04134542705971278,
+              "min": 0.04134542705971278,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.108688081178142,
+              "mean": 1.108688081178142,
+              "min": 1.108688081178142,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.20372043550014496,
+              "mean": 0.20372043550014496,
+              "min": 0.20372043550014496,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.21233696275713082,
+              "mean": 0.21233696275713082,
+              "min": 0.21233696275713082,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "deterministic_fit_or_resampling"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.977259702303526,
+          "mean": 0.977259702303526,
+          "min": 0.977259702303526,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.299613006353038,
+          "mean": 3.299613006353038,
+          "min": 3.299613006353038,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.18712925170068026,
+          "mean": 0.18712925170068026,
+          "min": 0.18712925170068026,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.20470112886939495,
+          "mean": 0.20470112886939495,
+          "min": 0.20470112886939495,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.948520030234316,
+          "mean": 0.948520030234316,
+          "min": 0.948520030234316,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 1.0358237857027595,
+          "mean": 1.0358237857027595,
+          "min": 1.0358237857027595,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.848249342700133,
+          "mean": 3.848249342700133,
+          "min": 3.848249342700133,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.166259274086114,
+          "mean": 9.166259274086114,
+          "min": 9.166259274086114,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.11124903830579849,
+          "mean": 0.11124903830579849,
+          "min": 0.11124903830579849,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.014291096422515779,
+          "mean": 0.014291096422515779,
+          "min": 0.014291096422515779,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.654875283446712,
+          "mean": 0.654875283446712,
+          "min": 0.654875283446712,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.37636642438745654,
+          "mean": 0.37636642438745654,
+          "min": 0.37636642438745654,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.18108843537414968,
+          "mean": 0.18108843537414968,
+          "min": 0.18108843537414968,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.18204695966793188,
+          "mean": 0.18204695966793188,
+          "min": 0.18204695966793188,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.04134542705971278,
+          "mean": 0.04134542705971278,
+          "min": 0.04134542705971278,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.108688081178142,
+          "mean": 1.108688081178142,
+          "min": 1.108688081178142,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.20372043550014496,
+          "mean": 0.20372043550014496,
+          "min": 0.20372043550014496,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.21233696275713082,
+          "mean": 0.21233696275713082,
+          "min": 0.21233696275713082,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "random_walk": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9776808226411021,
+              "mean": 0.9776808226411021,
+              "min": 0.9776808226411021,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.547535891477421,
+              "mean": 3.547535891477421,
+              "min": 3.547535891477421,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.2884918115394306,
+              "mean": 0.2884918115394306,
+              "min": 0.2884918115394306,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.6062287818004275,
+              "mean": 0.6062287818004275,
+              "min": 0.6062287818004275,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.9775600907029478,
+              "mean": 0.9775600907029478,
+              "min": 0.9775600907029478,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 1.015975472002582,
+              "mean": 1.015975472002582,
+              "min": 1.015975472002582,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.995016631847691,
+              "mean": 3.995016631847691,
+              "min": 3.995016631847691,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.854651497683529,
+              "mean": 9.854651497683529,
+              "min": 9.854651497683529,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.16411640549076775,
+              "mean": 0.16411640549076775,
+              "min": 0.16411640549076775,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.015551152002001465,
+              "mean": 0.015551152002001465,
+              "min": 0.015551152002001465,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.6560090702947846,
+              "mean": 0.6560090702947846,
+              "min": 0.6560090702947846,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.23348838187869106,
+              "mean": 0.23348838187869106,
+              "min": 0.23348838187869106,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.23232048374905512,
+              "mean": 0.23232048374905512,
+              "min": 0.23232048374905512,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": -0.03215091479822972,
+              "mean": -0.03215091479822972,
+              "min": -0.03215091479822972,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.04315948601662889,
+              "mean": 0.04315948601662889,
+              "min": 0.04315948601662889,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.2197521256881643,
+              "mean": 1.2197521256881643,
+              "min": 1.2197521256881643,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.2606428563594818,
+              "mean": 0.2606428563594818,
+              "min": 0.2606428563594818,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.22643127180942307,
+              "mean": 0.22643127180942307,
+              "min": 0.22643127180942307,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "deterministic_fit_or_resampling"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9776808226411021,
+          "mean": 0.9776808226411021,
+          "min": 0.9776808226411021,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.547535891477421,
+          "mean": 3.547535891477421,
+          "min": 3.547535891477421,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.2884918115394306,
+          "mean": 0.2884918115394306,
+          "min": 0.2884918115394306,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.6062287818004275,
+          "mean": 0.6062287818004275,
+          "min": 0.6062287818004275,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.9775600907029478,
+          "mean": 0.9775600907029478,
+          "min": 0.9775600907029478,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 1.015975472002582,
+          "mean": 1.015975472002582,
+          "min": 1.015975472002582,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.995016631847691,
+          "mean": 3.995016631847691,
+          "min": 3.995016631847691,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.854651497683529,
+          "mean": 9.854651497683529,
+          "min": 9.854651497683529,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.16411640549076775,
+          "mean": 0.16411640549076775,
+          "min": 0.16411640549076775,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.015551152002001465,
+          "mean": 0.015551152002001465,
+          "min": 0.015551152002001465,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.6560090702947846,
+          "mean": 0.6560090702947846,
+          "min": 0.6560090702947846,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.23348838187869106,
+          "mean": 0.23348838187869106,
+          "min": 0.23348838187869106,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.23232048374905512,
+          "mean": 0.23232048374905512,
+          "min": 0.23232048374905512,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": -0.03215091479822972,
+          "mean": -0.03215091479822972,
+          "min": -0.03215091479822972,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.04315948601662889,
+          "mean": 0.04315948601662889,
+          "min": 0.04315948601662889,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.2197521256881643,
+          "mean": 1.2197521256881643,
+          "min": 1.2197521256881643,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.2606428563594818,
+          "mean": 0.2606428563594818,
+          "min": 0.2606428563594818,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.22643127180942307,
+          "mean": 0.22643127180942307,
+          "min": 0.22643127180942307,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "scenarioflow": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 1.0,
+      "passes_all_screens": 1,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9844378414134136,
+              "mean": 0.9844378414134136,
+              "min": 0.9844378414134136,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.2054341527147128,
+              "mean": 3.2054341527147128,
+              "min": 3.2054341527147128,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.11392626186276981,
+              "mean": 0.11392626186276981,
+              "min": 0.11392626186276981,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.5450496206454205,
+              "mean": 0.5450496206454205,
+              "min": 0.5450496206454205,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.7514104308390023,
+              "mean": 0.7514104308390023,
+              "min": 0.7514104308390023,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 0.8694529611102146,
+              "mean": 0.8694529611102146,
+              "min": 0.8694529611102146,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.8459526948142972,
+              "mean": 3.8459526948142972,
+              "min": 3.8459526948142972,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 8.905271249692527,
+              "mean": 8.905271249692527,
+              "min": 8.905271249692527,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.10239723369506534,
+              "mean": 0.10239723369506534,
+              "min": 0.10239723369506534,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.013525378407136648,
+              "mean": 0.013525378407136648,
+              "min": 0.013525378407136648,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.3238095238095238,
+              "mean": 0.3238095238095238,
+              "min": 0.3238095238095238,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 1.2627691466470319,
+              "mean": 1.2627691466470319,
+              "min": 1.2627691466470319,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.16996220710506427,
+              "mean": 0.16996220710506427,
+              "min": 0.16996220710506427,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.97184704605123,
+              "mean": 0.97184704605123,
+              "min": 0.97184704605123,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.19803476946334087,
+              "mean": 0.19803476946334087,
+              "min": 0.19803476946334087,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.0106367682529842,
+              "mean": 1.0106367682529842,
+              "min": 1.0106367682529842,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.20323239266872406,
+              "mean": 0.20323239266872406,
+              "min": 0.20323239266872406,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.37331366112878717,
+              "mean": 0.37331366112878717,
+              "min": 0.37331366112878717,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "train:scenarioflow:stage1:canonical_s7343_s7345=7343 | train:scenarioflow:stage2:canonical_s7343_s7345=7345"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9844378414134136,
+          "mean": 0.9844378414134136,
+          "min": 0.9844378414134136,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.2054341527147128,
+          "mean": 3.2054341527147128,
+          "min": 3.2054341527147128,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.11392626186276981,
+          "mean": 0.11392626186276981,
+          "min": 0.11392626186276981,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.5450496206454205,
+          "mean": 0.5450496206454205,
+          "min": 0.5450496206454205,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.7514104308390023,
+          "mean": 0.7514104308390023,
+          "min": 0.7514104308390023,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 0.8694529611102146,
+          "mean": 0.8694529611102146,
+          "min": 0.8694529611102146,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.8459526948142972,
+          "mean": 3.8459526948142972,
+          "min": 3.8459526948142972,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 8.905271249692527,
+          "mean": 8.905271249692527,
+          "min": 8.905271249692527,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.10239723369506534,
+          "mean": 0.10239723369506534,
+          "min": 0.10239723369506534,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.013525378407136648,
+          "mean": 0.013525378407136648,
+          "min": 0.013525378407136648,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.3238095238095238,
+          "mean": 0.3238095238095238,
+          "min": 0.3238095238095238,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 1.2627691466470319,
+          "mean": 1.2627691466470319,
+          "min": 1.2627691466470319,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.16996220710506427,
+          "mean": 0.16996220710506427,
+          "min": 0.16996220710506427,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.97184704605123,
+          "mean": 0.97184704605123,
+          "min": 0.97184704605123,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.19803476946334087,
+          "mean": 0.19803476946334087,
+          "min": 0.19803476946334087,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.0106367682529842,
+          "mean": 1.0106367682529842,
+          "min": 1.0106367682529842,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.20323239266872406,
+          "mean": 0.20323239266872406,
+          "min": 0.20323239266872406,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.37331366112878717,
+          "mean": 0.37331366112878717,
+          "min": 0.37331366112878717,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "timegrad": {
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "grid_complete": true,
+      "pass_all_rate": 0.0,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [
+            772
+          ],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": 0.9794281799083782,
+              "mean": 0.9794281799083782,
+              "min": 0.9794281799083782,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": 3.419384121382457,
+              "mean": 3.419384121382457,
+              "min": 3.419384121382457,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": 0.15372671537750898,
+              "mean": 0.15372671537750898,
+              "min": 0.15372671537750898,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": 0.41207672001604334,
+              "mean": 0.41207672001604334,
+              "min": 0.41207672001604334,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": 0.9280544217687074,
+              "mean": 0.9280544217687074,
+              "min": 0.9280544217687074,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": 1.0088752622236565,
+              "mean": 1.0088752622236565,
+              "min": 1.0088752622236565,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": 3.8380629137082365,
+              "mean": 3.8380629137082365,
+              "min": 3.8380629137082365,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": 9.499013955516997,
+              "mean": 9.499013955516997,
+              "min": 9.499013955516997,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": 0.1374007936507937,
+              "mean": 0.1374007936507937,
+              "min": 0.1374007936507937,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": 0.014791414267114637,
+              "mean": 0.014791414267114637,
+              "min": 0.014791414267114637,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": 0.66281179138322,
+              "mean": 0.66281179138322,
+              "min": 0.66281179138322,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": 0.24171557921843984,
+              "mean": 0.24171557921843984,
+              "min": 0.24171557921843984,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": 0.1890098261526833,
+              "mean": 0.1890098261526833,
+              "min": 0.1890098261526833,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": 0.16839331779951391,
+              "mean": 0.16839331779951391,
+              "min": 0.16839331779951391,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": 0.08881330309901736,
+              "mean": 0.08881330309901736,
+              "min": 0.08881330309901736,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": 1.1447607510698234,
+              "mean": 1.1447607510698234,
+              "min": 1.1447607510698234,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": 0.22087164223194122,
+              "mean": 0.22087164223194122,
+              "min": 0.22087164223194122,
+              "sample_std": null,
+              "valid_count": 1
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": 0.35534591458961207,
+              "mean": 0.35534591458961207,
+              "min": 0.35534591458961207,
+              "sample_std": null,
+              "valid_count": 1
+            }
+          },
+          "training_chain": "train:timegrad:774=774"
+        }
+      ],
+      "states": {
+        "completed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": 0.9794281799083782,
+          "mean": 0.9794281799083782,
+          "min": 0.9794281799083782,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": 3.419384121382457,
+          "mean": 3.419384121382457,
+          "min": 3.419384121382457,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": 0.15372671537750898,
+          "mean": 0.15372671537750898,
+          "min": 0.15372671537750898,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": 0.41207672001604334,
+          "mean": 0.41207672001604334,
+          "min": 0.41207672001604334,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": 0.9280544217687074,
+          "mean": 0.9280544217687074,
+          "min": 0.9280544217687074,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": 1.0088752622236565,
+          "mean": 1.0088752622236565,
+          "min": 1.0088752622236565,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": 3.8380629137082365,
+          "mean": 3.8380629137082365,
+          "min": 3.8380629137082365,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": 9.499013955516997,
+          "mean": 9.499013955516997,
+          "min": 9.499013955516997,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": 0.1374007936507937,
+          "mean": 0.1374007936507937,
+          "min": 0.1374007936507937,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": 0.014791414267114637,
+          "mean": 0.014791414267114637,
+          "min": 0.014791414267114637,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": 0.66281179138322,
+          "mean": 0.66281179138322,
+          "min": 0.66281179138322,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": 0.24171557921843984,
+          "mean": 0.24171557921843984,
+          "min": 0.24171557921843984,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": 0.1890098261526833,
+          "mean": 0.1890098261526833,
+          "min": 0.1890098261526833,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": 0.16839331779951391,
+          "mean": 0.16839331779951391,
+          "min": 0.16839331779951391,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": 0.08881330309901736,
+          "mean": 0.08881330309901736,
+          "min": 0.08881330309901736,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": 1.1447607510698234,
+          "mean": 1.1447607510698234,
+          "min": 1.1447607510698234,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": 0.22087164223194122,
+          "mean": 0.22087164223194122,
+          "min": 0.22087164223194122,
+          "sample_std": null,
+          "valid_count": 1
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": 0.35534591458961207,
+          "mean": 0.35534591458961207,
+          "min": 0.35534591458961207,
+          "sample_std": null,
+          "valid_count": 1
+        }
+      }
+    },
+    "toto_1_0_finetuned": {
+      "completed_runs": 0,
+      "expected_runs": 1,
+      "grid_complete": false,
+      "pass_all_rate": null,
+      "passes_all_screens": 0,
+      "rollout_sensitivity_by_training_chain": [
+        {
+          "completed_rollout_seeds": [],
+          "expected_rollout_seeds": [
+            772
+          ],
+          "metrics": {
+            "ACF corr": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "CRPS": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "CalErr": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Corr score": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Cov90": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Econ ratio": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Energy Score": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Factor CRPS": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Factor KS": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "IV CRPS": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Jump KS": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Kurtosis": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Level KS": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "MR ratio": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Median dev": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Tail q99": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Variogram": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            },
+            "Width rho": {
+              "expected_count": 1,
+              "max": null,
+              "mean": null,
+              "min": null,
+              "sample_std": null,
+              "valid_count": 0
+            }
+          },
+          "training_chain": "train:toto:774=774"
+        }
+      ],
+      "states": {
+        "failed": 1
+      },
+      "training_chain_sensitivity": {
+        "ACF corr": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "CRPS": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "CalErr": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Corr score": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Cov90": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Econ ratio": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Energy Score": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Factor CRPS": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Factor KS": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "IV CRPS": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Jump KS": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Kurtosis": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Level KS": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "MR ratio": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Median dev": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Tail q99": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Variogram": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        },
+        "Width rho": {
+          "expected_count": 1,
+          "max": null,
+          "mean": null,
+          "min": null,
+          "sample_std": null,
+          "valid_count": 0
+        }
+      }
+    }
+  },
+  "caveat": "Retrospective selection-block diagnostics; intervals do not remove model-selection bias.",
+  "comparisons_to_scenarioflow": {
+    "bootstrap": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.24448926051742215,
+          "ci_low": 0.04641866591070729,
+          "mean_delta": 0.1527970366576858
+        },
+        "Energy Score": {
+          "ci_high": 0.051145147194409026,
+          "ci_low": -0.06225413476542492,
+          "mean_delta": 0.0040605405774263165
+        },
+        "Variogram": {
+          "ci_high": 0.020964031811389658,
+          "ci_low": -0.0303540433007303,
+          "mean_delta": -0.0002560539869591594
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "deepvar": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.20470197904157433,
+          "ci_low": 0.03228846584857038,
+          "mean_delta": 0.11334474828431673
+        },
+        "Energy Score": {
+          "ci_high": 0.052933483505030236,
+          "ci_low": -0.06372986463716364,
+          "mean_delta": 0.004156825606776676
+        },
+        "Variogram": {
+          "ci_high": 0.01048279001573924,
+          "ci_low": -0.03909023670889353,
+          "mean_delta": -0.009564504958689213
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "filtered_hs": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.10406939360845169,
+          "ci_low": 0.009488802851177234,
+          "mean_delta": 0.06554662662885202
+        },
+        "Energy Score": {
+          "ci_high": 0.045897103116880306,
+          "ci_low": -0.047589417479725345,
+          "mean_delta": 0.0038655025392449766
+        },
+        "Variogram": {
+          "ci_high": 0.0014070381805334437,
+          "ci_low": -0.03898728327981942,
+          "mean_delta": -0.014047143049538136
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "garch_ccc_gaussian": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.15799849177240513,
+          "ci_low": 0.07248593011211839,
+          "mean_delta": 0.12126388805144898
+        },
+        "Energy Score": {
+          "ci_high": 0.08992029479728553,
+          "ci_low": -0.0001309412671200288,
+          "mean_delta": 0.04538106417617087
+        },
+        "Variogram": {
+          "ci_high": 0.015873734828278994,
+          "ci_low": -0.021940529784039844,
+          "mean_delta": 0.0008288278477266431
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "historical_sim": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.14848005391058536,
+          "ci_low": -0.009781697740695379,
+          "mean_delta": 0.0752821063597651
+        },
+        "Energy Score": {
+          "ci_high": 0.03937899043884913,
+          "ci_low": -0.07622004654694058,
+          "mean_delta": -0.00629953685788915
+        },
+        "Variogram": {
+          "ci_high": 0.014225484278737276,
+          "ci_low": -0.03640302401036024,
+          "mean_delta": -0.006647550035268068
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "moirai_1_1_finetuned": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 11.625096399746388,
+          "ci_low": 0.057983939400098994,
+          "mean_delta": 4.640634785635454
+        },
+        "Energy Score": {
+          "ci_high": 260.1498451273326,
+          "ci_low": 0.15872217850068526,
+          "mean_delta": 102.86885793176701
+        },
+        "Variogram": {
+          "ci_high": 13.338945882304944,
+          "ci_low": 0.013813043202224977,
+          "mean_delta": 5.312033653259277
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "path_diffusion": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.8103145326747603,
+          "ci_low": 0.4142257094526883,
+          "mean_delta": 0.6078809513329545
+        },
+        "Energy Score": {
+          "ci_high": 0.4508237428628193,
+          "ci_low": 0.29423330440745604,
+          "mean_delta": 0.37345053965031527
+        },
+        "Variogram": {
+          "ci_high": 0.16523114273920148,
+          "ci_low": 0.11358397801632648,
+          "mean_delta": 0.14092642068862915
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "pca_var": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.18678569119425342,
+          "ci_low": 0.005902037431422401,
+          "mean_delta": 0.09417885363832613
+        },
+        "Energy Score": {
+          "ci_high": 0.0508253274429505,
+          "ci_low": -0.06254408159478021,
+          "mean_delta": 0.0022966478858354273
+        },
+        "Variogram": {
+          "ci_high": 0.021378343993726085,
+          "ci_low": -0.029118536678808076,
+          "mean_delta": 0.00048804012476466596
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "random_walk": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.48297339859261873,
+          "ci_low": 0.19186162378068053,
+          "mean_delta": 0.34210173876270883
+        },
+        "Energy Score": {
+          "ci_high": 0.2067968372118558,
+          "ci_low": 0.08118583780595645,
+          "mean_delta": 0.14906393703339355
+        },
+        "Variogram": {
+          "ci_high": 0.07975424987870075,
+          "ci_low": 0.030073654373300996,
+          "mean_delta": 0.057410478591918945
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "timegrad": {
+      "metrics": {
+        "CRPS": {
+          "ci_high": 0.35003643945245916,
+          "ci_low": 0.07165183236720962,
+          "mean_delta": 0.213949968667744
+        },
+        "Energy Score": {
+          "ci_high": 0.03329797929013992,
+          "ci_low": -0.07277674686344227,
+          "mean_delta": -0.007889781106060662
+        },
+        "Variogram": {
+          "ci_high": 0.03886819759388021,
+          "ci_low": -0.01061475968575464,
+          "mean_delta": 0.017639240249991417
+        }
+      },
+      "status": "complete_retrospective_comparison"
+    },
+    "toto_1_0_finetuned": {
+      "status": "unavailable_incomplete_grid"
+    }
+  },
+  "evidence_label": "retrospective_selection_block_diagnostics",
+  "independent_test": false,
+  "jobs": [
+    {
+      "action": "evaluate",
+      "candidate": "random_walk",
+      "error": null,
+      "node_id": "eval:random_walk:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "bootstrap",
+      "error": null,
+      "node_id": "eval:bootstrap:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "historical_sim",
+      "error": null,
+      "node_id": "eval:historical_sim:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "pca_var",
+      "error": null,
+      "node_id": "eval:pca_var:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "garch_ccc_gaussian",
+      "error": null,
+      "node_id": "eval:garch_ccc_gaussian:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "filtered_hs",
+      "error": null,
+      "node_id": "eval:filtered_hs:772",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "scenarioflow",
+      "error": null,
+      "node_id": "train:scenarioflow:stage1:canonical_s7343_s7345",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "scenarioflow",
+      "error": null,
+      "node_id": "train:scenarioflow:stage2:canonical_s7343_s7345",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "scenarioflow",
+      "error": null,
+      "node_id": "eval:scenarioflow:canonical_s7343_s7345:772",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "deepvar",
+      "error": null,
+      "node_id": "train:deepvar:774",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "deepvar",
+      "error": null,
+      "node_id": "eval:deepvar:774:772",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "timegrad",
+      "error": null,
+      "node_id": "train:timegrad:774",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "timegrad",
+      "error": null,
+      "node_id": "eval:timegrad:774:772",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "path_diffusion",
+      "error": null,
+      "node_id": "train:path_diffusion:774",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "path_diffusion",
+      "error": null,
+      "node_id": "eval:path_diffusion:774:772",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "moirai_1_1_finetuned",
+      "error": null,
+      "node_id": "train:moirai:774",
+      "state": "completed"
+    },
+    {
+      "action": "native_sample",
+      "candidate": "moirai_1_1_finetuned",
+      "error": null,
+      "node_id": "sample:moirai:774:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "moirai_1_1_finetuned",
+      "error": null,
+      "node_id": "eval:moirai:774:772",
+      "state": "completed"
+    },
+    {
+      "action": "train",
+      "candidate": "toto_1_0_finetuned",
+      "error": null,
+      "node_id": "train:toto:774",
+      "state": "completed"
+    },
+    {
+      "action": "hardware_sweep",
+      "candidate": "toto_1_0_finetuned",
+      "error": null,
+      "node_id": "sweep:toto:774",
+      "state": "completed"
+    },
+    {
+      "action": "native_sample",
+      "candidate": "toto_1_0_finetuned",
+      "error": null,
+      "node_id": "sample:toto:774:772",
+      "state": "completed"
+    },
+    {
+      "action": "evaluate",
+      "candidate": "toto_1_0_finetuned",
+      "error": "RuntimeError: command exited 1",
+      "node_id": "eval:toto:774:772",
+      "state": "failed"
+    }
+  ],
+  "numerical_benchmark_executed": true,
+  "plan_sha256": "5e367444665f6f634c534aff01ea4945e3a36044bdd33ff827119b3cc6bfc15f",
+  "runs": [
+    {
+      "artifact_hashes": {
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "random_walk/results_current_panel.json": "233a56077a048dc6398ff0d0a4bc234fc4b103126628dc61b19739f6a809e2ff",
+        "random_walk/window_scores.npz": "afca8e95c8db93a869b2a51d3740bfb6d5fa5c167fcd83d4f194c8c8aaf749c6",
+        "summary.json": "faa4b7c3dbd92bf7e32c44be6a5f207d4967e5636b759a2f511994d8a28a1f4d",
+        "summary.md": "5296a194082d0d769a6851db6196fb3e9d110541cff7ab0b774d1255831b7d23"
+      },
+      "candidate": "random_walk",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9776808226411021,
+        "CRPS": 3.547535891477421,
+        "CalErr": 0.2884918115394306,
+        "Corr score": 0.6062287818004275,
+        "Cov90": 0.9775600907029478,
+        "Econ ratio": 1.015975472002582,
+        "Energy Score": 3.995016631847691,
+        "Factor CRPS": 9.854651497683529,
+        "Factor KS": 0.16411640549076775,
+        "IV CRPS": 0.015551152002001465,
+        "Jump KS": 0.6560090702947846,
+        "Kurtosis": 0.23348838187869106,
+        "Level KS": 0.23232048374905512,
+        "MR ratio": -0.03215091479822972,
+        "Median dev": 0.04315948601662889,
+        "Tail q99": 1.2197521256881643,
+        "Variogram": 0.2606428563594818,
+        "Width rho": 0.22643127180942307
+      },
+      "node_id": "eval:random_walk:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "fail",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "fail",
+        "Jump KS": "fail",
+        "Kurtosis": "fail",
+        "Level KS": "fail",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "deterministic_fit_or_resampling",
+      "upstream_states": {}
+    },
+    {
+      "artifact_hashes": {
+        "bootstrap/results_current_panel.json": "605516f237534e281221d4c615686e9b8c2f0bf0d2a024d127cba978af7dab3a",
+        "bootstrap/window_scores.npz": "e8f9ce84c976981e0174218193f22da0e6d2c111efd20e2c360ffaeb3b1bbcd0",
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "summary.json": "0d95846e33b7548225c436d6e6b3b3e4d48e0744130261df1365c4f6586f0514",
+        "summary.md": "127c319b2a4413a3079d398a7d8cb7f0cffba7e81b4ffc0688b5f084b4a36a82"
+      },
+      "candidate": "bootstrap",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9761919139542717,
+        "CRPS": 3.3582311893723977,
+        "CalErr": 0.24647753422356594,
+        "Corr score": 0.6075283526587225,
+        "Cov90": 0.973817082388511,
+        "Econ ratio": 0.8191060190414716,
+        "Energy Score": 3.8500132353917236,
+        "Factor CRPS": 9.330180537613618,
+        "Factor KS": 0.08095499608573588,
+        "IV CRPS": 0.013939554357313887,
+        "Jump KS": 0.3292517006802721,
+        "Kurtosis": 0.9156086149201194,
+        "Level KS": 0.19176114890400608,
+        "MR ratio": 0.017097221943962584,
+        "Median dev": 0.048450491307634125,
+        "Tail q99": 1.5488235979543203,
+        "Variogram": 0.20297634601593018,
+        "Width rho": 0.1465821293552386
+      },
+      "node_id": "eval:bootstrap:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "fail",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "pass",
+        "Kurtosis": "pass",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "fail",
+        "Width rho": "fail"
+      },
+      "state": "completed",
+      "training_chain": "deterministic_fit_or_resampling",
+      "upstream_states": {}
+    },
+    {
+      "artifact_hashes": {
+        "historical_sim/results_current_panel.json": "8cccdbd076bd57639d33df6c4f74c37d113908e10a029de9969a7403ea2b36d8",
+        "historical_sim/window_scores.npz": "f2db5a9b465786736e878aa575edd832604c22273abe8e24a66de83afc7e7780",
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "summary.json": "4aa9b03d511f2a95e16cbcb70ae9cafec53b4268e048d105a0ff7bf9034cd0ed",
+        "summary.md": "72bb314cb298bb4570f4e1e48c8b46cb39e4279a88a4f640fb43f632bb5c7da8"
+      },
+      "candidate": "historical_sim",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9792436666738715,
+        "CRPS": 3.2807162590744774,
+        "CalErr": 0.0249782480893592,
+        "Corr score": 0.6725195483973228,
+        "Cov90": 0.8984126984126984,
+        "Econ ratio": 1.317895756010973,
+        "Energy Score": 3.8396531579564086,
+        "Factor CRPS": 9.114485868355699,
+        "Factor KS": 0.07159475893532018,
+        "IV CRPS": 0.013805277876993195,
+        "Jump KS": 0.3573696145124717,
+        "Kurtosis": 0.6819297464537857,
+        "Level KS": 0.13083900226757372,
+        "MR ratio": 0.009334378754530678,
+        "Median dev": 0.06477702191987911,
+        "Tail q99": 1.2483592308646088,
+        "Variogram": 0.19658483564853668,
+        "Width rho": 0.24277067470344782
+      },
+      "node_id": "eval:historical_sim:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "pass",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "fail",
+        "Factor KS": "pass",
+        "Jump KS": "pass",
+        "Kurtosis": "pass",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "deterministic_fit_or_resampling",
+      "upstream_states": {}
+    },
+    {
+      "artifact_hashes": {
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "pca_var/results_current_panel.json": "da76c7833b82bd732311a54031592b49b6f7085858db404da77d695325a75315",
+        "pca_var/window_scores.npz": "37e848752f46d1127d44d53c56f67182941a403120d42ed297f50a3ea1cc3187",
+        "summary.json": "583dbfe677d3fadbb6e89a9d3d85debf1601da43e1e855d271e69b697bf736cf",
+        "summary.md": "c718b917893a294f82cc649acb1d9426eaa862d7212ccc707a5c67b2ac80e49e"
+      },
+      "candidate": "pca_var",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.977259702303526,
+        "CRPS": 3.299613006353038,
+        "CalErr": 0.18712925170068026,
+        "Corr score": 0.20470112886939495,
+        "Cov90": 0.948520030234316,
+        "Econ ratio": 1.0358237857027595,
+        "Energy Score": 3.848249342700133,
+        "Factor CRPS": 9.166259274086114,
+        "Factor KS": 0.11124903830579849,
+        "IV CRPS": 0.014291096422515779,
+        "Jump KS": 0.654875283446712,
+        "Kurtosis": 0.37636642438745654,
+        "Level KS": 0.18108843537414968,
+        "MR ratio": 0.18204695966793188,
+        "Median dev": 0.04134542705971278,
+        "Tail q99": 1.108688081178142,
+        "Variogram": 0.20372043550014496,
+        "Width rho": 0.21233696275713082
+      },
+      "node_id": "eval:pca_var:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "pass",
+        "Corr score": "fail",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "fail",
+        "Kurtosis": "fail",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "deterministic_fit_or_resampling",
+      "upstream_states": {}
+    },
+    {
+      "artifact_hashes": {
+        "garch_ccc_gaussian/results_current_panel.json": "a24b144170e738a9593dc6e7786f1928722b6ee6fda1d04627dafd1165db8aa8",
+        "garch_ccc_gaussian/window_scores.npz": "b808228212056232a880a0eabc90c6048d470b92fc519839d824a6ec32b6f8a4",
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "summary.json": "3d8599ab2c37eab590252f513973c86ea8c297eed203c7607eaf14dd00be403b",
+        "summary.md": "7a6332c049cb0626d7cfd3ce9b9b960f3c4159dce050f7030b5ba8082a8d4f25"
+      },
+      "candidate": "garch_ccc_gaussian",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.977278634956813,
+        "CRPS": 3.3266980407661606,
+        "CalErr": 0.20592155874695556,
+        "Corr score": 0.6499310779723156,
+        "Cov90": 0.9729705215419501,
+        "Econ ratio": 1.0091979990317896,
+        "Energy Score": 3.8913337589904686,
+        "Factor CRPS": 9.242694329061559,
+        "Factor KS": 0.1256602789925494,
+        "IV CRPS": 0.013740119320739099,
+        "Jump KS": 0.507482993197279,
+        "Kurtosis": 0.9332751092016821,
+        "Level KS": 0.1767498110355253,
+        "MR ratio": 0.14347737006522526,
+        "Median dev": 0.06575963718820865,
+        "Tail q99": 1.0764957411246652,
+        "Variogram": 0.20406121015548706,
+        "Width rho": 0.2886763096847131
+      },
+      "node_id": "eval:garch_ccc_gaussian:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "fail",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "fail",
+        "Kurtosis": "pass",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "deterministic_fit_or_resampling",
+      "upstream_states": {}
+    },
+    {
+      "artifact_hashes": {
+        "filtered_hs/results_current_panel.json": "8208ede1e12eb9848dc1cb1412036adc2e778f0426b18d2e62e628221870a630",
+        "filtered_hs/window_scores.npz": "087792377c69079cbeb0b434dda51e12a81d9384148b65292d40063e46e73a27",
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "summary.json": "7b95ffe2c18953d8b0647fc51c944c4ec54f70644914392cbeea73da7aa2ab2f",
+        "summary.md": "06d211e2ed8cb7bec4ca23405358feeea5282805fc90be575656983c421c8ba6"
+      },
+      "candidate": "filtered_hs",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9757979279131379,
+        "CRPS": 3.2709807793435646,
+        "CalErr": 0.19222272612748803,
+        "Corr score": 0.6136487865354845,
+        "Cov90": 0.9738019652305366,
+        "Econ ratio": 0.9467484266580604,
+        "Energy Score": 3.8498181973535424,
+        "Factor CRPS": 9.087770735910876,
+        "Factor KS": 0.10426148634056798,
+        "IV CRPS": 0.0135784036658697,
+        "Jump KS": 0.42517006802721086,
+        "Kurtosis": 1.1705029088414518,
+        "Level KS": 0.15811035525321238,
+        "MR ratio": 0.10313608594423856,
+        "Median dev": 0.05086923658352227,
+        "Tail q99": 1.219053274741674,
+        "Variogram": 0.1891852468252182,
+        "Width rho": 0.3215109820151837
+      },
+      "node_id": "eval:filtered_hs:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "pass",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "pass",
+        "Kurtosis": "pass",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "deterministic_fit_or_resampling",
+      "upstream_states": {}
+    },
+    {
+      "artifact_hashes": {
+        "results_current_panel.json": "3374badcd466eb53cdfa3cea4c53aa51eaedbe754915c2fc37b56962c6e08ece",
+        "summary.md": "3202b4ccb16b91289fba3a84dd9930b575ef3c10807185cc8bff84e1d263f053",
+        "window_scores.npz": "e0870c26e44d05caed4ccd8e7454b29774059c64706d880606daa2b6d744382e"
+      },
+      "candidate": "scenarioflow",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9844378414134136,
+        "CRPS": 3.2054341527147128,
+        "CalErr": 0.11392626186276981,
+        "Corr score": 0.5450496206454205,
+        "Cov90": 0.7514104308390023,
+        "Econ ratio": 0.8694529611102146,
+        "Energy Score": 3.8459526948142972,
+        "Factor CRPS": 8.905271249692527,
+        "Factor KS": 0.10239723369506534,
+        "IV CRPS": 0.013525378407136648,
+        "Jump KS": 0.3238095238095238,
+        "Kurtosis": 1.2627691466470319,
+        "Level KS": 0.16996220710506427,
+        "MR ratio": 0.97184704605123,
+        "Median dev": 0.19803476946334087,
+        "Tail q99": 1.0106367682529842,
+        "Variogram": 0.20323239266872406,
+        "Width rho": 0.37331366112878717
+      },
+      "node_id": "eval:scenarioflow:canonical_s7343_s7345:772",
+      "pass_all": true,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "pass",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "pass",
+        "Kurtosis": "pass",
+        "Level KS": "pass",
+        "MR ratio": "pass",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "train:scenarioflow:stage1:canonical_s7343_s7345=7343 | train:scenarioflow:stage2:canonical_s7343_s7345=7345",
+      "upstream_states": {
+        "train:scenarioflow:stage2:canonical_s7343_s7345": "completed"
+      }
+    },
+    {
+      "artifact_hashes": {
+        "deepvar/results_current_panel.json": "e44b92933e22647d84b46da528555bc1a8f8d5f6c8ff76120b7b38e3c44c0928",
+        "deepvar/window_scores.npz": "e0a4dc28a2bd27c8e0cd2acbb01fdb6a49f6d4bf8ae25fc67f0d1f58c5e6ed7d",
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "summary.json": "b45e0aeb6c1e6bd632c921eeefe1af3fe8c94338a5caa87b014c0a51c199a04e",
+        "summary.md": "cc883928bc2788ffaf8f39e33de493a63629aee8704d266013ccbc8a5f74db3d"
+      },
+      "candidate": "deepvar",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9752091573895982,
+        "CRPS": 3.3187789009990296,
+        "CalErr": 0.20263777609809355,
+        "Corr score": 0.7010264205078058,
+        "Cov90": 0.971848828420257,
+        "Econ ratio": 0.8896240116185251,
+        "Energy Score": 3.850109520421074,
+        "Factor CRPS": 9.220265365541406,
+        "Factor KS": 0.14161309861246088,
+        "IV CRPS": 0.013946480855298751,
+        "Jump KS": 0.5963718820861678,
+        "Kurtosis": 0.5167467652644794,
+        "Level KS": 0.18409674981103552,
+        "MR ratio": 0.13732367697752276,
+        "Median dev": 0.06855631141345431,
+        "Tail q99": 1.048762875781804,
+        "Variogram": 0.19366788864135742,
+        "Width rho": 0.3065845918787095
+      },
+      "node_id": "eval:deepvar:774:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "fail",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "fail",
+        "Kurtosis": "pass",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "train:deepvar:774=774",
+      "upstream_states": {
+        "train:deepvar:774": "completed"
+      }
+    },
+    {
+      "artifact_hashes": {
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "summary.json": "d383163213ceb6d426c73529904d91c21b50ebe164e167b1d78297ffde3f8608",
+        "summary.md": "3fa9b9be063780805fb5c64b054b5a05032f09964760895e875f317cf756ff26",
+        "timegrad/results_current_panel.json": "0ad9dd4381fd7cf5448889cda6405012e4f9534a0e0dee7e9fb5d544802f940a",
+        "timegrad/window_scores.npz": "96ebb71cbde50d7aa713bd2e686da1f4bb21e6ea1ba3eb9f39522b1260a0991f"
+      },
+      "candidate": "timegrad",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9794281799083782,
+        "CRPS": 3.419384121382457,
+        "CalErr": 0.15372671537750898,
+        "Corr score": 0.41207672001604334,
+        "Cov90": 0.9280544217687074,
+        "Econ ratio": 1.0088752622236565,
+        "Energy Score": 3.8380629137082365,
+        "Factor CRPS": 9.499013955516997,
+        "Factor KS": 0.1374007936507937,
+        "IV CRPS": 0.014791414267114637,
+        "Jump KS": 0.66281179138322,
+        "Kurtosis": 0.24171557921843984,
+        "Level KS": 0.1890098261526833,
+        "MR ratio": 0.16839331779951391,
+        "Median dev": 0.08881330309901736,
+        "Tail q99": 1.1447607510698234,
+        "Variogram": 0.22087164223194122,
+        "Width rho": 0.35534591458961207
+      },
+      "node_id": "eval:timegrad:774:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "pass",
+        "Corr score": "pass",
+        "Cov90": "pass",
+        "Econ ratio": "pass",
+        "Factor KS": "pass",
+        "Jump KS": "fail",
+        "Kurtosis": "fail",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "train:timegrad:774=774",
+      "upstream_states": {
+        "train:timegrad:774": "completed"
+      }
+    },
+    {
+      "artifact_hashes": {
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "path_diffusion/results_current_panel.json": "e78619f912064156c7d17290e0579b1d00a7bd5cbc543e451beb3838910a2636",
+        "path_diffusion/window_scores.npz": "2198b08d137d09aa28d26e6484bfc41537557296f07c99c9f3bc395a52c2468e",
+        "summary.json": "869f8ab75ea4bb794f8509e659215b5c897388f27e14e1e69a2588da0d7cf59b",
+        "summary.md": "091928a0dd2be96005b452534fd829a882de232c92379be9c84274a0cadbd96e"
+      },
+      "candidate": "path_diffusion",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.9764228163680274,
+        "CRPS": 3.8133151040476663,
+        "CalErr": 0.31625094482237337,
+        "Corr score": 0.285603254260701,
+        "Cov90": 0.9849433106575963,
+        "Econ ratio": 1.0175891560432466,
+        "Energy Score": 4.219403234464613,
+        "Factor CRPS": 10.59372613781459,
+        "Factor KS": 0.1975357007882518,
+        "IV CRPS": 0.016284925138188733,
+        "Jump KS": 0.5653061224489796,
+        "Kurtosis": 0.24513927447007747,
+        "Level KS": 0.2734996220710506,
+        "MR ratio": -0.03531339979242425,
+        "Median dev": 0.04572940287226002,
+        "Tail q99": 1.4995636858685455,
+        "Variogram": 0.34415876865386963,
+        "Width rho": 0.2203320489034775
+      },
+      "node_id": "eval:path_diffusion:774:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "fail",
+        "Corr score": "fail",
+        "Cov90": "fail",
+        "Econ ratio": "pass",
+        "Factor KS": "fail",
+        "Jump KS": "fail",
+        "Kurtosis": "fail",
+        "Level KS": "fail",
+        "MR ratio": "fail",
+        "Tail q99": "pass",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "train:path_diffusion:774=774",
+      "upstream_states": {
+        "train:path_diffusion:774": "completed"
+      }
+    },
+    {
+      "artifact_hashes": {
+        "manifest.json": "78a022fed257879c31739fd82e7cde2ec9b85ecd390e81e02507b1bb53bec26c",
+        "moirai_1_1_finetuned/results_current_panel.json": "7b49e10b782beec355f605d1efbf8498c6c2f6921af169c0b762d94578618bb2",
+        "moirai_1_1_finetuned/window_scores.npz": "f682e256d28913b997677b3d5ebdb503685e5f943b6c8dd5dea7436d36173e46",
+        "summary.json": "7ecde619688924fa3c2c8076a2098de1cd8ff47ec1496c49aa6c8b293ed1d75f",
+        "summary.md": "c666d1400bfb91717b2322cb8d325edc52b6d542bb8c0b138faa12d75489688a"
+      },
+      "candidate": "moirai_1_1_finetuned",
+      "error": null,
+      "metrics": {
+        "ACF corr": 0.978751791510213,
+        "CRPS": 7.846068938350168,
+        "CalErr": 0.08384244562022339,
+        "Corr score": 0.2939184350618206,
+        "Cov90": 0.9378170823885109,
+        "Econ ratio": 0.6015814103598516,
+        "Energy Score": 106.71481062658133,
+        "Factor CRPS": 21.832515767882764,
+        "Factor KS": 0.08275302680596046,
+        "IV CRPS": 0.013658713811913515,
+        "Jump KS": 0.22108843537414966,
+        "Kurtosis": 1.7364084165365397,
+        "Level KS": 0.16453514739229025,
+        "MR ratio": 0.029329644286151507,
+        "Median dev": 0.021844293272864745,
+        "Tail q99": 1.6532912311357106,
+        "Variogram": 5.5152668952941895,
+        "Width rho": 0.21612589091580686
+      },
+      "node_id": "eval:moirai:774:772",
+      "pass_all": false,
+      "rollout_seed": 772,
+      "screens": {
+        "CalErr": "pass",
+        "Corr score": "fail",
+        "Cov90": "pass",
+        "Econ ratio": "fail",
+        "Factor KS": "pass",
+        "Jump KS": "pass",
+        "Kurtosis": "fail",
+        "Level KS": "pass",
+        "MR ratio": "fail",
+        "Tail q99": "fail",
+        "Width rho": "pass"
+      },
+      "state": "completed",
+      "training_chain": "train:moirai:774=774",
+      "upstream_states": {
+        "sample:moirai:774:772": "completed"
+      }
+    },
+    {
+      "candidate": "toto_1_0_finetuned",
+      "error": "RuntimeError: command exited 1",
+      "node_id": "eval:toto:774:772",
+      "rollout_seed": 772,
+      "state": "failed",
+      "training_chain": "train:toto:774=774",
+      "upstream_states": {
+        "sample:toto:774:772": "completed"
+      }
+    }
+  ],
+  "schema_version": "fmts-causal-aggregate-v1",
+  "uncertainty": {
+    "block_length": 30,
+    "bootstrap_seed": 20260805,
+    "canonical_single_seed_is_not_robustness_evidence": true,
+    "ci_level": 0.95,
+    "direction": "baseline_minus_scenarioflow; positive favors ScenarioFlow for proper scores",
+    "n_bootstrap": 10000,
+    "training_seed_uncertainty_in_window_interval": false,
+    "unit": "chronological origin after averaging the complete within-model seed grid"
+  }
+}

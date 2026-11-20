@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "ScenarioFlow"
+type: software
+authors:
+  - family-names: Zhang
+    given-names: Jingwei
+  - family-names: Ng
+    given-names: Patrick
+  - family-names: Andrushchenko
+    given-names: Michael
+repository-code: "https://github.com/0xC000005/ScenarioFlow"
+url: "https://osf.io/ywpc5/"
+license: MIT
+version: "1.1.0"
+preferred-citation:
+  type: conference-paper
+  title: "ScenarioFlow: Multimodal Market Conditioning for Heterogeneous Multivariate Time-Series Simulation"
+  authors:
+    - family-names: Zhang
+      given-names: Jingwei
+    - family-names: Ng
+      given-names: Patrick
+    - family-names: Andrushchenko
+      given-names: Michael
+  collection-title: "NeurIPS 2026 Workshop on Foundation Models for Temporal Systems"
+  year: 2026

@@ -1,7 +1,9 @@
 """State transforms and normalized-innovation reconstruction.
 
-The numerical definitions in this module are extracted from the frozen 576a,
-628a, and 662a donor implementations.
+Each variable is mapped to a model state by a class-based transform (log level,
+difference, or bounded logit), and generated normalized innovations are mapped
+back to market units. The numerical definitions are frozen: the released
+checkpoints depend on them exactly.
 """
 
 from __future__ import annotations

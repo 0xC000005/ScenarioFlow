@@ -1,0 +1,24 @@
+/* The story's SVG asks for font-family="Inter"; the site registers the variable font as 'Inter Variable'.
+   A CSS rule beats the presentation attribute, so the ported drawing code stays untouched. The italic axis
+   is imported for the typed prompts. */
+@import "@fontsource-variable/inter/wght-italic.css";
+
+.sf-stage text,
+.sf-stage tspan {
+  font-family: "Inter Variable", Inter, system-ui, sans-serif;
+}
+
+.sf-cap-in {
+  animation: sf-cap-in 380ms cubic-bezier(0.2, 0.75, 0.15, 1) both;
+}
+@keyframes sf-cap-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-cap-in { animation: none; }
+}
+
+dialog.sf-video::backdrop {
+  background: rgba(0, 0, 0, 0.88);
+}

@@ -1,0 +1,31 @@
+\begin{table}[H]
+\centering
+\caption{Target-disjoint rerun (causal-v1) on the same 441 validation windows. Training targets are disjoint from validation targets (training starts 168--3980), missing values are filled forward only, and variable maps are fixed by variable class. Every model is retrained once with its submitted recipe and scored with unchanged screens. Rows are ordered by CRPS; only Cov90 and MR of the 11 screens are shown as columns, and ``Screens passed'' counts all 11. Red marks a failed screen and bold the best proper score among completed methods.}
+\label{tab:fmts-causal-v1}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.85}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Model & CRPS$\downarrow$ & IV CRPS$\downarrow$ & Energy$\downarrow$ & Variogram$\downarrow$ & Cov90$\to.90$ & MR$\to1$ & Screens passed \\
+\midrule
+\scenarioflow{} & \textbf{3.2054} & \textbf{0.01353} & 3.846 & 0.2032 & 0.751 & 0.972 & \PassCount{11/11} \\
+Filtered hist. sim. & 3.2710 & 0.01358 & 3.850 & \textbf{0.1892} & 0.974 & \textcolor{red}{0.103} & \FailCount{10/11} \\
+Historical sim. & 3.2807 & 0.01381 & 3.840 & 0.1966 & 0.898 & \textcolor{red}{0.009} & \FailCount{9/11} \\
+PCA--VAR & 3.2996 & 0.01429 & 3.848 & 0.2037 & 0.949 & \textcolor{red}{0.182} & \FailCount{7/11} \\
+DeepVAR & 3.3188 & 0.01395 & 3.850 & 0.1937 & 0.972 & \textcolor{red}{0.137} & \FailCount{8/11} \\
+GARCH--CCC & 3.3267 & 0.01374 & 3.891 & 0.2041 & 0.973 & \textcolor{red}{0.143} & \FailCount{8/11} \\
+Bootstrap & 3.3582 & 0.01394 & 3.850 & 0.2030 & 0.974 & \textcolor{red}{0.017} & \FailCount{7/11} \\
+TimeGrad & 3.4194 & 0.01479 & \textbf{3.838} & 0.2209 & 0.928 & \textcolor{red}{0.168} & \FailCount{8/11} \\
+Random walk & 3.5475 & 0.01555 & 3.995 & 0.2606 & 0.978 & \textcolor{red}{-0.032} & \FailCount{5/11} \\
+CSDI & 3.8133 & 0.01628 & 4.219 & 0.3442 & \textcolor{red}{0.985} & \textcolor{red}{-0.035} & \FailCount{3/11} \\
+Moirai$^\ast$ & 7.8461 & 0.01366 & 106.715 & 5.5153 & 0.938 & \textcolor{red}{0.029} & \FailCount{6/11} \\
+Toto$^\dagger$ & \multicolumn{6}{c}{\textcolor{red}{evaluation failed}} & -- \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\begin{minipage}{0.99\linewidth}
+\tiny\raggedright \scenarioflow{} history checks: high/low deck width $1.194\times$; matched-history MAE reduction $5.6\%$; 20 of 25 surface cells improved. Paired 30-origin moving-block CRPS differences (baseline minus \scenarioflow{}): filtered hist.\ sim.\ $0.0655$ $[0.0095, 0.1041]$; hist.\ sim.\ $0.0753$ $[-0.0098, 0.1485]$. $^\ast$Five origins account for $96.3\%$ of Moirai's summed per-origin Energy Score; no origins were removed. $^\dagger$One generated VIX path overflows on reconstruction and the evaluation stopped before scoring; no path was clipped or removed. The Econ.\ screen here uses the reproduction pipeline's cointegration-based ratio.
+\end{minipage}
+\end{table}

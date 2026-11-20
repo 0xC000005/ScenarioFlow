@@ -1,18 +1,32 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta name="theme-color" content="#000000" />
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png" />
+    <!-- the landing hero and the before/after band draw the 20 Jan 2016 query's real output; fetch it early, on / only -->
+    <script>
+      if (location.pathname === "/") {
+        const l = document.createElement("link");
+        l.rel = "preload";
+        l.as = "fetch";
+        l.crossOrigin = "anonymous";
+        l.href = "/data/narrative_shift_2016-01-20.json";
+        document.head.appendChild(l);
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ScenarioFlow — A Temporal Foundation Model with Multimodal Market Conditioning</title>
-    <meta name="description" content="ScenarioFlow generates joint, multi-day market scenarios from numerical history or natural-language descriptions." />
+    <title>ScenarioFlow</title>
+    <meta name="description" content="ScenarioFlow generates conditional distributions of joint, multi-day market paths from recent market history and, optionally, a plain-language description." />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="ScenarioFlow — A Temporal Foundation Model" />
-    <meta property="og:description" content="Conditional distributions of joint market paths from numerical history or natural-language descriptions." />
+    <meta property="og:title" content="ScenarioFlow — Describe the market in words. See its future distribution." />
+    <meta property="og:description" content="Conditional distributions of joint market paths from recent market history and, optionally, a plain-language description." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ScenarioFlow — A Temporal Foundation Model" />
-    <meta name="twitter:description" content="Conditional distributions of joint market paths from numerical history or natural-language descriptions." />
+    <meta name="twitter:title" content="ScenarioFlow — Describe the market in words. See its future distribution." />
+    <meta name="twitter:description" content="Conditional distributions of joint market paths from recent market history and, optionally, a plain-language description." />
   </head>
   <body>
     <div id="root"></div>

@@ -15,7 +15,7 @@ from ..model import (
     load_model,
 )
 from ..state import reconstruct_state_from_increments
-from .metrics import evaluate_deck
+from .metrics import METRIC_NAMES, SCREEN_NAMES, evaluate_deck
 from .panel import prepare_panel_blocks, select_normalized_innovation_scope
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -204,6 +204,7 @@ def main(argv: list[str] | None = None) -> None:
         seed=int(args.seed),
         device=device,
     )
+    variable_names = [spec.name for spec in specs]
     args.output_dir.mkdir(parents=True, exist_ok=True)
     output_path = args.output_dir / "scenarios.npz"
     np.savez_compressed(
@@ -211,11 +212,14 @@ def main(argv: list[str] | None = None) -> None:
         scenarios=deck,
         window_indices=validation_block.indices[:n_windows],
         seed=np.asarray(int(args.seed), dtype=np.int64),
+        variables=np.asarray(variable_names),
     )
     result: dict[str, Any] = {
         "checkpoint": str(args.checkpoint),
         "output": str(output_path),
         "shape": list(deck.shape),
+        "axes": ["window", "sample", "day", "variable"],
+        "variables": variable_names,
         "seed": int(args.seed),
     }
     if int(args.n_steps) == int(model.cfg.future_len):
@@ -229,7 +233,9 @@ def main(argv: list[str] | None = None) -> None:
             ],
             iv_count=int(payload.get("iv_count", 25)),
         )
+        result["metric_names"] = list(METRIC_NAMES)
         result["metrics"] = metrics.tolist()
+        result["screen_names"] = list(SCREEN_NAMES)
         result["screens"] = screens.tolist()
     (args.output_dir / "summary.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"

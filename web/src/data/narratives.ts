@@ -1,5 +1,5 @@
-// The recommended-narrative bank, copied VERBATIM from the original Gradio Demo 1
-// (NARRATIVE_EXAMPLE_FAMILIES in nl_risk_manager_story_gradio_app.py). Six market-regime
+// The recommended-narrative bank, the same examples the narrative-to-scenario
+// backend offers. Six market-regime
 // families, each with short / medium / full ("professional read") variants — so a user can
 // either type their own narrative or pick one of these to learn what input the system accepts.
 export type Length = "short" | "medium" | "full";
@@ -64,7 +64,7 @@ export const NARRATIVE_FAMILIES: NarrativeFamily[] = [
 
 // 15 fan factors (FAN_MARKET_CHOICES). [label, market-key]
 export const FACTORS: [string, string][] = [
-  ["SPX", "SPX"], ["VIX", "VIX"], ["BBB OAS", "BBB_OAS"], ["AAA OAS", "AAA_OAS"],
+  ["S&P 500", "SPX"], ["VIX", "VIX"], ["BBB OAS", "BBB_OAS"], ["AAA OAS", "AAA_OAS"],
   ["US 2Y", "US2Y"], ["US 10Y", "US10Y"], ["USD/JPY", "USDJPY"], ["DXY", "DXY"],
   ["Gold", "GOLD"], ["Crude oil", "CRUDE_OIL"], ["IV surface avg", "IV_SURFACE"],
   ["IV ATM 3M", "IV_ATM_3M"], ["IV ATM 1Y", "IV_ATM_1Y"], ["IV OTM put 1Y", "IV_OTM_PUT_1Y"],

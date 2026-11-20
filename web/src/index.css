@@ -1,23 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));
+/* phone held sideways: too short for the stacked story layout, so the story sits side by side */
+@custom-variant short (@media (max-height: 520px) and (orientation: landscape) and (max-width: 1023.98px));
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Geist Variable', 'Inter', system-ui, sans-serif;
+    --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
 
-    /* Apple-web fluid type scale (display sizes; larger than the OS 34pt scale) */
-    --text-hero: clamp(2.75rem, 4vw + 1.5rem, 4.5rem);
-    --text-hero--line-height: 1.05;
-    --text-hero--letter-spacing: -0.025em;
-    --text-hero--font-weight: 600;
-    --text-display: clamp(1.75rem, 2vw + 1rem, 2.75rem);
-    --text-display--line-height: 1.1;
-    --text-display--letter-spacing: -0.02em;
-    --text-display--font-weight: 600;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -119,7 +112,7 @@
     --chart-5: oklch(0.269 0 0);
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary: oklch(0.985 0 0);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -139,22 +132,71 @@
     }
 }
 
-/* Apple-minimal overrides: blue primary + blue fan-chart palette + tighter radius */
-/* Accent = Apple web CTA blue #0071e3 (oklch), unified with the hardcoded chart blue */
+/* ── Site palette tokens (match the explainer video: black / white / one red) ── */
 :root {
-  --primary: oklch(0.563 0.193 256);
-  --primary-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.60 0.19 256);
-  --radius: 0.5rem;
-  --chart-1: oklch(0.62 0.17 252);
-  --chart-2: oklch(0.83 0.08 250);
-  --chart-3: oklch(0.72 0.13 251);
-  --chart-4: oklch(0.55 0.12 250);
-  --chart-5: oklch(0.45 0.10 250);
+  --vg-black: #000000;
+  --vg-white: #FFFFFF;
+  --vg-red: #E81132;
+  --vg-red-deep: #B80D27;
+  --vg-grey: #8C8C8C;
+  --vg-mute: #5C5C5C;
+  --vg-soft: #BDBDBD;
+  --vg-rule: #DADADA;
+  --vg-panel: #1A1A1A;
+  --vg-paper: #F4F4F4;
+
+  --background: var(--vg-white);
+  --foreground: var(--vg-black);
+  --card: var(--vg-white);
+  --card-foreground: var(--vg-black);
+  --popover: var(--vg-white);
+  --popover-foreground: var(--vg-black);
+  --primary: var(--vg-red);
+  --primary-foreground: var(--vg-white);
+  --secondary: var(--vg-paper);
+  --secondary-foreground: var(--vg-black);
+  --muted: var(--vg-paper);
+  --muted-foreground: var(--vg-mute);
+  --accent: var(--vg-paper);
+  --accent-foreground: var(--vg-black);
+  --destructive: var(--vg-red);
+  --border: var(--vg-rule);
+  --input: var(--vg-black);
+  --ring: var(--vg-red);
+  --radius: 0rem;
+  --chart-1: var(--vg-red);
+  --chart-2: var(--vg-grey);
+  --chart-3: var(--vg-black);
+  --chart-4: var(--vg-mute);
+  --chart-5: var(--vg-soft);
 }
-.dark {
-  --primary: oklch(0.64 0.16 252);
-  --primary-foreground: oklch(0.985 0 0);
-  --chart-1: oklch(0.70 0.15 252);
-  --chart-2: oklch(0.45 0.10 250);
+
+@theme inline {
+  --color-vg-black: var(--vg-black);
+  --color-vg-white: var(--vg-white);
+  --color-vg-red: var(--vg-red);
+  --color-vg-red-deep: var(--vg-red-deep);
+  --color-vg-grey: var(--vg-grey);
+  --color-vg-mute: var(--vg-mute);
+  --color-vg-soft: var(--vg-soft);
+  --color-vg-rule: var(--vg-rule);
+  --color-vg-panel: var(--vg-panel);
+  --color-vg-paper: var(--vg-paper);
+  /* constructivist display scale: heavy, tight, left-aligned */
+  --text-vg-mega: clamp(3rem, 7vw + 0.5rem, 7.5rem);
+  --text-vg-mega--line-height: 0.92;
+  --text-vg-mega--letter-spacing: -0.045em;
+  --text-vg-mega--font-weight: 800;
+  --text-vg-h1: clamp(2.5rem, 4.4vw + 0.5rem, 4.75rem);
+  --text-vg-h1--line-height: 0.98;
+  --text-vg-h1--letter-spacing: -0.04em;
+  --text-vg-h1--font-weight: 800;
+  --text-vg-h2: clamp(2rem, 2.6vw + 0.75rem, 3.25rem);
+  --text-vg-h2--line-height: 1.02;
+  --text-vg-h2--letter-spacing: -0.035em;
+  --text-vg-h2--font-weight: 800;
 }
+
+html { font-feature-settings: "cv11", "ss01", "tnum"; }
+::selection { background: var(--vg-red); color: var(--vg-white); }
+:focus-visible { outline: 3px solid var(--vg-red); outline-offset: 2px; }
