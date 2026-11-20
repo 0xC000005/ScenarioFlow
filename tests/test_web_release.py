@@ -69,7 +69,6 @@ def test_reviewed_web_snapshot_is_complete_and_byte_exact() -> None:
         "web/src/components/ScenarioFan.tsx",
         "web/src/components/Sparkline.tsx",
         "web/src/components/vg/ExplainerVideo.tsx",
-        "web/src/components/vg/Footer.tsx",
         "web/src/components/vg/Hatch.tsx",
         "web/src/components/vg/ScenarioToNarrative.tsx",
         "web/src/components/vg/anim/chart.ts",
@@ -80,7 +79,6 @@ def test_reviewed_web_snapshot_is_complete_and_byte_exact() -> None:
         "web/src/data/narratives.ts",
         "web/src/index.css",
         "web/src/lib/palette.ts",
-        "web/src/pages/Landing.tsx",
     ]
 
 
