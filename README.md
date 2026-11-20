@@ -5,7 +5,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/downloads/)
 [![Ubuntu](https://img.shields.io/badge/platform-Ubuntu-E95420.svg?logo=ubuntu&logoColor=white)](#quick-start)
 [![GHCR](https://img.shields.io/badge/container-GHCR%20v1.0.0-2496ED.svg?logo=docker&logoColor=white)](https://github.com/users/0xC000005/packages/container/package/scenarioflow)
-[![Live demo](https://img.shields.io/badge/live_demo-open-16A34A.svg)](http://138.28.239.185:8767/)
+[![Live demo](https://img.shields.io/badge/live_demo-open-16A34A.svg)](https://0xc000005.github.io/ScenarioFlow/)
 
 ScenarioFlow is a temporal foundation model for generating conditional,
 multivariate time series. Given numerical market history—or a natural-language
@@ -16,7 +16,7 @@ ScenarioFlow uses autoregressive flow matching to learn how variables evolve
 together across time. This repository includes the model, adaptive-graph variant,
 baselines, processed data, paper results, and two interactive demos.
 
-**Live demo:** [http://138.28.239.185:8767/](http://138.28.239.185:8767/)
+**Live demo:** [https://0xc000005.github.io/ScenarioFlow/](https://0xc000005.github.io/ScenarioFlow/)
 
 ## Paper
 
