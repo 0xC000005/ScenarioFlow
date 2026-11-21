@@ -55,7 +55,11 @@ export default function Footer() {
         </div>
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-8">
-        <div className="border-t border-white/15 py-5 text-[13px] text-vg-soft">FMTS @ NeurIPS 2026 workshop</div>
+        <div className="border-t border-white/15 py-5 text-[13px] text-vg-soft">
+          <a href="https://neurips.cc/virtual/2026/loc/sydney/175077" target="_blank" rel="noopener" className="underline decoration-vg-red decoration-2 underline-offset-4 transition-colors hover:text-vg-white">
+            FMTS @ NeurIPS 2026 workshop
+          </a>
+        </div>
       </div>
     </footer>
   );

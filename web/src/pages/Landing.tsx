@@ -83,7 +83,7 @@ function Hero() {
             </div>
             {/* paper and poster up front, so nobody has to scroll to the end for them */}
             <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-semibold">
-              <span className="text-vg-grey">FMTS @ NeurIPS 2026 workshop</span>
+              <a href="https://neurips.cc/virtual/2026/loc/sydney/175077" target="_blank" rel="noopener" className={heroLink}>FMTS @ NeurIPS 2026 workshop</a>
               <a href={PAPER_PDF} target="_blank" rel="noopener" className={heroLink}>Paper (PDF)</a>
               <a href={POSTER_PDF} target="_blank" rel="noopener" className={heroLink}>Poster (PDF)</a>
               <a href="https://github.com/0xC000005/ScenarioFlow" target="_blank" rel="noopener" className={heroLink}>Code (GitHub)</a>
@@ -180,7 +180,14 @@ function PaperPoster() {
           </h2>
           <div className="mt-8 flex">
             <span aria-hidden className="w-[10px] shrink-0 bg-vg-red" />
-            <p className="bg-vg-black px-4 py-3 text-[16px] font-semibold text-vg-white">FMTS @ NeurIPS 2026 workshop</p>
+            <a
+              href="https://neurips.cc/virtual/2026/loc/sydney/175077"
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-12 items-center bg-vg-black px-4 text-[16px] font-semibold text-vg-white transition-colors hover:bg-vg-red"
+            >
+              FMTS @ NeurIPS 2026 workshop
+            </a>
           </div>
           <p className="mt-8 max-w-xl text-[18px] leading-relaxed text-vg-mute">
             The paper describes the generator behind both demos: one model that conditions on recent market history, and
